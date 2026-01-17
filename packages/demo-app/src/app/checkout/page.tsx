@@ -8,16 +8,9 @@ import { useCart } from '../../context/CartContext';
 import { usePageTracking } from '../../hooks/usePageTracking';
 import ScrollTracker from '../../components/tracking/ScrollTracker';
 import { trackEvent } from '../../amplitude';
-import { useEffect } from 'react';
 
 export default function CheckoutPage() {
   const { pageLoadTime } = usePageTracking();
-  
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      (window as any).checkoutStartTime = pageLoadTime;
-    }
-  }, [pageLoadTime]);
   const router = useRouter();
   const { items, getCartTotal, clearCart } = useCart();
   const [step, setStep] = useState(1);
@@ -51,14 +44,13 @@ export default function CheckoutPage() {
   }
 
   const handlePlaceOrder = () => {
-    // Track checkout completion
-    const checkoutStartTime = Date.now() - (typeof window !== 'undefined' ? (window as any).checkoutStartTime || Date.now() : Date.now());
-    trackEvent('goal_completed', {
-      goal_type: 'checkout',
-      goal_id: `checkout_complete_${Date.now()}`,
-      cart_value: total,
-      time_on_goal: checkoutStartTime,
-      page_name: 'checkout',
+    const timeSincePageLoad = pageLoadTime ? Date.now() - pageLoadTime : undefined;
+    trackEvent('button_clicked', {
+      button_id: 'place_order',
+      button_text: 'Place Order',
+      button_type: 'place_order',
+      cart_total: total,
+      time_since_page_load: timeSincePageLoad,
     });
     clearCart();
     router.push('/checkout/success');
@@ -307,7 +299,21 @@ export default function CheckoutPage() {
                           (555) 123-4567
                         </p>
                       </div>
-                      <Button variant="plain" onClick={() => setStep(1)}>Edit</Button>
+                      <Button 
+                        variant="plain" 
+                        onClick={() => {
+                          const timeSincePageLoad = pageLoadTime ? Date.now() - pageLoadTime : undefined;
+                          trackEvent('button_clicked', {
+                            button_id: 'edit_shipping_address',
+                            button_text: 'Edit',
+                            button_type: 'edit_shipping',
+                            time_since_page_load: timeSincePageLoad,
+                          });
+                          setStep(1);
+                        }}
+                      >
+                        Edit
+                      </Button>
                     </div>
                   </div>
 
@@ -320,7 +326,21 @@ export default function CheckoutPage() {
                           Expires 12/25
                         </p>
                       </div>
-                      <Button variant="plain" onClick={() => setStep(2)}>Edit</Button>
+                      <Button 
+                        variant="plain" 
+                        onClick={() => {
+                          const timeSincePageLoad = pageLoadTime ? Date.now() - pageLoadTime : undefined;
+                          trackEvent('button_clicked', {
+                            button_id: 'edit_payment_method',
+                            button_text: 'Edit',
+                            button_type: 'edit_payment',
+                            time_since_page_load: timeSincePageLoad,
+                          });
+                          setStep(2);
+                        }}
+                      >
+                        Edit
+                      </Button>
                     </div>
                   </div>
 
@@ -358,14 +378,55 @@ export default function CheckoutPage() {
             {/* Navigation */}
             <div className="mt-8 flex justify-between">
               {step > 1 ? (
-                <Button onClick={() => setStep(step - 1)}>Back</Button>
+                <Button 
+                  onClick={() => {
+                    const timeSincePageLoad = pageLoadTime ? Date.now() - pageLoadTime : undefined;
+                    trackEvent('button_clicked', {
+                      button_id: `checkout_back_step_${step}`,
+                      button_text: 'Back',
+                      button_type: 'checkout_navigation',
+                      current_step: step,
+                      new_step: step - 1,
+                      time_since_page_load: timeSincePageLoad,
+                    });
+                    setStep(step - 1);
+                  }}
+                >
+                  Back
+                </Button>
               ) : (
                 <Link href="/cart">
-                  <Button>Back to Cart</Button>
+                  <Button
+                    onClick={() => {
+                      const timeSincePageLoad = pageLoadTime ? Date.now() - pageLoadTime : undefined;
+                      trackEvent('button_clicked', {
+                        button_id: 'back_to_cart',
+                        button_text: 'Back to Cart',
+                        button_type: 'navigation',
+                        time_since_page_load: timeSincePageLoad,
+                      });
+                    }}
+                  >
+                    Back to Cart
+                  </Button>
                 </Link>
               )}
               {step < 3 ? (
-                <Button variant="primary" onClick={() => setStep(step + 1)}>
+                <Button 
+                  variant="primary" 
+                  onClick={() => {
+                    const timeSincePageLoad = pageLoadTime ? Date.now() - pageLoadTime : undefined;
+                    trackEvent('button_clicked', {
+                      button_id: `checkout_next_step_${step}`,
+                      button_text: 'Continue',
+                      button_type: 'checkout_navigation',
+                      current_step: step,
+                      new_step: step + 1,
+                      time_since_page_load: timeSincePageLoad,
+                    });
+                    setStep(step + 1);
+                  }}
+                >
                   Continue
                 </Button>
               ) : (
