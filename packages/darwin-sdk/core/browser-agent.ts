@@ -1,5 +1,6 @@
 import { Stagehand } from "@browserbasehq/stagehand";
 import type { AgentResult } from "@browserbasehq/stagehand";
+import { injectTimerOverlay, stopTimerOverlay } from "./timer-overlay";
 
 export interface BrowserAgentConfig {
   website: string;
@@ -102,6 +103,9 @@ ${thinkingFormatInstructions}
 
     const page = this.stagehand.context.pages()[0];
     await page.goto(this.config.website);
+
+    // Inject timer overlay into the page
+    await injectTimerOverlay(page);
 
     // Track seen thoughts to avoid duplicates
     const seenThoughts = new Set<string>();
@@ -238,6 +242,9 @@ ${thinkingFormatInstructions}
     // Get the final result after streaming completes
     const finalResult = await streamResult.result;
     
+    // Stop the timer when task completes
+    await stopTimerOverlay(page);
+    
     // Sanitize the message to remove control characters
     if (finalResult.message) {
       const sanitized = finalResult.message
@@ -276,6 +283,7 @@ ${thinkingFormatInstructions}
     
     return finalResult;
   }
+
 
   /**
    * Close the browser and cleanup
