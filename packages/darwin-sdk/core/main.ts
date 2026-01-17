@@ -1,4 +1,3 @@
-// Polyfill is loaded via --require flag in package.json scripts
 import express from "express";
 import cors from "cors";
 import { BrowserAgent } from "./browser-agent";
@@ -64,7 +63,6 @@ export function startDarwin() {
           task,
           model: model || "google/gemini-3-flash-preview",
           maxSteps: maxSteps || 20,
-          verbose: 2,
           env: (env as "LOCAL" | "BROWSERBASE") || "LOCAL",
           apiKey,
           projectId,
@@ -79,7 +77,7 @@ export function startDarwin() {
       agent
         .init()
         .then(() => agent.execute())
-        .then((result) => {
+        .then(() => {
           console.log(chalk.green("Task completed via API"));
           return agent.close();
         })
@@ -138,7 +136,6 @@ export function startDarwin() {
           task,
           model: model || "google/gemini-3-flash-preview",
           maxSteps: maxSteps || 20,
-          verbose: 2,
           env: (env as "LOCAL" | "BROWSERBASE") || "LOCAL",
           apiKey,
           projectId,
@@ -152,14 +149,12 @@ export function startDarwin() {
       try {
         await agent.init();
         const result = await agent.execute();
-        const logs = agent.getLogs();
 
         res.json({
           status: "completed",
           success: result.success,
           message: result.message,
           actions: result.actions?.length || 0,
-          logs: logs,
         });
       } finally {
         await agent.close();

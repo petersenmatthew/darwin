@@ -7,13 +7,11 @@ export interface DarwinConfig {
   task: string;
   model?: string;
   maxSteps?: number;
-  verbose?: 0 | 1 | 2;
   env?: "LOCAL" | "BROWSERBASE";
   apiKey?: string;
   projectId?: string;
-  integrations?: string[];
+  verbose?: 0 | 1 | 2;
   systemPrompt?: string;
-  viewport?: { width: number; height: number };
 }
 
 const DEFAULT_CONFIG_PATH = path.join(process.cwd(), "darwin.config.json");
@@ -72,17 +70,11 @@ export function createDefaultConfig(configPath?: string): void {
 
   const defaultConfig: DarwinConfig = {
     website: "https://example.com",
-    task: "Navigate the website, describe what you see, and critique the UI/UX design. Think out loud about your observations and any issues you notice.",
+    task: "Click the sign up button and fill out the registration form",
     model: "google/gemini-3-flash-preview",
     maxSteps: 20,
-    verbose: 2,
     env: "LOCAL",
-    viewport: {
-      width: 1288,
-      height: 711,
-    },
-    systemPrompt:
-      "You are a helpful browser automation assistant that navigates websites like a human would. You must continuously think out loud and critique the UI as you navigate. Use the 'think' tool frequently to share your reasoning, observations, and decision-making process. Actively critique the user interface - identify confusing elements, accessibility issues, poor visual hierarchy, navigation difficulties, and highlight both good and bad UX patterns. Move the cursor naturally, scroll smoothly, and take your time to ensure accuracy.",
+    verbose: 1, // Default to info level
   };
 
   saveConfig(defaultConfig, configFile);
@@ -98,12 +90,10 @@ export function toBrowserAgentConfig(config: DarwinConfig): BrowserAgentConfig {
     task: config.task,
     model: config.model,
     maxSteps: config.maxSteps,
-    verbose: config.verbose,
     env: config.env,
     apiKey: config.apiKey,
     projectId: config.projectId,
-    integrations: config.integrations,
+    verbose: config.verbose,
     systemPrompt: config.systemPrompt,
-    viewport: config.viewport,
   };
 }

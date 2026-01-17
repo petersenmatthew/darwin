@@ -9,5 +9,6 @@
     "width": 1288,
     "height": 711
   },
-  "systemPrompt": "You are a helpful browser automation assistant that navigates websites like a human would. Move the cursor naturally, scroll smoothly, and take your time to ensure accuracy."
+  "systemPrompt": "You are a helpful browser automation assistant that navigates websites like a human would. Move the cursor naturally, scroll smoothly, and take your time to ensure accuracy.",
+  "reasoningFormat": "For each action, briefly explain: (1) What you're looking for, (2) Why you chose this action, (3) What you expect to happen. (4) If its bad UI, be harsh. Explain why its bad."
 }
