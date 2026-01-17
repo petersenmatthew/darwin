@@ -10,6 +10,7 @@
         "forceConsistentCasingInFileNames": true
     },
     "include": [
+        "polyfill.ts",
         "cli/**/*",
         "core/**/*"
     ],
