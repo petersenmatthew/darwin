@@ -230,24 +230,6 @@ export default function CheckoutPage() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      State <span className="text-red-500">*</span>
-                    </label>
-                    <select
-                      name="state"
-                      className="w-full border rounded-md px-3 py-2"
-                      defaultValue=""
-                      onFocus={() => handleFieldFocus('shipping_state', 'select')}
-                      onChange={(e) => handleFieldChange('shipping_state', 'select', e)}
-                      onBlur={(e) => handleFieldBlur('shipping_state', 'select', e)}
-                    >
-                      <option value="" disabled>Select state</option>
-                      <option value="CA">California</option>
-                      <option value="NY">New York</option>
-                      <option value="TX">Texas</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
                       ZIP Code <span className="text-red-500">*</span>
                     </label>
                     <input

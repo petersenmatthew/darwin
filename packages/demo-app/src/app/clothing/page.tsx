@@ -21,7 +21,7 @@ export default function ClothingPage() {
               <Text as="p" variant="bodySm" fontWeight="medium" tone="subdued">
                 NEW COLLECTION
               </Text>
-              <Text as="h1" variant="heading3xl" fontWeight="bold">
+              <Text as="h1" variant="heading2xl" fontWeight="bold">
                 Spring/Summer 2024
               </Text>
               <p className="mt-4 text-lg text-gray-600">
