@@ -8,6 +8,7 @@ import { useCart } from '../../context/CartContext';
 import { usePageTracking } from '../../hooks/usePageTracking';
 import ScrollTracker from '../../components/tracking/ScrollTracker';
 import { trackEvent } from '../../amplitude';
+import { useFormTracking } from '../../hooks/useFormTracking';
 
 export default function CartPage() {
   const { pageLoadTime } = usePageTracking();
@@ -306,6 +307,7 @@ export default function CartPage() {
                           button_type: 'apply_promo',
                           time_since_page_load: timeSincePageLoad,
                         });
+                        handleApplyPromo();
                       }}
                     >
                       Apply
