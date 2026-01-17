@@ -6,12 +6,14 @@ import { trackEvent, getPageName } from '../amplitude';
 
 // Global tracking to prevent duplicates across component instances
 const trackedPages = new Map<string, number>();
+const abandonedPages = new Map<string, number>();
 const TRACKING_WINDOW_MS = 1000; // Only track once per second per page
 
 export const usePageTracking = () => {
   const pathname = usePathname();
   const pageLoadTime = useRef<number>(Date.now());
   const hasTrackedPageView = useRef<boolean>(false);
+  const hasTrackedAbandonment = useRef<boolean>(false);
   const trackedPathname = useRef<string | null>(null);
   const abandonmentTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -22,8 +24,15 @@ export const usePageTracking = () => {
     // Reset tracking if pathname changed
     if (trackedPathname.current !== currentPathname) {
       hasTrackedPageView.current = false;
+      hasTrackedAbandonment.current = false;
       trackedPathname.current = currentPathname;
       pageLoadTime.current = now;
+      
+      // Clear any existing abandonment timer
+      if (abandonmentTimeoutRef.current) {
+        clearTimeout(abandonmentTimeoutRef.current);
+        abandonmentTimeoutRef.current = null;
+      }
     }
 
     // Track page view only once per pathname change
@@ -60,15 +69,35 @@ export const usePageTracking = () => {
     const resetAbandonmentTimer = () => {
       if (abandonmentTimeoutRef.current) {
         clearTimeout(abandonmentTimeoutRef.current);
+        abandonmentTimeoutRef.current = null;
       }
 
-      abandonmentTimeoutRef.current = setTimeout(() => {
-        const timeOnPage = Date.now() - pageLoadTime.current;
-        trackEvent('page_abandoned', {
-          page_name: pathname || getPageName(),
-          time_on_page: timeOnPage,
-        });
-      }, 30000); // 30 seconds
+      // Only set timer if we haven't already tracked abandonment for this page
+      if (!hasTrackedAbandonment.current) {
+        abandonmentTimeoutRef.current = setTimeout(() => {
+          const currentPage = pathname || getPageName();
+          const timeOnPage = Date.now() - pageLoadTime.current;
+          const now = Date.now();
+          
+          // Check if we've already tracked abandonment for this page recently
+          const lastAbandoned = abandonedPages.get(currentPage);
+          if (!lastAbandoned || (now - lastAbandoned) > TRACKING_WINDOW_MS) {
+            trackEvent('page_abandoned', {
+              page_name: currentPage,
+              time_on_page: timeOnPage,
+            });
+            abandonedPages.set(currentPage, now);
+            hasTrackedAbandonment.current = true;
+            
+            // Clean up old entries from the map (older than 5 minutes)
+            abandonedPages.forEach((timestamp, page) => {
+              if (now - timestamp > 300000) {
+                abandonedPages.delete(page);
+              }
+            });
+          }
+        }, 30000); // 30 seconds
+      }
     };
 
     // Reset abandonment timer on user activity
