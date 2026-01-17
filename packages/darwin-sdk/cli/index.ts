@@ -101,7 +101,7 @@ program
 
       try {
         await agent.init();
-        const thoughts = await agent.execute();
+        const { thoughts, result } = await agent.execute();
 
         console.log(chalk.green(`\n✓ Task completed`));
         console.log(chalk.cyan(`  Thoughts captured: ${thoughts.length}`));
@@ -221,7 +221,8 @@ program
       let thoughts: ThoughtEntry[] = [];
       try {
         await agent.init();
-        thoughts = await agent.execute();
+        const executeResult = await agent.execute();
+        thoughts = executeResult.thoughts;
         console.log(chalk.green(`✓ Agent completed with ${thoughts.length} thoughts\n`));
       } finally {
         await agent.close();
