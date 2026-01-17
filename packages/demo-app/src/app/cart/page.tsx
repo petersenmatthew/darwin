@@ -1,35 +1,19 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import { Text, Button, Badge, Icon, Divider } from '@shopify/polaris';
 import { DeleteIcon } from '@shopify/polaris-icons';
-import { cartItems as initialCartItems } from '../../data/products';
+import { useCart } from '../../context/CartContext';
 
 export default function CartPage() {
-  const [cartItems, setCartItems] = useState(initialCartItems);
+  const { items, updateQuantity, removeFromCart, getCartTotal } = useCart();
 
-  const updateQuantity = (productId: string, newQuantity: number) => {
-    if (newQuantity < 1) return;
-    setCartItems(items =>
-      items.map(item =>
-        item.product.id === productId
-          ? { ...item, quantity: newQuantity }
-          : item
-      )
-    );
-  };
-
-  const removeItem = (productId: string) => {
-    setCartItems(items => items.filter(item => item.product.id !== productId));
-  };
-
-  const subtotal = cartItems.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+  const subtotal = getCartTotal();
   const shipping = subtotal > 50 ? 0 : 9.99;
   const tax = subtotal * 0.08;
   const total = subtotal + shipping + tax;
 
-  if (cartItems.length === 0) {
+  if (items.length === 0) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-16 text-center">
         <div className="max-w-md mx-auto">
@@ -58,14 +42,14 @@ export default function CartPage() {
         Shopping Cart
       </Text>
       <Text as="p" variant="bodyMd" tone="subdued">
-        {cartItems.length} item{cartItems.length !== 1 ? 's' : ''} in your cart
+        {items.length} item{items.length !== 1 ? 's' : ''} in your cart
       </Text>
 
       <div className="grid lg:grid-cols-3 gap-8 mt-8">
         {/* Cart Items */}
         <div className="lg:col-span-2">
           <div className="bg-white rounded-lg border">
-            {cartItems.map((item, index) => (
+            {items.map((item, index) => (
               <div key={item.product.id}>
                 <div className="p-6 flex gap-6">
                   {/* Image */}
@@ -117,7 +101,7 @@ export default function CartPage() {
 
                       {/* Remove */}
                       <button
-                        onClick={() => removeItem(item.product.id)}
+                        onClick={() => removeFromCart(item.product.id)}
                         className="text-red-500 hover:text-red-700 flex items-center gap-1 text-sm"
                       >
                         <Icon source={DeleteIcon} />
@@ -126,7 +110,7 @@ export default function CartPage() {
                     </div>
                   </div>
                 </div>
-                {index < cartItems.length - 1 && <Divider />}
+                {index < items.length - 1 && <Divider />}
               </div>
             ))}
           </div>

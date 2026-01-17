@@ -1,57 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
-import { Text, Button, Badge, Icon, TextField, Select, Filters, ChoiceList } from '@shopify/polaris';
-import { StarFilledIcon, FilterIcon } from '@shopify/polaris-icons';
+import { Text, Button, Icon } from '@shopify/polaris';
+import { FilterIcon } from '@shopify/polaris-icons';
 import { products, categories } from '../../data/products';
-
-function ProductCard({ product }: { product: typeof products[0] }) {
-  return (
-    <Link href={`/products/${product.id}`}>
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
-        <div className="aspect-square bg-gray-100 relative">
-          <img
-            src={product.image}
-            alt={product.title}
-            className="w-full h-full object-cover"
-          />
-          {product.compareAtPrice && (
-            <div className="absolute top-2 left-2">
-              <Badge tone="success">Sale</Badge>
-            </div>
-          )}
-          {!product.inStock && (
-            <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-              <Badge tone="critical">Out of Stock</Badge>
-            </div>
-          )}
-        </div>
-        <div className="p-4">
-          <Text as="p" variant="bodyMd" fontWeight="medium" truncate>
-            {product.title}
-          </Text>
-          <div className="flex items-center gap-1 mt-1">
-            <Icon source={StarFilledIcon} tone="warning" />
-            <Text as="span" variant="bodySm" tone="subdued">
-              {product.rating} ({product.reviews})
-            </Text>
-          </div>
-          <div className="flex items-center gap-2 mt-2">
-            <Text as="span" variant="bodyLg" fontWeight="bold">
-              ${product.price}
-            </Text>
-            {product.compareAtPrice && (
-              <Text as="span" variant="bodySm" tone="subdued" textDecorationLine="line-through">
-                ${product.compareAtPrice}
-              </Text>
-            )}
-          </div>
-        </div>
-      </div>
-    </Link>
-  );
-}
+import ProductCard from '../../components/ProductCard';
 
 export default function ProductsPage() {
   const [selectedCategory, setSelectedCategory] = useState('All');
