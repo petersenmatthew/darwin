@@ -35,7 +35,7 @@ export default function CheckoutPage() {
   };
 
   const handleFieldBlur = (fieldName: string, fieldType: string = 'text', e?: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    const hasValue = e?.target?.value && e.target.value.trim() !== '';
+    const hasValue = Boolean(e?.target?.value && e.target.value.trim() !== '');
     trackFieldUnfocus(fieldName, fieldType, hasValue);
     if (hasValue) {
       trackFieldCompleted(fieldName, fieldType, true);
