@@ -1,5 +1,7 @@
+export type AnalyticsEvent = Record<string, any>; // can be anything (lenient)
+
 export interface AnalyticsSnapshot {
-  test: string;
+  events: AnalyticsEvent[];
 }
 
 export type Severity = 'low' | 'medium' | 'high' | 'critical';

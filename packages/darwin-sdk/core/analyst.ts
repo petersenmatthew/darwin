@@ -2,6 +2,8 @@ import { runClaude } from '../helpers/claude-helper';
 import * as path from 'path';
 import { GoogleGenAI } from "@google/genai"
 import { AnalyticsSnapshot, AnalysisResult } from '../helpers/analytic-types'
+import { ThoughtEntry } from './browser-agent';
+import { log } from 'console';
 
 export class Analyst {
   private targetAppPath: string;
@@ -12,14 +14,14 @@ export class Analyst {
     this.analyst = new GoogleGenAI({});
   }
 
-  async analyze(analytics: AnalyticsSnapshot): Promise<AnalysisResult> {
+  async analyze(analytics: AnalyticsSnapshot, logic: ThoughtEntry[]): Promise<AnalysisResult> {
     const model = "gemini-3-flash-preview";
     const systemPrompt = `
     You are a senior product analyst and growth engineer.
 
     Your task:
-    - Analyze product analytics
-    - Identify the MOST impactful user experience problems
+    - Analyze product analytics and user thoughts
+    - Identify the MOST impactful user experience problems (i.e. components)
     - Base conclusions ONLY on provided data
     - Output STRICT JSON matching the schema
     - Be concise, evidence-driven, and actionable
@@ -28,6 +30,9 @@ export class Analyst {
       const userPrompt = `
     Analytics snapshot:
     ${JSON.stringify(analytics, null, 2)}
+
+    User thought process snapshot:
+    ${JSON.stringify(logic, null, 2)}
 
     JSON schema:
     {
