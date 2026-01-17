@@ -4,6 +4,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { BrowserAgent, ThoughtEntry } from "./browser-agent";
 import { loadConfig, toBrowserAgentConfig, type DarwinConfig } from "./config";
+import { sessionManager } from "./agent-sessions";
 import { Analyst } from "./analyst";
 import { AnalyticsSnapshot } from "../helpers/analytic-types";
 import chalk from "chalk";
@@ -78,22 +79,51 @@ export function startDarwin() {
       }
 
       const agentConfig = toBrowserAgentConfig(config);
+      
+      // Create session and add event callback
+      const sessionId = sessionManager.createSession(agentConfig);
+      agentConfig.onEvent = (type, data) => {
+        if (type === 'think') {
+          sessionManager.addLog(sessionId, 'think', data.thought || JSON.stringify(data));
+        } else if (type === 'action') {
+          sessionManager.addLog(sessionId, 'action', data.toolName || JSON.stringify(data));
+        } else if (type === 'status') {
+          sessionManager.addLog(sessionId, 'status', data.status || JSON.stringify(data));
+        } else if (type === 'error') {
+          sessionManager.addLog(sessionId, 'error', data.message || JSON.stringify(data));
+        }
+      };
+
       const agent = new BrowserAgent(agentConfig);
+
+      // Start intercepting console logs BEFORE agent operations
+      sessionManager.startLogging(sessionId);
+      sessionManager.addLog(sessionId, "status", "Agent session created, initializing...");
+      
+      // Test that console interception is working
+      console.log("✓ Console interception active for session:", sessionId);
 
       // Run agent asynchronously and return immediately
       agent
         .init()
-        .then(() => agent.execute())
         .then(() => {
-          console.log(chalk.green("Task completed via API"));
+          sessionManager.updateSessionStatus(sessionId, "running");
+          sessionManager.addLog(sessionId, "status", "Agent initialized, starting execution...");
+          return agent.execute();
+        })
+        .then((executeResult) => {
+          sessionManager.setSessionResult(sessionId, executeResult.result);
+          sessionManager.stopLogging();
           return agent.close();
         })
         .catch((error) => {
-          console.error(chalk.red(`API task error: ${error.message}`));
+          sessionManager.setSessionError(sessionId, error.message);
+          sessionManager.stopLogging();
           return agent.close();
         });
 
       res.json({
+        sessionId,
         status: "started",
         message: "Browser agent task started",
         config: {
@@ -104,6 +134,126 @@ export function startDarwin() {
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
+  });
+
+  // Server-Sent Events endpoint for streaming logs
+  app.get("/api/stream/:sessionId", (req, res) => {
+    const { sessionId } = req.params;
+    const session = sessionManager.getSession(sessionId);
+
+    if (!session) {
+      return res.status(404).json({ error: "Session not found" });
+    }
+
+    // Set headers for SSE
+    res.setHeader("Content-Type", "text/event-stream");
+    res.setHeader("Cache-Control", "no-cache");
+    res.setHeader("Connection", "keep-alive");
+    res.setHeader("X-Accel-Buffering", "no");
+
+    // Send initial status and existing logs
+    const sendEvent = (type: string, data: any) => {
+      res.write(`event: ${type}\n`);
+      res.write(`data: ${JSON.stringify(data)}\n\n`);
+    };
+
+    sendEvent("status", {
+      status: session.status,
+      sessionId: session.id,
+      message: `Status: ${session.status}`,
+    });
+
+    // Send existing logs
+    session.logs.forEach((log) => {
+      sendEvent(log.type, {
+        message: log.message,
+        data: log.data,
+        timestamp: log.timestamp.toISOString(),
+      });
+    });
+
+    // Listen for new logs
+    const logHandler = (sid: string, logEntry: any) => {
+      if (sid === sessionId) {
+        sendEvent(logEntry.type, {
+          message: logEntry.message,
+          data: logEntry.data,
+          timestamp: logEntry.timestamp.toISOString(),
+        });
+      }
+    };
+
+    const statusHandler = (sid: string, status: string) => {
+      if (sid === sessionId) {
+        sendEvent("status", { 
+          status, 
+          sessionId: sid,
+          message: `Status changed to: ${status}`,
+        });
+      }
+    };
+
+    const completedHandler = (sid: string, result: any) => {
+      if (sid === sessionId) {
+        sendEvent("result", {
+          success: result.success,
+          message: result.message,
+        });
+        // Close connection after a delay
+        setTimeout(() => {
+          res.end();
+        }, 1000);
+      }
+    };
+
+    const errorHandler = (sid: string, error: string) => {
+      if (sid === sessionId) {
+        sendEvent("error", { message: error });
+      }
+    };
+
+    sessionManager.on("session:log", logHandler);
+    sessionManager.on("session:status", statusHandler);
+    sessionManager.on("session:completed", completedHandler);
+    sessionManager.on("session:error", errorHandler);
+
+    // Cleanup on client disconnect
+    req.on("close", () => {
+      sessionManager.off("session:log", logHandler);
+      sessionManager.off("session:status", statusHandler);
+      sessionManager.off("session:completed", completedHandler);
+      sessionManager.off("session:error", errorHandler);
+      res.end();
+    });
+  });
+
+  // Get session status
+  app.get("/api/session/:sessionId", (req, res) => {
+    const { sessionId } = req.params;
+    const session = sessionManager.getSession(sessionId);
+
+    if (!session) {
+      return res.status(404).json({ error: "Session not found" });
+    }
+
+    res.json({
+      id: session.id,
+      status: session.status,
+      config: {
+        website: session.config.website,
+        task: session.config.task,
+      },
+      result: session.result
+        ? {
+            success: session.result.success,
+            message: session.result.message,
+          }
+        : undefined,
+      error: session.error,
+      createdAt: session.createdAt.toISOString(),
+      completedAt: session.completedAt?.toISOString(),
+      logsCount: session.logs.length,
+    });
   });
 
   app.post("/api/run-sync", async (req, res) => {
@@ -158,7 +308,7 @@ export function startDarwin() {
 
       try {
         await agent.init();
-        const thoughts = await agent.execute();
+        const { thoughts } = await agent.execute();
 
         res.json({
           status: "completed",
@@ -233,7 +383,8 @@ export function startDarwin() {
       let thoughts: ThoughtEntry[] = [];
       try {
         await agent.init();
-        thoughts = await agent.execute();
+        const executeResult = await agent.execute();
+        thoughts = executeResult.thoughts;
         console.log(chalk.green(`✓ Agent completed with ${thoughts.length} thoughts`));
       } finally {
         await agent.close();
