@@ -1,5 +1,12 @@
 import { Stagehand } from "@browserbasehq/stagehand";
 import type { AgentResult } from "@browserbasehq/stagehand";
+import { ElevenLabsClient } from "@elevenlabs/elevenlabs-js";
+import * as dotenv from "dotenv";
+import * as path from "path";
+import chalk from "chalk";
+
+// Load environment variables
+dotenv.config({ path: path.resolve(__dirname, "../../../.env") });
 
 export interface BrowserAgentConfig {
   website: string;
@@ -17,6 +24,7 @@ export interface BrowserAgentConfig {
 export class BrowserAgent {
   private stagehand: Stagehand | null = null;
   private config: BrowserAgentConfig;
+  private elevenLabsClient: ElevenLabsClient | null = null;
 
   constructor(config: BrowserAgentConfig) {
     this.config = {
@@ -26,6 +34,13 @@ export class BrowserAgent {
       verbose: 1, // Default to info level
       ...config,
     };
+
+    const apiKey = process.env.ELEVENLABS_API_KEY;
+    if (apiKey) {
+      this.elevenLabsClient = new ElevenLabsClient({ apiKey });
+    } else {
+      console.warn(chalk.yellow("ELEVENLABS_API_KEY not found. TTS will be disabled."));
+    }
   }
 
   /**
@@ -37,6 +52,17 @@ export class BrowserAgent {
       experimental: true, // Required for hybrid mode and streaming
       verbose: this.config.verbose, // Pass verbosity to Stagehand
     };
+
+    if (this.config.env === "LOCAL") {
+      stagehandConfig.localBrowserLaunchOptions = {
+        headless: false, // Show browser window
+        args: [
+          "--disable-web-security",
+          "--disable-features=IsolateOrigins,site-per-process",
+          "--autoplay-policy=no-user-gesture-required",
+        ],
+      };
+    }
 
     if (this.config.env === "BROWSERBASE") {
       stagehandConfig.apiKey =
@@ -58,6 +84,152 @@ export class BrowserAgent {
   }
 
   /**
+   * Generate speech audio from text using ElevenLabs
+   */
+  private async generateSpeech(text: string): Promise<string | null> {
+    if (!this.elevenLabsClient) return null;
+
+    try {
+      const audioStream = await this.elevenLabsClient.textToSpeech.convert(
+        "JBFqnCBsd6RMkjVDRZzb", // Default voice ID
+        {
+          outputFormat: "mp3_44100_128",
+          text: text,
+          modelId: "eleven_multilingual_v2",
+        }
+      );
+
+      const chunks: any[] = [];
+      for await (const chunk of audioStream) {
+        chunks.push(chunk);
+      }
+      const audioBuffer = Buffer.concat(chunks);
+      return audioBuffer.toString("base64");
+    } catch (error) {
+      console.error(chalk.red("ElevenLabs TTS Error:"), error);
+      return null;
+    }
+  }
+
+  /**
+   * Inject the 3D Agent Overlay into the page
+   */
+  private async injectOverlay(page: any) {
+    try {
+      await page.evaluate(() => {
+        (window as any).createAgentOverlay = () => {
+          if (document.getElementById("agent-overlay")) return;
+
+          console.log("Injecting Agent Overlay...");
+
+          const container = document.createElement("div");
+          container.id = "agent-overlay";
+          container.style.position = "fixed";
+          container.style.bottom = "20px";
+          container.style.left = "20px";
+          container.style.width = "250px";
+          container.style.height = "250px";
+          container.style.zIndex = "2147483647";
+          container.style.pointerEvents = "none";
+          container.style.borderRadius = "50%";
+          container.style.overflow = "hidden";
+          container.style.border = "4px solid yellow"; // Loading state
+          container.style.backgroundColor = "rgba(0,0,0,0.8)";
+          container.style.transition = "border-color 0.5s";
+          container.innerHTML =
+            '<div style="color:white; text-align:center; padding-top:100px; font-family:sans-serif;">Initializing Agent...</div>';
+
+          document.body.appendChild(container);
+
+          const mod = document.createElement("script");
+          mod.type = "module";
+          mod.textContent = `
+                    import { TalkingHead } from "https://esm.sh/@met4citizen/talkinghead@1.7.0";
+                    
+                    (async () => {
+                        try {
+                            const node = document.getElementById('agent-overlay');
+                            if (!node) return;
+                            node.innerHTML = '';
+                            
+                            const head = new TalkingHead(node, {
+                                cameraView: "head",
+                                avatarMood: "neutral",
+                                lipsyncModules: ["en"],
+                                cameraDistance: 1.5
+                            });
+
+                            await head.loadAvatar("https://models.readyplayer.me/64b73eac23865614945417e9.glb");
+                            
+                            node.style.borderColor = '#00ff00'; // Ready state
+                            node.style.backgroundColor = 'rgba(0,0,0,0.5)';
+                            
+                            head.start();
+                            window.agentHead = head;
+                            console.log("Agent Head Ready");
+                        } catch(e) {
+                            console.error("Agent Head Init Failed:", e);
+                            const node = document.getElementById('agent-overlay');
+                            if(node) {
+                                node.style.borderColor = 'red';
+                                node.innerHTML = '<div style="color:red; text-align:center; padding-top:100px;">Load Failed</div>';
+                            }
+                        }
+                    })();
+                `;
+          document.body.appendChild(mod);
+        };
+
+        (window as any).createAgentOverlay();
+
+        // Persistence logic
+        const observer = new MutationObserver(() => {
+          if (!document.getElementById("agent-overlay")) {
+            (window as any).createAgentOverlay();
+          }
+        });
+        observer.observe(document.body, { childList: true });
+      });
+    } catch (e) {
+      console.error(chalk.red(`Failed to inject overlay: ${e}`));
+    }
+  }
+
+  /**
+   * Send audio to the browser overlay to speak
+   */
+  private async speakInBrowser(base64Audio: string, text: string) {
+    if (!this.stagehand) return;
+    const page = this.stagehand.context.pages()[0];
+    if (!page) return;
+
+    try {
+      const dataUri = `data:audio/mpeg;base64,${base64Audio}`;
+      await page.evaluate(
+        ({ uri, text }) => {
+          // Try to use the 3D Head first
+          if ((window as any).agentHead) {
+            fetch(uri)
+              .then((res) => res.arrayBuffer())
+              .then((buffer) => {
+                (window as any).agentHead.speakAudio(buffer, { text: text });
+              })
+              .catch((e) => console.error("Head Playback error:", e));
+          } else {
+            // Fallback: Play audio directly if head isn't ready
+            console.log("Agent Head not ready, playing audio only.");
+            const audio = new Audio(uri);
+            audio.play().catch((e) => console.error("Audio Playback error:", e));
+          }
+        },
+        { uri: dataUri, text }
+      );
+    } catch (error) {
+      console.error("Failed to speak in browser:", error);
+    }
+  }
+
+  /**
    * Execute the task and stream output
    */
   async execute(): Promise<AgentResult> {
@@ -65,111 +237,85 @@ export class BrowserAgent {
       throw new Error("Agent not initialized. Call init() first.");
     }
 
-    // Default thinking format instructions
-    const defaultThinkingFormat = `Keep your thinking concise and focused. Use 2-3 short sentences maximum. Be direct and avoid long paragraphs.`;
-    
-    const thinkingFormatInstructions = this.config.thinkingFormat || defaultThinkingFormat;
-
-    // Default system prompt that encourages thinking
-    const defaultSystemPrompt = `<role>
-You are a helpful browser automation assistant specialized in web interaction and task execution.
-</role>
-
-<workflow>
-Before taking any action, you MUST use the 'think' tool to explain:
-1. What you're observing on the page
-2. What you're trying to accomplish
-3. Why you're choosing this specific action
-4. What you expect to happen
-</workflow>
-
-<thinking_format>
-${thinkingFormatInstructions}
-</thinking_format>
-
-<rules>
-- Always use the 'think' tool before calling other tools like screenshot, ariaTree, click, scroll, etc.
-- This helps users understand your reasoning process and improves transparency.
-- After thinking, proceed with your action.
-</rules>`;
-
     const agent = this.stagehand.agent({
       mode: "hybrid",
       model: this.config.model,
       stream: true, // Enable streaming mode
-      systemPrompt: this.config.systemPrompt || defaultSystemPrompt,
+      systemPrompt:
+        this.config.systemPrompt ||
+        "You are a helpful browser automation assistant. Think out loud before every action.",
     });
 
     const page = this.stagehand.context.pages()[0];
     await page.goto(this.config.website);
 
-    // Track seen thoughts to avoid duplicates
-    const seenThoughts = new Set<string>();
+    // Inject the 3D model overlay
+    await this.injectOverlay(page);
 
-    // Track step history to force thinking
+    const seenThoughts = new Set<string>();
     let stepNumber = 0;
-    let lastStepToolCalls: any[] = [];
     let lastStepHadThink = false;
+    let lastStepToolCalls: any[] = [];
 
     const streamResult = await agent.execute({
       instruction: this.config.task,
       maxSteps: this.config.maxSteps,
       callbacks: {
-        // Intercept steps before execution to force thinking
         prepareStep: async (stepContext: any) => {
           stepNumber++;
-          
-          // Always require thinking at the start of each step (except first step)
-          // OR if the previous step had actions without thinking
-          const shouldRequireThinking = stepNumber > 1 && (!lastStepHadThink || lastStepToolCalls.some((tc: any) => tc.toolName !== 'think'));
-          
+          // Re-inject overlay on each step to ensure it persists
+          await this.injectOverlay(this.stagehand!.context.pages()[0]);
+
+          const shouldRequireThinking =
+            stepNumber > 1 &&
+            (!lastStepHadThink ||
+              lastStepToolCalls.some((tc: any) => tc.toolName !== "think"));
+
           if (shouldRequireThinking) {
             const messages = stepContext.messages || [];
-            
-            // Add a user message requiring thinking before actions
             messages.push({
-              role: 'user',
-              content: 'CRITICAL: Before taking any action in this step, you MUST first use the "think" tool to explain what you observe, what you plan to do, and why. Only after using the think tool should you proceed with other actions.'
+              role: "user",
+              content:
+                'CRITICAL: Before taking any action in this step, you MUST first use the "think" tool to explain what you observe, what you plan to do, and why.',
             });
-            
-            return {
-              ...stepContext,
-              messages: messages,
-            };
+            return { ...stepContext, messages };
           }
-          
           return stepContext;
         },
-        // Capture think tool calls when steps finish
         onStepFinish: async (event: any) => {
-          // Store tool calls from this step
           if (event.toolCalls) {
             lastStepToolCalls = event.toolCalls;
-            lastStepHadThink = event.toolCalls.some((tc: any) => tc.toolName === 'think');
-            
+            lastStepHadThink = event.toolCalls.some(
+              (tc: any) => tc.toolName === "think"
+            );
+
             for (const toolCall of event.toolCalls) {
-              if (toolCall.toolName === 'think') {
-                // Extract thought from think tool call
-                const thought = toolCall.args?.thought || 
-                              toolCall.args?.text || 
-                              toolCall.args?.input ||
-                              toolCall.input ||
-                              toolCall.args || '';
-                
+              if (toolCall.toolName === "think") {
+                const thought =
+                  toolCall.args?.thought ||
+                  toolCall.args?.text ||
+                  toolCall.args?.input ||
+                  toolCall.input ||
+                  toolCall.args ||
+                  "";
+
                 if (thought) {
-                  const thoughtText = typeof thought === 'string' 
-                    ? thought 
-                    : JSON.stringify(thought, null, 2);
-                  
-                  // Avoid duplicates
+                  const thoughtText =
+                    typeof thought === "string"
+                      ? thought
+                      : JSON.stringify(thought, null, 2);
+
                   if (!seenThoughts.has(thoughtText)) {
                     seenThoughts.add(thoughtText);
-                    console.log('\n💭 Thinking:', thoughtText);
+                    console.log("\n💭 Thinking:", thoughtText);
+
+                    // Narrate using elevenlabs
+                    const base64Audio = await this.generateSpeech(thoughtText);
+                    if (base64Audio) {
+                      await this.speakInBrowser(base64Audio, thoughtText);
+                    }
                   }
                 }
-              } else if (toolCall.toolName !== 'think') {
-                // Show other tool calls
-                console.log(`\n🔧 Action: ${toolCall.toolName}`);
               }
             }
           } else {
@@ -180,106 +326,38 @@ ${thinkingFormatInstructions}
       },
     });
 
-    // Stream fullStream to capture think tool calls in real-time
+    // Stream real-time thinking
     for await (const event of streamResult.fullStream) {
       const eventAny = event as any;
-      
-      // Look for think tool calls in the stream
-      if (event.type === 'tool-call' && eventAny.toolName === 'think') {
-        // Extract thinking from think tool calls
-        const thought = eventAny.args?.thought || 
-                       eventAny.args?.text || 
-                       eventAny.args?.input ||
-                       eventAny.input ||
-                       eventAny.args || '';
-        
+      if (event.type === "tool-call" && eventAny.toolName === "think") {
+        const thought =
+          eventAny.args?.thought ||
+          eventAny.args?.text ||
+          eventAny.args?.input ||
+          eventAny.input ||
+          eventAny.args ||
+          "";
+
         if (thought) {
-          const thoughtText = typeof thought === 'string' 
-            ? thought 
-            : JSON.stringify(thought, null, 2);
-          
-          // Avoid duplicates
+          const thoughtText =
+            typeof thought === "string" ? thought : JSON.stringify(thought);
           if (!seenThoughts.has(thoughtText)) {
             seenThoughts.add(thoughtText);
-            console.log('\n💭 Thinking:', thoughtText);
-          }
-        }
-      } else if (event.type === 'tool-call' && eventAny.toolName !== 'think') {
-        // Show other tool calls (avoid duplicates with onStepFinish)
-        // Only log if we haven't seen it in onStepFinish
-        // For now, we'll let onStepFinish handle most tool calls
-      } else if (event.type === 'tool-result' && eventAny.toolName === 'think') {
-        // Think tool results - sometimes the result contains the thought
-        const result = eventAny.result;
-        if (result) {
-          const resultText = typeof result === 'string' 
-            ? result 
-            : JSON.stringify(result, null, 2);
-          
-          if (!seenThoughts.has(resultText)) {
-            seenThoughts.add(resultText);
-            console.log('\n💭 Thought Result:', resultText);
+            console.log("\n💭 Thinking:", thoughtText);
+
+            // Real-time narration
+            this.generateSpeech(thoughtText).then((audio) => {
+              if (audio) this.speakInBrowser(audio, thoughtText);
+            });
           }
         }
       }
     }
 
-    // Also stream textStream for any reasoning text
-    for await (const delta of streamResult.textStream) {
-      if (delta && delta.trim()) {
-        // Filter out control characters
-        const cleanDelta = delta.replace(/[\x00-\x1F\x7F-\x9F]/g, '');
-        if (cleanDelta.trim()) {
-          process.stdout.write(cleanDelta);
-        }
-      }
-    }
-
-    // Get the final result after streaming completes
     const finalResult = await streamResult.result;
-    
-    // Sanitize the message to remove control characters
-    if (finalResult.message) {
-      const sanitized = finalResult.message
-        .replace(/[\x00-\x1F\x7F-\x9F]/g, '') // Remove control characters
-        .replace(/<ctrl\d+>/gi, '') // Remove <ctrlXX> patterns
-        .trim();
-      
-      // Only update if there's actual content after sanitization
-      if (sanitized) {
-        finalResult.message = sanitized;
-      } else {
-        // If message was only control characters, provide a default
-        finalResult.message = finalResult.success 
-          ? 'Task completed successfully' 
-          : 'Task completed but may not have reached the goal';
-      }
-    }
-    
-    // Extract reasoning from the final close action if available
-    if (finalResult.actions && finalResult.actions.length > 0) {
-      const closeAction = finalResult.actions.find((action: any) => action.type === 'close');
-      if (closeAction && closeAction.reasoning) {
-        // Sanitize reasoning too
-        let reasoning = closeAction.reasoning;
-        if (typeof reasoning === 'string') {
-          reasoning = reasoning
-            .replace(/[\x00-\x1F\x7F-\x9F]/g, '')
-            .replace(/<ctrl\d+>/gi, '')
-            .trim();
-        }
-        if (reasoning) {
-          console.log('\n💭 Final Reasoning:', reasoning);
-        }
-      }
-    }
-    
     return finalResult;
   }
 
-  /**
-   * Close the browser and cleanup
-   */
   async close(): Promise<void> {
     if (this.stagehand) {
       await this.stagehand.close();
