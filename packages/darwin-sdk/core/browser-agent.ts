@@ -13,6 +13,7 @@ export interface BrowserAgentConfig {
   verbose?: 0 | 1 | 2;
   systemPrompt?: string;
   thinkingFormat?: string;
+  onEvent?: (type: "think" | "action" | "status" | "error", data: any) => void;
 }
 
 export class BrowserAgent {
@@ -54,8 +55,10 @@ export class BrowserAgent {
       }
     }
 
+    console.log("Initializing Stagehand browser agent...");
     this.stagehand = new Stagehand(stagehandConfig);
     await this.stagehand.init();
+    console.log("Stagehand initialized successfully");
   }
 
   /**
@@ -102,10 +105,17 @@ ${thinkingFormatInstructions}
     });
 
     const page = this.stagehand.context.pages()[0];
+    console.log(`Navigating to: ${this.config.website}`);
     await page.goto(this.config.website);
+    console.log("Page loaded, starting task execution...");
 
     // Inject timer overlay into the page
     await injectTimerOverlay(page);
+
+    // Emit initial status
+    if (this.config.onEvent) {
+      this.config.onEvent('status', { status: 'running' });
+    }
 
     // Track seen thoughts to avoid duplicates
     const seenThoughts = new Set<string>();
@@ -169,11 +179,19 @@ ${thinkingFormatInstructions}
                   if (!seenThoughts.has(thoughtText)) {
                     seenThoughts.add(thoughtText);
                     console.log('\n💭 Thinking:', thoughtText);
+                    // Emit event if callback provided
+                    if (this.config.onEvent) {
+                      this.config.onEvent('think', { thought: thoughtText });
+                    }
                   }
                 }
               } else if (toolCall.toolName !== 'think') {
                 // Show other tool calls
                 console.log(`\n🔧 Action: ${toolCall.toolName}`);
+                // Emit event if callback provided
+                if (this.config.onEvent) {
+                  this.config.onEvent('action', { toolName: toolCall.toolName, args: toolCall.args });
+                }
               }
             }
           } else {
@@ -206,6 +224,10 @@ ${thinkingFormatInstructions}
           if (!seenThoughts.has(thoughtText)) {
             seenThoughts.add(thoughtText);
             console.log('\n💭 Thinking:', thoughtText);
+            // Emit event if callback provided
+            if (this.config.onEvent) {
+              this.config.onEvent('think', { thought: thoughtText });
+            }
           }
         }
       } else if (event.type === 'tool-call' && eventAny.toolName !== 'think') {
