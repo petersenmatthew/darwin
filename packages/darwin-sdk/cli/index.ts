@@ -101,7 +101,7 @@ program
 
       try {
         await agent.init();
-        const thoughts = await agent.execute();
+        const { thoughts } = await agent.execute();
 
         console.log(chalk.green(`\n✓ Task completed`));
         console.log(chalk.cyan(`  Thoughts captured: ${thoughts.length}`));
@@ -213,6 +213,13 @@ program
       console.log(chalk.gray(`  Task: ${config.task}`));
       console.log(chalk.gray(`  Target: ${targetAppPath}\n`));
 
+
+      // Clear events.json before starting
+      const eventsFilePath = path.join(targetAppPath, "events.json");
+      console.log(chalk.cyan("Clearing previous events..."));
+      fs.writeFileSync(eventsFilePath, "[]", "utf-8");
+      console.log(chalk.green("✓ Events cleared\n"));
+
       // Step 1: Run the browser agent
       console.log(chalk.cyan("Step 1: Running browser agent..."));
       const agentConfig = toBrowserAgentConfig(config);
@@ -221,7 +228,8 @@ program
       let thoughts: ThoughtEntry[] = [];
       try {
         await agent.init();
-        thoughts = await agent.execute();
+        const executeResult = await agent.execute();
+        thoughts = executeResult.thoughts;
         console.log(chalk.green(`✓ Agent completed with ${thoughts.length} thoughts\n`));
       } finally {
         await agent.close();
@@ -229,7 +237,6 @@ program
 
       // Step 2: Load events from events.json
       console.log(chalk.cyan("Step 2: Loading analytics events..."));
-      const eventsFilePath = path.join(targetAppPath, "events.json");
 
       let analyticsSnapshot: AnalyticsSnapshot = { events: [] };
       if (fs.existsSync(eventsFilePath)) {
