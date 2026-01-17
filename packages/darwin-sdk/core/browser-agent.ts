@@ -1,4 +1,5 @@
 import { Stagehand } from "@browserbasehq/stagehand";
+import { injectTimerOverlay, stopTimerOverlay } from "./timer-overlay";
 
 export interface BrowserAgentConfig {
   website: string;
@@ -11,6 +12,7 @@ export interface BrowserAgentConfig {
   verbose?: 0 | 1 | 2;
   systemPrompt?: string;
   thinkingFormat?: string;
+  onEvent?: (type: "think" | "action" | "status" | "error", data: any) => void;
 }
 
 export interface ThoughtEntry {
@@ -59,14 +61,16 @@ export class BrowserAgent {
       }
     }
 
+    console.log("Initializing Stagehand browser agent...");
     this.stagehand = new Stagehand(stagehandConfig);
     await this.stagehand.init();
+    console.log("Stagehand initialized successfully");
   }
 
   /**
    * Execute the task and stream output
    */
-  async execute(): Promise<ThoughtEntry[]> {
+  async execute(): Promise<{ thoughts: ThoughtEntry[]; result: any }> {
     if (!this.stagehand) {
       throw new Error("Agent not initialized. Call init() first.");
     }
@@ -107,7 +111,17 @@ ${thinkingFormatInstructions}
     });
 
     const page = this.stagehand.context.pages()[0];
+    console.log(`Navigating to: ${this.config.website}`);
     await page.goto(this.config.website);
+    console.log("Page loaded, starting task execution...");
+
+    // Inject timer overlay into the page
+    await injectTimerOverlay(page);
+
+    // Emit initial status
+    if (this.config.onEvent) {
+      this.config.onEvent('status', { status: 'running' });
+    }
 
     // Track seen thoughts to avoid duplicates
     const thoughts: ThoughtEntry[] = [];
@@ -186,6 +200,10 @@ ${thinkingFormatInstructions}
               } else if (toolCall.toolName !== 'think') {
                 // Show other tool calls
                 console.log(`\n🔧 Action: ${toolCall.toolName}`);
+                // Emit event if callback provided
+                if (this.config.onEvent) {
+                  this.config.onEvent('action', { toolName: toolCall.toolName, args: toolCall.args });
+                }
               }
             }
           } else {
@@ -243,6 +261,9 @@ ${thinkingFormatInstructions}
     // Get the final result after streaming completes
     const finalResult = await streamResult.result;
     
+    // Stop the timer when task completes
+    await stopTimerOverlay(page);
+    
     // Sanitize the message to remove control characters
     if (finalResult.message) {
       const sanitized = finalResult.message
@@ -279,8 +300,9 @@ ${thinkingFormatInstructions}
       }
     }
 
-    return thoughts;
+    return { thoughts, result: finalResult };
   }
+
 
   /**
    * Close the browser and cleanup
