@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { Text, Button, Badge, Icon, Divider } from '@shopify/polaris';
 import { DeleteIcon } from '@shopify/polaris-icons';
@@ -11,11 +12,29 @@ import { trackEvent } from '../../amplitude';
 export default function CartPage() {
   const { pageLoadTime } = usePageTracking();
   const { items, updateQuantity, removeFromCart, getCartTotal } = useCart();
+  const [promoCode, setPromoCode] = useState('');
+  const [appliedPromo, setAppliedPromo] = useState<string | null>(null);
+  const [promoError, setPromoError] = useState('');
 
   const subtotal = getCartTotal();
+  const discount = appliedPromo ? subtotal * 0.1 : 0; // 10% off
   const shipping = subtotal > 50 ? 0 : 9.99;
-  const tax = subtotal * 0.08;
-  const total = subtotal + shipping + tax;
+  const tax = (subtotal - discount) * 0.08;
+  const total = subtotal - discount + shipping + tax;
+
+  const handleApplyPromo = () => {
+    const code = promoCode.trim().toUpperCase();
+    if (appliedPromo) {
+      setPromoError('Promo code already applied');
+      return;
+    }
+    if (code === 'WELCOME10') {
+      setAppliedPromo(code);
+      setPromoError('');
+    } else {
+      setPromoError('Invalid promo code');
+    }
+  };
 
   if (items.length === 0) {
     return (
@@ -176,6 +195,12 @@ export default function CartPage() {
                 <Text as="span" tone="subdued">Subtotal</Text>
                 <Text as="span">${subtotal.toFixed(2)}</Text>
               </div>
+              {appliedPromo && (
+                <div className="flex justify-between text-green-600">
+                  <Text as="span">Discount (10%)</Text>
+                  <Text as="span">-${discount.toFixed(2)}</Text>
+                </div>
+              )}
               <div className="flex justify-between">
                 <Text as="span" tone="subdued">Shipping</Text>
                 <Text as="span">
@@ -249,26 +274,48 @@ export default function CartPage() {
               <Text as="h3" variant="bodySm" fontWeight="medium">
                 Have a promo code?
               </Text>
-              <div className="flex gap-2 mt-2">
-                <input
-                  type="text"
-                  placeholder="Enter code"
-                  className="flex-1 border rounded-md px-3 py-2 text-sm"
-                />
-                <Button
-                  onClick={() => {
-                    const timeSincePageLoad = pageLoadTime ? Date.now() - pageLoadTime : undefined;
-                    trackEvent('button_clicked', {
-                      button_id: 'apply_promo_code',
-                      button_text: 'Apply',
-                      button_type: 'apply_promo',
-                      time_since_page_load: timeSincePageLoad,
-                    });
-                  }}
-                >
-                  Apply
-                </Button>
-              </div>
+              {appliedPromo ? (
+                <div className="mt-2 p-3 bg-green-50 rounded-md text-sm text-green-700 flex items-center justify-between">
+                  <span>Code "{appliedPromo}" applied - 10% off!</span>
+                  <button
+                    onClick={() => {
+                      setAppliedPromo(null);
+                      setPromoCode('');
+                    }}
+                    className="text-green-800 hover:underline text-xs"
+                  >
+                    Remove
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <div className="flex gap-2 mt-2">
+                    <input
+                      type="text"
+                      placeholder="Enter code"
+                      value={promoCode}
+                      onChange={(e) => setPromoCode(e.target.value)}
+                      className="flex-1 border rounded-md px-3 py-2 text-sm"
+                    />
+                    <Button
+                      onClick={() => {
+                        const timeSincePageLoad = pageLoadTime ? Date.now() - pageLoadTime : undefined;
+                        trackEvent('button_clicked', {
+                          button_id: 'apply_promo_code',
+                          button_text: 'Apply',
+                          button_type: 'apply_promo',
+                          time_since_page_load: timeSincePageLoad,
+                        });
+                      }}
+                    >
+                      Apply
+                    </Button>
+                  </div>
+                  {promoError && (
+                    <p className="mt-1 text-sm text-red-600">{promoError}</p>
+                  )}
+                </>
+              )}
             </div>
           </div>
         </div>

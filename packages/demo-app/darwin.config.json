@@ -1,5 +1,5 @@
 {
-  "website": "localhost:3000",
+  "website": "http://localhost:3000",
   "task": "Purchase a smart fitness watch while making use of the discount code.",
   "model": "google/gemini-3-flash-preview",
   "maxSteps": 50,
