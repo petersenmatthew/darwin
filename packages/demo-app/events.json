@@ -3,243 +3,1152 @@
     "event": "navigation_clicked",
     "session_id": "session_1768676781826_cezicv2i1",
     "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768678170297,
-    "page_name": "/",
-    "link_href": "/clothing",
-    "link_text": "Clothing",
-    "time_since_page_load": 24583
-  },
-  {
-    "event": "page_viewed",
-    "session_id": "session_1768676781826_cezicv2i1",
-    "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768678172049,
-    "page_name": "/clothing"
-  },
-  {
-    "event": "page_viewed",
-    "session_id": "session_1768676781826_cezicv2i1",
-    "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768678211700,
-    "page_name": "/products/4"
-  },
-  {
-    "event": "button_clicked",
-    "session_id": "session_1768676781826_cezicv2i1",
-    "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768678217865,
-    "page_name": "/products/4",
-    "button_id": "add_to_cart_4",
-    "button_text": "Add to Cart",
-    "button_type": "add_to_cart",
-    "product_id": "4",
-    "product_name": "Organic Cotton T-Shirt",
-    "quantity": 1,
-    "time_since_page_load": 6182
-  },
-  {
-    "event": "page_abandoned",
-    "session_id": "session_1768676781826_cezicv2i1",
-    "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768678257471,
-    "page_name": "/products/4",
-    "time_on_page": 45771
-  },
-  {
-    "event": "session_started",
-    "session_id": "session_1768676781826_cezicv2i1",
-    "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768678426377,
-    "page_name": "/products/4",
-    "referrer": "http://localhost:3000/products/4"
-  },
-  {
-    "event": "page_viewed",
-    "session_id": "session_1768676781826_cezicv2i1",
-    "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768678426371,
-    "page_name": "/products/4"
-  },
-  {
-    "event": "page_viewed",
-    "session_id": "session_1768676781826_cezicv2i1",
-    "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768678454031,
-    "page_name": "/products/4"
-  },
-  {
-    "event": "session_started",
-    "session_id": "session_1768676781826_cezicv2i1",
-    "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768678454036,
-    "page_name": "/products/4",
-    "referrer": "http://localhost:3000/products/4"
-  },
-  {
-    "event": "page_abandoned",
-    "session_id": "session_1768676781826_cezicv2i1",
-    "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768678484480,
-    "page_name": "/products/4",
-    "time_on_page": 30449
-  },
-  {
-    "event": "page_refresh",
-    "session_id": "session_1768676781826_cezicv2i1",
-    "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768678501521,
-    "page_name": "/products/4",
-    "time_on_page": 47490
-  },
-  {
-    "event": "page_refresh",
-    "session_id": "session_1768676781826_cezicv2i1",
-    "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768678501522,
-    "page_name": "/products/4",
-    "time_on_page": 47490
-  },
-  {
-    "event": "page_refresh",
-    "session_id": "session_1768676781826_cezicv2i1",
-    "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768678501523,
-    "page_name": "/products/4",
-    "time_on_page": 47490
-  },
-  {
-    "event": "page_refresh",
-    "session_id": "session_1768676781826_cezicv2i1",
-    "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768678501523,
-    "page_name": "/products/4",
-    "time_on_page": 47491
-  },
-  {
-    "event": "page_refresh",
-    "session_id": "session_1768676781826_cezicv2i1",
-    "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768678501524,
-    "page_name": "/products/4",
-    "time_on_page": 47492
-  },
-  {
-    "event": "page_viewed",
-    "session_id": "session_1768676781826_cezicv2i1",
-    "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768678503496,
-    "page_name": "/products/4"
-  },
-  {
-    "event": "session_started",
-    "session_id": "session_1768676781826_cezicv2i1",
-    "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768678503503,
-    "page_name": "/products/4",
-    "referrer": "http://localhost:3000/products/4"
-  },
-  {
-    "event": "back_button_clicked",
-    "session_id": "session_1768676781826_cezicv2i1",
-    "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768678512505,
-    "page_name": "/products/4",
-    "previous_page": "/clothing",
-    "time_since_page_load": 9054
-  },
-  {
-    "event": "page_viewed",
-    "session_id": "session_1768676781826_cezicv2i1",
-    "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768678512778,
-    "page_name": "/clothing"
-  },
-  {
-    "event": "page_viewed",
-    "session_id": "session_1768676781826_cezicv2i1",
-    "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768678521053,
-    "page_name": "/clothing"
-  },
-  {
-    "event": "session_started",
-    "session_id": "session_1768676781826_cezicv2i1",
-    "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768678521058,
-    "page_name": "/clothing",
-    "referrer": "http://localhost:3000/clothing"
-  },
-  {
-    "event": "navigation_clicked",
-    "session_id": "session_1768676781826_cezicv2i1",
-    "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768678539785,
-    "page_name": "/clothing",
-    "link_href": "/",
-    "link_text": "Link",
-    "time_since_page_load": 18732
-  },
-  {
-    "event": "page_viewed",
-    "session_id": "session_1768676781826_cezicv2i1",
-    "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768678540025,
-    "page_name": "/"
-  },
-  {
-    "event": "page_viewed",
-    "session_id": "session_1768676781826_cezicv2i1",
-    "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768678544622,
-    "page_name": "/clothing"
-  },
-  {
-    "event": "navigation_clicked",
-    "session_id": "session_1768676781826_cezicv2i1",
-    "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768678552401,
-    "page_name": "/clothing",
-    "link_href": "/",
-    "link_text": "Link",
-    "time_since_page_load": 12376
-  },
-  {
-    "event": "page_viewed",
-    "session_id": "session_1768676781826_cezicv2i1",
-    "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768678552426,
-    "page_name": "/"
-  },
-  {
-    "event": "navigation_clicked",
-    "session_id": "session_1768676781826_cezicv2i1",
-    "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768678554228,
+    "timestamp": 1768678626407,
     "page_name": "/",
     "link_href": "/products",
     "link_text": "All Products",
-    "time_since_page_load": 9606
+    "time_since_page_load": 65529
   },
   {
     "event": "page_viewed",
     "session_id": "session_1768676781826_cezicv2i1",
     "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768678555746,
+    "timestamp": 1768678626572,
     "page_name": "/products"
   },
   {
     "event": "page_viewed",
     "session_id": "session_1768676781826_cezicv2i1",
     "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768678560877,
+    "timestamp": 1768678629690,
+    "page_name": "/"
+  },
+  {
+    "event": "navigation_clicked",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768678636128,
+    "page_name": "/",
+    "link_href": "/clothing",
+    "link_text": "Clothing",
+    "time_since_page_load": 9556
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768678636213,
+    "page_name": "/clothing"
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768678640392,
     "page_name": "/"
   },
   {
     "event": "page_abandoned",
     "session_id": "session_1768676781826_cezicv2i1",
     "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768678591483,
+    "timestamp": 1768678679473,
     "page_name": "/",
-    "time_on_page": 30606
+    "time_on_page": 39081
+  },
+  {
+    "event": "navigation_clicked",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768681528728,
+    "page_name": "/",
+    "link_href": "/cart",
+    "link_text": "Link",
+    "time_since_page_load": 2892514
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768681529707,
+    "page_name": "/cart"
+  },
+  {
+    "event": "navigation_clicked",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768681531749,
+    "page_name": "/cart",
+    "link_href": "/clothing",
+    "link_text": "Clothing",
+    "time_since_page_load": 2891357
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768681531840,
+    "page_name": "/clothing"
+  },
+  {
+    "event": "navigation_clicked",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768681535464,
+    "page_name": "/clothing",
+    "link_href": "/products",
+    "link_text": "All Products",
+    "time_since_page_load": 5756
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768681535593,
+    "page_name": "/products"
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768681536865,
+    "page_name": "/products/1"
+  },
+  {
+    "event": "button_clicked",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768681538095,
+    "page_name": "/products/1",
+    "button_id": "add_to_cart_1",
+    "button_text": "Add to Cart",
+    "button_type": "add_to_cart",
+    "product_id": "1",
+    "product_name": "Wireless Bluetooth Headphones",
+    "quantity": 1,
+    "time_since_page_load": 1256
+  },
+  {
+    "event": "navigation_clicked",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768681539261,
+    "page_name": "/products/1",
+    "link_href": "/cart",
+    "link_text": "Link",
+    "time_since_page_load": 2396
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768681539273,
+    "page_name": "/cart"
+  },
+  {
+    "event": "button_clicked",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768681540645,
+    "page_name": "/cart",
+    "button_id": "proceed_to_checkout",
+    "button_text": "Proceed to Checkout",
+    "button_type": "checkout",
+    "cart_total": 161.9892,
+    "time_since_page_load": 1381
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768681542227,
+    "page_name": "/checkout"
+  },
+  {
+    "event": "page_abandoned",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768681590473,
+    "page_name": "/checkout",
+    "time_on_page": 48246
+  },
+  {
+    "event": "session_ended",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768681787549,
+    "page_name": "/checkout",
+    "session_duration": 3266491,
+    "pages_viewed": 2
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768681787550,
+    "page_name": "/checkout",
+    "time_on_page": 245323
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768681787551,
+    "page_name": "/checkout",
+    "time_on_page": 245323
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768681787551,
+    "page_name": "/checkout",
+    "time_on_page": 245323
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768681787551,
+    "page_name": "/checkout",
+    "time_on_page": 245323
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768681788398,
+    "page_name": "/checkout"
+  },
+  {
+    "event": "session_started",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768681788401,
+    "page_name": "/checkout",
+    "referrer": "http://localhost:3000/clothing"
+  },
+  {
+    "event": "navigation_clicked",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768681792235,
+    "page_name": "/checkout",
+    "link_href": "/",
+    "link_text": "Link",
+    "time_since_page_load": 3859
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768681792452,
+    "page_name": "/"
+  },
+  {
+    "event": "navigation_clicked",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768681807481,
+    "page_name": "/",
+    "link_href": "/products",
+    "link_text": "All Products",
+    "time_since_page_load": 19082
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768681807733,
+    "page_name": "/products"
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768681810253,
+    "page_name": "/products/1"
+  },
+  {
+    "event": "button_clicked",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768681811660,
+    "page_name": "/products/1",
+    "button_id": "add_to_cart_1",
+    "button_text": "Add to Cart",
+    "button_type": "add_to_cart",
+    "product_id": "1",
+    "product_name": "Wireless Bluetooth Headphones",
+    "quantity": 1,
+    "time_since_page_load": 1425
+  },
+  {
+    "event": "navigation_clicked",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768681813991,
+    "page_name": "/products/1",
+    "link_href": "/cart",
+    "link_text": "Link",
+    "time_since_page_load": 3737
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768681814195,
+    "page_name": "/cart"
+  },
+  {
+    "event": "button_clicked",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768681815638,
+    "page_name": "/cart",
+    "button_id": "proceed_to_checkout",
+    "button_text": "Proceed to Checkout",
+    "button_type": "checkout",
+    "cart_total": 161.9892,
+    "time_since_page_load": 1455
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768681815652,
+    "page_name": "/checkout"
+  },
+  {
+    "event": "page_abandoned",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768681877476,
+    "page_name": "/checkout",
+    "time_on_page": 61824
+  },
+  {
+    "event": "session_ended",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682011547,
+    "page_name": "/checkout",
+    "session_duration": 223146,
+    "pages_viewed": 2
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682011547,
+    "page_name": "/checkout",
+    "time_on_page": 195895
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682011548,
+    "page_name": "/checkout",
+    "time_on_page": 195896
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682011548,
+    "page_name": "/checkout",
+    "time_on_page": 195896
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682011547,
+    "page_name": "/checkout",
+    "time_on_page": 195895
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682012495,
+    "page_name": "/checkout"
+  },
+  {
+    "event": "session_started",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682012501,
+    "page_name": "/checkout",
+    "referrer": "http://localhost:3000/clothing"
+  },
+  {
+    "event": "navigation_clicked",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682013472,
+    "page_name": "/checkout",
+    "link_href": "/cart",
+    "link_text": "Link",
+    "time_since_page_load": 996
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682014822,
+    "page_name": "/cart"
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682016210,
+    "page_name": "/products"
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682023446,
+    "page_name": "/products/1"
+  },
+  {
+    "event": "button_clicked",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682027292,
+    "page_name": "/products/1",
+    "button_id": "add_to_cart_1",
+    "button_text": "Add to Cart",
+    "button_type": "add_to_cart",
+    "product_id": "1",
+    "product_name": "Wireless Bluetooth Headphones",
+    "quantity": 1,
+    "time_since_page_load": 3868
+  },
+  {
+    "event": "navigation_clicked",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682028128,
+    "page_name": "/products/1",
+    "link_href": "/cart",
+    "link_text": "Link",
+    "time_since_page_load": 4681
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682028157,
+    "page_name": "/cart"
+  },
+  {
+    "event": "button_clicked",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682029843,
+    "page_name": "/cart",
+    "button_id": "proceed_to_checkout",
+    "button_text": "Proceed to Checkout",
+    "button_type": "checkout",
+    "cart_total": 161.9892,
+    "time_since_page_load": 1702
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682029855,
+    "page_name": "/checkout"
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682071554,
+    "page_name": "/checkout"
+  },
+  {
+    "event": "page_abandoned",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682073484,
+    "page_name": "/checkout",
+    "time_on_page": 43629
+  },
+  {
+    "event": "page_abandoned",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682102475,
+    "page_name": "/checkout",
+    "time_on_page": 30921
+  },
+  {
+    "event": "form_started",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682135118,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "form_name": "Checkout Form",
+    "time_since_page_load": 63564
+  },
+  {
+    "event": "form_field_focused",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682135119,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_first_name",
+    "field_type": "text",
+    "time_since_page_load": 63565
+  },
+  {
+    "event": "form_field_unfocused",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682135463,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_first_name",
+    "field_type": "text",
+    "has_value": true,
+    "time_since_page_load": 63909
+  },
+  {
+    "event": "form_field_completed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682135464,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_first_name",
+    "field_type": "text",
+    "has_value": true,
+    "time_since_page_load": 63910
+  },
+  {
+    "event": "form_field_focused",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682135464,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_last_name",
+    "field_type": "text",
+    "time_since_page_load": 63910
+  },
+  {
+    "event": "form_field_unfocused",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682135801,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_last_name",
+    "field_type": "text",
+    "has_value": true,
+    "time_since_page_load": 64247
+  },
+  {
+    "event": "form_field_completed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682135802,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_last_name",
+    "field_type": "text",
+    "has_value": true,
+    "time_since_page_load": 64248
+  },
+  {
+    "event": "form_field_focused",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682135803,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_email",
+    "field_type": "email",
+    "time_since_page_load": 64249
+  },
+  {
+    "event": "form_field_unfocused",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682136265,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_email",
+    "field_type": "email",
+    "has_value": true,
+    "time_since_page_load": 64711
+  },
+  {
+    "event": "form_field_completed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682136266,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_email",
+    "field_type": "email",
+    "has_value": true,
+    "time_since_page_load": 64712
+  },
+  {
+    "event": "form_field_focused",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682152511,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_email",
+    "field_type": "email",
+    "time_since_page_load": 80957
+  },
+  {
+    "event": "form_field_unfocused",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682153809,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_email",
+    "field_type": "email",
+    "has_value": true,
+    "time_since_page_load": 82254
+  },
+  {
+    "event": "form_field_focused",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682153810,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_first_name",
+    "field_type": "text",
+    "time_since_page_load": 82256
+  },
+  {
+    "event": "form_field_unfocused",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682154310,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_first_name",
+    "field_type": "text",
+    "has_value": true,
+    "time_since_page_load": 82756
+  },
+  {
+    "event": "form_field_focused",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682158804,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_first_name",
+    "field_type": "text",
+    "time_since_page_load": 87250
+  },
+  {
+    "event": "form_field_unfocused",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682159910,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_first_name",
+    "field_type": "text",
+    "has_value": true,
+    "time_since_page_load": 88356
+  },
+  {
+    "event": "form_field_focused",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682159910,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_last_name",
+    "field_type": "text",
+    "time_since_page_load": 88356
+  },
+  {
+    "event": "form_field_unfocused",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682160385,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_last_name",
+    "field_type": "text",
+    "has_value": true,
+    "time_since_page_load": 88831
+  },
+  {
+    "event": "form_field_focused",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682160385,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_first_name",
+    "field_type": "text",
+    "time_since_page_load": 88831
+  },
+  {
+    "event": "form_field_unfocused",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682160856,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_first_name",
+    "field_type": "text",
+    "has_value": true,
+    "time_since_page_load": 89302
+  },
+  {
+    "event": "form_field_focused",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682160856,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_last_name",
+    "field_type": "text",
+    "time_since_page_load": 89302
+  },
+  {
+    "event": "form_field_unfocused",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682161293,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_last_name",
+    "field_type": "text",
+    "has_value": true,
+    "time_since_page_load": 89739
+  },
+  {
+    "event": "form_field_focused",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682161293,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_first_name",
+    "field_type": "text",
+    "time_since_page_load": 89739
+  },
+  {
+    "event": "form_field_unfocused",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682161749,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_first_name",
+    "field_type": "text",
+    "has_value": true,
+    "time_since_page_load": 90194
+  },
+  {
+    "event": "form_field_focused",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682161750,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_last_name",
+    "field_type": "text",
+    "time_since_page_load": 90196
+  },
+  {
+    "event": "form_field_unfocused",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682162351,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_last_name",
+    "field_type": "text",
+    "has_value": true,
+    "time_since_page_load": 90797
+  },
+  {
+    "event": "form_field_focused",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682175493,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_first_name",
+    "field_type": "text",
+    "time_since_page_load": 103939
+  },
+  {
+    "event": "form_field_unfocused",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682176996,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_first_name",
+    "field_type": "text",
+    "has_value": true,
+    "time_since_page_load": 105442
+  },
+  {
+    "event": "page_abandoned",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682207472,
+    "page_name": "/checkout",
+    "time_on_page": 177616
+  },
+  {
+    "event": "form_field_focused",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682207914,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_first_name",
+    "field_type": "text",
+    "time_since_page_load": 136360
+  },
+  {
+    "event": "form_field_unfocused",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682210187,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_first_name",
+    "field_type": "text",
+    "has_value": true,
+    "time_since_page_load": 138633
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682219261,
+    "page_name": "/checkout"
+  },
+  {
+    "event": "session_started",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682219266,
+    "page_name": "/checkout",
+    "referrer": "http://localhost:3000/checkout"
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682229558,
+    "page_name": "/checkout"
+  },
+  {
+    "event": "page_abandoned",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682249474,
+    "page_name": "/checkout",
+    "time_on_page": 30213
+  },
+  {
+    "event": "page_abandoned",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682260474,
+    "page_name": "/checkout",
+    "time_on_page": 30916
+  },
+  {
+    "event": "navigation_clicked",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682336940,
+    "page_name": "/checkout",
+    "link_href": "/products",
+    "link_text": "All Products",
+    "time_since_page_load": 117677
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682337371,
+    "page_name": "/products"
+  },
+  {
+    "event": "button_clicked",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682339101,
+    "page_name": "/products",
+    "button_id": "add_to_cart_1",
+    "button_text": "Add to Cart",
+    "button_type": "add_to_cart",
+    "product_id": "1",
+    "product_name": "Wireless Bluetooth Headphones",
+    "time_since_page_load": 1861
+  },
+  {
+    "event": "navigation_clicked",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682340258,
+    "page_name": "/products",
+    "link_href": "/cart",
+    "link_text": "Link",
+    "time_since_page_load": 2886
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682341136,
+    "page_name": "/cart"
+  },
+  {
+    "event": "button_clicked",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682342427,
+    "page_name": "/cart",
+    "button_id": "proceed_to_checkout",
+    "button_text": "Proceed to Checkout",
+    "button_type": "checkout",
+    "cart_total": 161.9892,
+    "time_since_page_load": 1304
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682342515,
+    "page_name": "/checkout"
+  },
+  {
+    "event": "form_started",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682344994,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "form_name": "Checkout Form",
+    "time_since_page_load": 2492
+  },
+  {
+    "event": "form_field_focused",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682344995,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_last_name",
+    "field_type": "text",
+    "time_since_page_load": 2493
+  },
+  {
+    "event": "form_field_unfocused",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682345496,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_last_name",
+    "field_type": "text",
+    "has_value": true,
+    "time_since_page_load": 2994
+  },
+  {
+    "event": "form_field_completed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682345496,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_last_name",
+    "field_type": "text",
+    "has_value": true,
+    "time_since_page_load": 2994
+  },
+  {
+    "event": "form_field_focused",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682345497,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_email",
+    "field_type": "email",
+    "time_since_page_load": 2995
+  },
+  {
+    "event": "form_field_unfocused",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682346058,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_email",
+    "field_type": "email",
+    "has_value": true,
+    "time_since_page_load": 3556
+  },
+  {
+    "event": "form_field_completed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682346058,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_email",
+    "field_type": "email",
+    "has_value": true,
+    "time_since_page_load": 3556
+  },
+  {
+    "event": "form_field_focused",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682351289,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_email",
+    "field_type": "email",
+    "time_since_page_load": 8787
+  },
+  {
+    "event": "form_field_unfocused",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682351955,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_email",
+    "field_type": "email",
+    "has_value": true,
+    "time_since_page_load": 9453
+  },
+  {
+    "event": "form_field_focused",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682354716,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_email",
+    "field_type": "email",
+    "time_since_page_load": 12214
+  },
+  {
+    "event": "form_field_changed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682358300,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_email",
+    "field_type": "email",
+    "has_value": true,
+    "value_length": 29,
+    "time_since_page_load": 15798
+  },
+  {
+    "event": "form_field_unfocused",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682359252,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_email",
+    "field_type": "email",
+    "has_value": true,
+    "time_since_page_load": 16750
+  },
+  {
+    "event": "form_field_focused",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682380375,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_first_name",
+    "field_type": "text",
+    "time_since_page_load": 37873
+  },
+  {
+    "event": "form_field_changed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682384179,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_first_name",
+    "field_type": "text",
+    "has_value": true,
+    "value_length": 16,
+    "time_since_page_load": 41677
+  },
+  {
+    "event": "form_field_changed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682385194,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_first_name",
+    "field_type": "text",
+    "has_value": true,
+    "value_length": 23,
+    "time_since_page_load": 42692
+  },
+  {
+    "event": "form_field_unfocused",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682385608,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_first_name",
+    "field_type": "text",
+    "has_value": true,
+    "time_since_page_load": 43106
+  },
+  {
+    "event": "form_field_completed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682385609,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_first_name",
+    "field_type": "text",
+    "has_value": true,
+    "time_since_page_load": 43107
+  },
+  {
+    "event": "page_abandoned",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768682429476,
+    "page_name": "/checkout",
+    "time_on_page": 86961
   }
 ]

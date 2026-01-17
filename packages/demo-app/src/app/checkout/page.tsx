@@ -8,12 +8,43 @@ import { useCart } from '../../context/CartContext';
 import { usePageTracking } from '../../hooks/usePageTracking';
 import ScrollTracker from '../../components/tracking/ScrollTracker';
 import { trackEvent } from '../../amplitude';
+import { useFormTracking } from '../../hooks/useFormTracking';
 
 export default function CheckoutPage() {
   const { pageLoadTime } = usePageTracking();
   const router = useRouter();
   const { items, getCartTotal, clearCart } = useCart();
   const [step, setStep] = useState(1);
+  
+  // Form tracking for checkout forms
+  const {
+    trackFieldFocus,
+    trackFieldUnfocus,
+    trackFieldChanged,
+    trackFieldCompleted,
+    trackFormSubmitted,
+  } = useFormTracking({
+    formId: 'checkout_form',
+    formName: 'Checkout Form',
+    pageLoadTime,
+  });
+
+  // Helper functions for form field tracking
+  const handleFieldFocus = (fieldName: string, fieldType: string = 'text') => {
+    trackFieldFocus(fieldName, fieldType);
+  };
+
+  const handleFieldBlur = (fieldName: string, fieldType: string = 'text', e?: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const hasValue = e?.target?.value && e.target.value.trim() !== '';
+    trackFieldUnfocus(fieldName, fieldType, hasValue);
+    if (hasValue) {
+      trackFieldCompleted(fieldName, fieldType, true);
+    }
+  };
+
+  const handleFieldChange = (fieldName: string, fieldType: string = 'text', e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    trackFieldChanged(fieldName, fieldType, e.target.value);
+  };
 
   const subtotal = getCartTotal();
   const shipping = subtotal > 50 ? 0 : 9.99;
@@ -52,6 +83,8 @@ export default function CheckoutPage() {
       cart_total: total,
       time_since_page_load: timeSincePageLoad,
     });
+    // Track form submission
+    trackFormSubmitted();
     clearCart();
     router.push('/checkout/success');
   };
@@ -103,7 +136,11 @@ export default function CheckoutPage() {
                     </label>
                     <input
                       type="text"
+                      name="firstName"
                       defaultValue="John"
+                      onFocus={() => handleFieldFocus('shipping_first_name', 'text')}
+                      onChange={(e) => handleFieldChange('shipping_first_name', 'text', e)}
+                      onBlur={(e) => handleFieldBlur('shipping_first_name', 'text', e)}
                       className="w-full border rounded-md px-3 py-2"
                     />
                   </div>
@@ -113,7 +150,11 @@ export default function CheckoutPage() {
                     </label>
                     <input
                       type="text"
+                      name="lastName"
                       defaultValue="Doe"
+                      onFocus={() => handleFieldFocus('shipping_last_name', 'text')}
+                      onChange={(e) => handleFieldChange('shipping_last_name', 'text', e)}
+                      onBlur={(e) => handleFieldBlur('shipping_last_name', 'text', e)}
                       className="w-full border rounded-md px-3 py-2"
                     />
                   </div>
@@ -123,7 +164,11 @@ export default function CheckoutPage() {
                     </label>
                     <input
                       type="email"
+                      name="email"
                       defaultValue="john.doe@example.com"
+                      onFocus={() => handleFieldFocus('shipping_email', 'email')}
+                      onChange={(e) => handleFieldChange('shipping_email', 'email', e)}
+                      onBlur={(e) => handleFieldBlur('shipping_email', 'email', e)}
                       className="w-full border rounded-md px-3 py-2"
                     />
                   </div>
@@ -133,7 +178,11 @@ export default function CheckoutPage() {
                     </label>
                     <input
                       type="text"
+                      name="address"
                       defaultValue="123 Main Street"
+                      onFocus={() => handleFieldFocus('shipping_address', 'text')}
+                      onChange={(e) => handleFieldChange('shipping_address', 'text', e)}
+                      onBlur={(e) => handleFieldBlur('shipping_address', 'text', e)}
                       className="w-full border rounded-md px-3 py-2"
                     />
                   </div>
@@ -143,7 +192,11 @@ export default function CheckoutPage() {
                     </label>
                     <input
                       type="text"
+                      name="apartment"
                       defaultValue="Apt 4B"
+                      onFocus={() => handleFieldFocus('shipping_apartment', 'text')}
+                      onChange={(e) => handleFieldChange('shipping_apartment', 'text', e)}
+                      onBlur={(e) => handleFieldBlur('shipping_apartment', 'text', e)}
                       className="w-full border rounded-md px-3 py-2"
                     />
                   </div>
@@ -153,7 +206,11 @@ export default function CheckoutPage() {
                     </label>
                     <input
                       type="text"
+                      name="city"
                       defaultValue="San Francisco"
+                      onFocus={() => handleFieldFocus('shipping_city', 'text')}
+                      onChange={(e) => handleFieldChange('shipping_city', 'text', e)}
+                      onBlur={(e) => handleFieldBlur('shipping_city', 'text', e)}
                       className="w-full border rounded-md px-3 py-2"
                     />
                   </div>
@@ -161,7 +218,14 @@ export default function CheckoutPage() {
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       State
                     </label>
-                    <select className="w-full border rounded-md px-3 py-2" defaultValue="CA">
+                    <select
+                      name="state"
+                      className="w-full border rounded-md px-3 py-2"
+                      defaultValue="CA"
+                      onFocus={() => handleFieldFocus('shipping_state', 'select')}
+                      onChange={(e) => handleFieldChange('shipping_state', 'select', e)}
+                      onBlur={(e) => handleFieldBlur('shipping_state', 'select', e)}
+                    >
                       <option value="CA">California</option>
                       <option value="NY">New York</option>
                       <option value="TX">Texas</option>
@@ -173,7 +237,11 @@ export default function CheckoutPage() {
                     </label>
                     <input
                       type="text"
+                      name="zipCode"
                       defaultValue="94102"
+                      onFocus={() => handleFieldFocus('shipping_zip_code', 'text')}
+                      onChange={(e) => handleFieldChange('shipping_zip_code', 'text', e)}
+                      onBlur={(e) => handleFieldBlur('shipping_zip_code', 'text', e)}
                       className="w-full border rounded-md px-3 py-2"
                     />
                   </div>
@@ -183,7 +251,11 @@ export default function CheckoutPage() {
                     </label>
                     <input
                       type="tel"
+                      name="phone"
                       defaultValue="(555) 123-4567"
+                      onFocus={() => handleFieldFocus('shipping_phone', 'tel')}
+                      onChange={(e) => handleFieldChange('shipping_phone', 'tel', e)}
+                      onBlur={(e) => handleFieldBlur('shipping_phone', 'tel', e)}
                       className="w-full border rounded-md px-3 py-2"
                     />
                   </div>
@@ -231,8 +303,12 @@ export default function CheckoutPage() {
                     </label>
                     <input
                       type="text"
+                      name="cardNumber"
                       placeholder="1234 5678 9012 3456"
                       defaultValue="4242 4242 4242 4242"
+                      onFocus={() => handleFieldFocus('payment_card_number', 'text')}
+                      onChange={(e) => handleFieldChange('payment_card_number', 'text', e)}
+                      onBlur={(e) => handleFieldBlur('payment_card_number', 'text', e)}
                       className="w-full border rounded-md px-3 py-2"
                     />
                   </div>
@@ -243,8 +319,12 @@ export default function CheckoutPage() {
                       </label>
                       <input
                         type="text"
+                        name="expiryDate"
                         placeholder="MM/YY"
                         defaultValue="12/25"
+                        onFocus={() => handleFieldFocus('payment_expiry_date', 'text')}
+                        onChange={(e) => handleFieldChange('payment_expiry_date', 'text', e)}
+                        onBlur={(e) => handleFieldBlur('payment_expiry_date', 'text', e)}
                         className="w-full border rounded-md px-3 py-2"
                       />
                     </div>
@@ -254,8 +334,12 @@ export default function CheckoutPage() {
                       </label>
                       <input
                         type="text"
+                        name="cvc"
                         placeholder="123"
                         defaultValue="123"
+                        onFocus={() => handleFieldFocus('payment_cvc', 'text')}
+                        onChange={(e) => handleFieldChange('payment_cvc', 'text', e)}
+                        onBlur={(e) => handleFieldBlur('payment_cvc', 'text', e)}
                         className="w-full border rounded-md px-3 py-2"
                       />
                     </div>
@@ -266,7 +350,11 @@ export default function CheckoutPage() {
                     </label>
                     <input
                       type="text"
+                      name="cardholderName"
                       defaultValue="John Doe"
+                      onFocus={() => handleFieldFocus('payment_cardholder_name', 'text')}
+                      onChange={(e) => handleFieldChange('payment_cardholder_name', 'text', e)}
+                      onBlur={(e) => handleFieldBlur('payment_cardholder_name', 'text', e)}
                       className="w-full border rounded-md px-3 py-2"
                     />
                   </div>

@@ -94,13 +94,17 @@ export const trackEvent = async (
 
   // Also send to local JSON file via API
   try {
-    await fetch('/api/events', {
+    const response = await fetch('/api/events', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(eventData),
     });
+    
+    if (!response.ok) {
+      console.error('Failed to write event to JSON file:', response.status, response.statusText);
+    }
   } catch (error) {
     console.error('Failed to write event to JSON file:', error);
   }
