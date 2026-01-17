@@ -5,6 +5,8 @@ import { Text, Button, Badge, Icon } from '@shopify/polaris';
 import { StarFilledIcon, CartIcon } from '@shopify/polaris-icons';
 import { Product } from '../data/products';
 import { useCart } from '../context/CartContext';
+import { usePageTracking } from '../hooks/usePageTracking';
+import { trackEvent } from '../amplitude';
 
 interface ProductCardProps {
   product: Product;
@@ -12,10 +14,22 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const { addToCart } = useCart();
+  const { pageLoadTime } = usePageTracking();
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    
+    const timeSincePageLoad = pageLoadTime ? Date.now() - pageLoadTime : undefined;
+    trackEvent('button_clicked', {
+      button_id: `add_to_cart_${product.id}`,
+      button_text: 'Add to Cart',
+      button_type: 'add_to_cart',
+      product_id: product.id,
+      product_name: product.title,
+      time_since_page_load: timeSincePageLoad,
+    });
+    
     if (product.inStock) {
       addToCart(product);
     }

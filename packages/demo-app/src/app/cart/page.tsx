@@ -1,17 +1,38 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { Text, Button, Badge, Icon, Divider } from '@shopify/polaris';
 import { DeleteIcon } from '@shopify/polaris-icons';
 import { useCart } from '../../context/CartContext';
+import { usePageTracking } from '../../hooks/usePageTracking';
+import ScrollTracker from '../../components/tracking/ScrollTracker';
+import { trackEvent } from '../../amplitude';
+import { useFormTracking } from '../../hooks/useFormTracking';
 
 export default function CartPage() {
-  const { items, updateQuantity, removeFromCart, getCartTotal } = useCart();
+  const { pageLoadTime } = usePageTracking();
+  const { items, updateQuantity, removeFromCart, getCartTotal, appliedPromo, applyPromo, removePromo, getDiscount } = useCart();
+  const [promoCode, setPromoCode] = useState('');
+  const [promoError, setPromoError] = useState('');
 
   const subtotal = getCartTotal();
+  const discount = getDiscount();
   const shipping = subtotal > 50 ? 0 : 9.99;
-  const tax = subtotal * 0.08;
-  const total = subtotal + shipping + tax;
+  const tax = (subtotal - discount) * 0.08;
+  const total = subtotal - discount + shipping + tax;
+
+  const handleApplyPromo = () => {
+    if (appliedPromo) {
+      setPromoError('Promo code already applied');
+      return;
+    }
+    if (applyPromo(promoCode)) {
+      setPromoError('');
+    } else {
+      setPromoError('Invalid promo code');
+    }
+  };
 
   if (items.length === 0) {
     return (
@@ -85,14 +106,40 @@ export default function CartPage() {
                       {/* Quantity */}
                       <div className="flex items-center border rounded-md">
                         <button
-                          onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
+                          onClick={() => {
+                            const timeSincePageLoad = pageLoadTime ? Date.now() - pageLoadTime : undefined;
+                            trackEvent('button_clicked', {
+                              button_id: `quantity_decrease_${item.product.id}`,
+                              button_text: '-',
+                              button_type: 'quantity_decrease',
+                              product_id: item.product.id,
+                              product_name: item.product.title,
+                              current_quantity: item.quantity,
+                              new_quantity: item.quantity - 1,
+                              time_since_page_load: timeSincePageLoad,
+                            });
+                            updateQuantity(item.product.id, item.quantity - 1);
+                          }}
                           className="px-3 py-1.5 hover:bg-gray-50 text-sm"
                         >
                           -
                         </button>
                         <span className="px-4 py-1.5 border-x text-sm">{item.quantity}</span>
                         <button
-                          onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                          onClick={() => {
+                            const timeSincePageLoad = pageLoadTime ? Date.now() - pageLoadTime : undefined;
+                            trackEvent('button_clicked', {
+                              button_id: `quantity_increase_${item.product.id}`,
+                              button_text: '+',
+                              button_type: 'quantity_increase',
+                              product_id: item.product.id,
+                              product_name: item.product.title,
+                              current_quantity: item.quantity,
+                              new_quantity: item.quantity + 1,
+                              time_since_page_load: timeSincePageLoad,
+                            });
+                            updateQuantity(item.product.id, item.quantity + 1);
+                          }}
                           className="px-3 py-1.5 hover:bg-gray-50 text-sm"
                         >
                           +
@@ -101,7 +148,18 @@ export default function CartPage() {
 
                       {/* Remove */}
                       <button
-                        onClick={() => removeFromCart(item.product.id)}
+                        onClick={() => {
+                          const timeSincePageLoad = pageLoadTime ? Date.now() - pageLoadTime : undefined;
+                          trackEvent('button_clicked', {
+                            button_id: `remove_from_cart_${item.product.id}`,
+                            button_text: 'Remove',
+                            button_type: 'remove_from_cart',
+                            product_id: item.product.id,
+                            product_name: item.product.title,
+                            time_since_page_load: timeSincePageLoad,
+                          });
+                          removeFromCart(item.product.id);
+                        }}
                         className="text-red-500 hover:text-red-700 flex items-center gap-1 text-sm"
                       >
                         <Icon source={DeleteIcon} />
@@ -135,6 +193,12 @@ export default function CartPage() {
                 <Text as="span" tone="subdued">Subtotal</Text>
                 <Text as="span">${subtotal.toFixed(2)}</Text>
               </div>
+              {appliedPromo && (
+                <div className="flex justify-between text-green-600">
+                  <Text as="span">Discount (10%)</Text>
+                  <Text as="span">-${discount.toFixed(2)}</Text>
+                </div>
+              )}
               <div className="flex justify-between">
                 <Text as="span" tone="subdued">Shipping</Text>
                 <Text as="span">
@@ -164,14 +228,41 @@ export default function CartPage() {
 
             <div className="mt-6">
               <Link href="/checkout">
-                <Button variant="primary" size="large" fullWidth>
+                <Button 
+                  variant="primary" 
+                  size="large" 
+                  fullWidth
+                  onClick={() => {
+                    const timeSincePageLoad = pageLoadTime ? Date.now() - pageLoadTime : undefined;
+                    trackEvent('button_clicked', {
+                      button_id: 'proceed_to_checkout',
+                      button_text: 'Proceed to Checkout',
+                      button_type: 'checkout',
+                      cart_total: total,
+                      time_since_page_load: timeSincePageLoad,
+                    });
+                  }}
+                >
                   Proceed to Checkout
                 </Button>
               </Link>
             </div>
 
             <div className="mt-4">
-              <Button size="large" fullWidth>
+              <Button 
+                size="large" 
+                fullWidth
+                onClick={() => {
+                  const timeSincePageLoad = pageLoadTime ? Date.now() - pageLoadTime : undefined;
+                  trackEvent('button_clicked', {
+                    button_id: 'paypal_checkout',
+                    button_text: 'PayPal',
+                    button_type: 'paypal_checkout',
+                    cart_total: total,
+                    time_since_page_load: timeSincePageLoad,
+                  });
+                }}
+              >
                 PayPal
               </Button>
             </div>
@@ -181,14 +272,49 @@ export default function CartPage() {
               <Text as="h3" variant="bodySm" fontWeight="medium">
                 Have a promo code?
               </Text>
-              <div className="flex gap-2 mt-2">
-                <input
-                  type="text"
-                  placeholder="Enter code"
-                  className="flex-1 border rounded-md px-3 py-2 text-sm"
-                />
-                <Button>Apply</Button>
-              </div>
+              {appliedPromo ? (
+                <div className="mt-2 p-3 bg-green-50 rounded-md text-sm text-green-700 flex items-center justify-between">
+                  <span>Code "{appliedPromo}" applied - 10% off!</span>
+                  <button
+                    onClick={() => {
+                      removePromo();
+                      setPromoCode('');
+                    }}
+                    className="text-green-800 hover:underline text-xs"
+                  >
+                    Remove
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <div className="flex gap-2 mt-2">
+                    <input
+                      type="text"
+                      placeholder="Enter code"
+                      value={promoCode}
+                      onChange={(e) => setPromoCode(e.target.value)}
+                      className="flex-1 border rounded-md px-3 py-2 text-sm"
+                    />
+                    <Button
+                      onClick={() => {
+                        const timeSincePageLoad = pageLoadTime ? Date.now() - pageLoadTime : undefined;
+                        trackEvent('button_clicked', {
+                          button_id: 'apply_promo_code',
+                          button_text: 'Apply',
+                          button_type: 'apply_promo',
+                          time_since_page_load: timeSincePageLoad,
+                        });
+                        handleApplyPromo();
+                      }}
+                    >
+                      Apply
+                    </Button>
+                  </div>
+                  {promoError && (
+                    <p className="mt-1 text-sm text-red-600">{promoError}</p>
+                  )}
+                </>
+              )}
             </div>
           </div>
         </div>

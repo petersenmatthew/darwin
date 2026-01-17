@@ -4,8 +4,11 @@ import Link from 'next/link';
 import { Text, Button, Badge } from '@shopify/polaris';
 import { products } from '../../data/products';
 import ProductCard from '../../components/ProductCard';
+import { usePageTracking } from '../../hooks/usePageTracking';
+import ScrollTracker from '../../components/tracking/ScrollTracker';
 
 export default function AccessoriesPage() {
+  usePageTracking();
   const accessoriesProducts = products.filter(p => p.category === 'Accessories');
 
   return (
@@ -18,7 +21,7 @@ export default function AccessoriesPage() {
               <Text as="p" variant="bodySm" fontWeight="medium">
                 <span className="text-gray-400">PREMIUM COLLECTION</span>
               </Text>
-              <Text as="h1" variant="heading3xl" fontWeight="bold">
+              <Text as="h1" variant="heading2xl" fontWeight="bold">
                 Accessories That Define You
               </Text>
               <p className="mt-4 text-lg text-gray-400">

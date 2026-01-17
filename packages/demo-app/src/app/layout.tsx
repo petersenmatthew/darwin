@@ -1,27 +1,40 @@
+'use client';
+
 import './globals.css';
-import type { Metadata } from 'next';
+// import type { Metadata } from 'next';
 import PolarisProvider from '../components/PolarisProvider';
 import Navigation from '../components/Navigation';
 import { CartProvider } from '../context/CartContext';
 import { WishlistProvider } from '../context/WishlistContext';
 import Link from 'next/link';
-
-export const metadata: Metadata = {
-  title: 'ShopWave - Demo Store',
-  description: 'A demo e-commerce store',
-};
+import { initAmplitude } from '../amplitude';
+import { useEffect } from 'react';
+import { useSessionTracking } from '../hooks/useSessionTracking';
+import ScrollTracker from '../components/tracking/ScrollTracker';
+// export const metadata: Metadata = {
+//   title: 'ShopWave - Demo Store',
+//   description: 'A demo e-commerce store',
+// };
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return (
+  useEffect(() => {
+    initAmplitude();
+  }, []);
+
+  // Track session start/end
+  useSessionTracking();
+
+  return (  
     <html lang="en">
       <body className="min-h-screen bg-gray-50">
         <PolarisProvider>
           <CartProvider>
             <WishlistProvider>
+              <ScrollTracker />
               <Navigation />
               <main>{children}</main>
 

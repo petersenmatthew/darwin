@@ -4,8 +4,11 @@ import Link from 'next/link';
 import { Text, Button } from '@shopify/polaris';
 import { products } from '../data/products';
 import ProductCard from '../components/ProductCard';
+import { usePageTracking } from '../hooks/usePageTracking';
+import { trackEvent } from '../amplitude';
 
 export default function Home() {
+  const { pageLoadTime } = usePageTracking();
   const featuredProducts = products.slice(0, 4);
 
   return (
@@ -14,7 +17,7 @@ export default function Home() {
       <section className="bg-gradient-to-r from-green-600 to-green-700 text-white">
         <div className="max-w-7xl mx-auto px-4 py-20">
           <div className="max-w-2xl">
-            <Text as="h1" variant="heading3xl" fontWeight="bold">
+            <Text as="h1" variant="heading2xl" fontWeight="bold">
               New Season Arrivals
             </Text>
             <p className="mt-4 text-lg text-green-100">
@@ -22,7 +25,20 @@ export default function Home() {
             </p>
             <div className="mt-8 flex gap-4">
               <Link href="/products">
-                <Button size="large">Shop Now</Button>
+                <Button 
+                  size="large"
+                  onClick={() => {
+                    const timeSincePageLoad = pageLoadTime ? Date.now() - pageLoadTime : undefined;
+                    trackEvent('button_clicked', {
+                      button_id: 'shop_now',
+                      button_text: 'Shop Now',
+                      button_type: 'cta',
+                      time_since_page_load: timeSincePageLoad,
+                    });
+                  }}
+                >
+                  Shop Now
+                </Button>
               </Link>
               <Button size="large" variant="plain">
                 Learn More
