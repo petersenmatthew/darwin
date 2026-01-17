@@ -1,8 +1,0 @@
-{
-  "website": "https://uofthacks.com",
-  "task": "Find the requirements to be a volunteer",
-  "model": "google/gemini-3-flash-preview",
-  "maxSteps": 20,
-  "env": "LOCAL",
-  "thinkingFormat": "Keep your thinking concise and focused. Use 2-3 short sentences maximum. Be direct and avoid long paragraphs."
-}
