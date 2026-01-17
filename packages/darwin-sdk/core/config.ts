@@ -12,6 +12,7 @@ export interface DarwinConfig {
   projectId?: string;
   verbose?: 0 | 1 | 2;
   systemPrompt?: string;
+  thinkingFormat?: string;
 }
 
 const DEFAULT_CONFIG_PATH = path.join(process.cwd(), "darwin.config.json");
@@ -95,5 +96,6 @@ export function toBrowserAgentConfig(config: DarwinConfig): BrowserAgentConfig {
     projectId: config.projectId,
     verbose: config.verbose,
     systemPrompt: config.systemPrompt,
+    thinkingFormat: config.thinkingFormat,
   };
 }

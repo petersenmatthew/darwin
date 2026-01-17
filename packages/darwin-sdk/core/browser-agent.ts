@@ -11,6 +11,7 @@ export interface BrowserAgentConfig {
   projectId?: string;
   verbose?: 0 | 1 | 2;
   systemPrompt?: string;
+  thinkingFormat?: string;
 }
 
 export class BrowserAgent {
@@ -64,18 +65,33 @@ export class BrowserAgent {
       throw new Error("Agent not initialized. Call init() first.");
     }
 
-    // Default system prompt that encourages thinking
-    const defaultSystemPrompt = `You are a helpful browser automation assistant. 
+    // Default thinking format instructions
+    const defaultThinkingFormat = `Keep your thinking concise and focused. Use 2-3 short sentences maximum. Be direct and avoid long paragraphs.`;
+    
+    const thinkingFormatInstructions = this.config.thinkingFormat || defaultThinkingFormat;
 
-IMPORTANT: Before taking any action, you MUST use the 'think' tool to explain:
+    // Default system prompt that encourages thinking
+    const defaultSystemPrompt = `<role>
+You are a helpful browser automation assistant specialized in web interaction and task execution.
+</role>
+
+<workflow>
+Before taking any action, you MUST use the 'think' tool to explain:
 1. What you're observing on the page
 2. What you're trying to accomplish
 3. Why you're choosing this specific action
 4. What you expect to happen
+</workflow>
 
-Always use the 'think' tool before calling other tools like screenshot, ariaTree, click, scroll, etc. This helps users understand your reasoning process.
+<thinking_format>
+${thinkingFormatInstructions}
+</thinking_format>
 
-After thinking, proceed with your action.`;
+<rules>
+- Always use the 'think' tool before calling other tools like screenshot, ariaTree, click, scroll, etc.
+- This helps users understand your reasoning process and improves transparency.
+- After thinking, proceed with your action.
+</rules>`;
 
     const agent = this.stagehand.agent({
       mode: "hybrid",
@@ -93,6 +109,7 @@ After thinking, proceed with your action.`;
     // Track step history to force thinking
     let stepNumber = 0;
     let lastStepToolCalls: any[] = [];
+    let lastStepHadThink = false;
 
     const streamResult = await agent.execute({
       instruction: this.config.task,
@@ -102,12 +119,11 @@ After thinking, proceed with your action.`;
         prepareStep: async (stepContext: any) => {
           stepNumber++;
           
-          // Check if the last step had any non-think tool calls without a preceding think
-          const hadNonThinkActions = lastStepToolCalls.some(tc => tc.toolName !== 'think');
-          const hadThink = lastStepToolCalls.some(tc => tc.toolName === 'think');
+          // Always require thinking at the start of each step (except first step)
+          // OR if the previous step had actions without thinking
+          const shouldRequireThinking = stepNumber > 1 && (!lastStepHadThink || lastStepToolCalls.some((tc: any) => tc.toolName !== 'think'));
           
-          // If last step had actions but no think, inject a requirement for this step
-          if (hadNonThinkActions && !hadThink && stepNumber > 1) {
+          if (shouldRequireThinking) {
             const messages = stepContext.messages || [];
             
             // Add a user message requiring thinking before actions
@@ -122,8 +138,6 @@ After thinking, proceed with your action.`;
             };
           }
           
-          // Reset for this step
-          lastStepToolCalls = [];
           return stepContext;
         },
         // Capture think tool calls when steps finish
@@ -131,6 +145,7 @@ After thinking, proceed with your action.`;
           // Store tool calls from this step
           if (event.toolCalls) {
             lastStepToolCalls = event.toolCalls;
+            lastStepHadThink = event.toolCalls.some((tc: any) => tc.toolName === 'think');
             
             for (const toolCall of event.toolCalls) {
               if (toolCall.toolName === 'think') {
@@ -157,6 +172,9 @@ After thinking, proceed with your action.`;
                 console.log(`\n🔧 Action: ${toolCall.toolName}`);
               }
             }
+          } else {
+            lastStepToolCalls = [];
+            lastStepHadThink = false;
           }
         },
       },
