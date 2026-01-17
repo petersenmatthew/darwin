@@ -4,8 +4,8 @@ import { useEffect, useRef } from 'react';
 import { trackEvent, getPageName } from '../amplitude';
 
 export const useScrollTracking = (pageLoadTime?: number) => {
-  const trackedDepths = useRef<Set<number>>(new Set());
-  const milestones = [25, 50, 75, 100];
+  const lastScrollTop = useRef<number>(0);
+  const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -17,30 +17,38 @@ export const useScrollTracking = (pageLoadTime?: number) => {
         ? Math.round((scrollTop / scrollableHeight) * 100)
         : 0;
 
-      milestones.forEach((milestone) => {
-        if (scrollPercent >= milestone && !trackedDepths.current.has(milestone)) {
-          trackedDepths.current.add(milestone);
-          const timeSincePageLoad = pageLoadTime 
-            ? Date.now() - pageLoadTime 
-            : undefined;
+      // Determine scroll direction
+      const scrollDirection = scrollTop > lastScrollTop.current ? 'down' : 'up';
+      lastScrollTop.current = scrollTop;
 
-          trackEvent('scroll_depth_reached', {
-            scroll_depth: milestone,
-            scroll_depth_percent: milestone,
-            time_since_page_load: timeSincePageLoad,
-            page_name: getPageName(),
-          });
-        }
-      });
+      // Clear any pending timeout
+      if (scrollTimeout.current) {
+        clearTimeout(scrollTimeout.current);
+      }
+
+      // Track scroll event when user stops scrolling (after 300ms of no scroll)
+      scrollTimeout.current = setTimeout(() => {
+        const timeSincePageLoad = pageLoadTime 
+          ? Date.now() - pageLoadTime 
+          : undefined;
+
+        trackEvent('scroll', {
+          scroll_direction: scrollDirection,
+          scroll_position: scrollTop,
+          scroll_percent: scrollPercent,
+          time_since_page_load: timeSincePageLoad,
+          page_name: getPageName(),
+        });
+      }, 300);
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // Check initial scroll position
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      if (scrollTimeout.current) {
+        clearTimeout(scrollTimeout.current);
+      }
     };
   }, [pageLoadTime]);
-
-  return { trackedDepths: trackedDepths.current };
 };

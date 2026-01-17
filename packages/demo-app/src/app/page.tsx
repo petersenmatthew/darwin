@@ -5,7 +5,6 @@ import { Text, Button } from '@shopify/polaris';
 import { products } from '../data/products';
 import ProductCard from '../components/ProductCard';
 import { usePageTracking } from '../hooks/usePageTracking';
-import ScrollTracker from '../components/tracking/ScrollTracker';
 import { trackEvent } from '../amplitude';
 
 export default function Home() {
@@ -14,7 +13,6 @@ export default function Home() {
 
   return (
     <div>
-      <ScrollTracker />
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-green-600 to-green-700 text-white">
         <div className="max-w-7xl mx-auto px-4 py-20">
