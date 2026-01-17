@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "npm run dev --workspaces",
     "build": "npm run build --workspaces",
-    "run-sdk-on-demo": "cd packages/demo-app && npx ts-node --require ../darwin-sdk/polyfill.js ../darwin-sdk/cli/index.ts run"
+    "run-sdk-on-demo": "cd packages/demo-app && npx ts-node --require ../darwin-sdk/polyfill.js ../darwin-sdk/cli/index.ts run",
+    "evolve": "cd packages/demo-app && npx ts-node --require ../darwin-sdk/polyfill.js ../darwin-sdk/cli/index.ts evolve"
   }
 }

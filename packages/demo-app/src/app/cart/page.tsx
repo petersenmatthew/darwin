@@ -12,25 +12,22 @@ import { useFormTracking } from '../../hooks/useFormTracking';
 
 export default function CartPage() {
   const { pageLoadTime } = usePageTracking();
-  const { items, updateQuantity, removeFromCart, getCartTotal } = useCart();
+  const { items, updateQuantity, removeFromCart, getCartTotal, appliedPromo, applyPromo, removePromo, getDiscount } = useCart();
   const [promoCode, setPromoCode] = useState('');
-  const [appliedPromo, setAppliedPromo] = useState<string | null>(null);
   const [promoError, setPromoError] = useState('');
 
   const subtotal = getCartTotal();
-  const discount = appliedPromo ? subtotal * 0.1 : 0; // 10% off
+  const discount = getDiscount();
   const shipping = subtotal > 50 ? 0 : 9.99;
   const tax = (subtotal - discount) * 0.08;
   const total = subtotal - discount + shipping + tax;
 
   const handleApplyPromo = () => {
-    const code = promoCode.trim().toUpperCase();
     if (appliedPromo) {
       setPromoError('Promo code already applied');
       return;
     }
-    if (code === 'WELCOME10') {
-      setAppliedPromo(code);
+    if (applyPromo(promoCode)) {
       setPromoError('');
     } else {
       setPromoError('Invalid promo code');
@@ -280,7 +277,7 @@ export default function CartPage() {
                   <span>Code "{appliedPromo}" applied - 10% off!</span>
                   <button
                     onClick={() => {
-                      setAppliedPromo(null);
+                      removePromo();
                       setPromoCode('');
                     }}
                     className="text-green-800 hover:underline text-xs"
