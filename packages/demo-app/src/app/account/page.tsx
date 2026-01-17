@@ -2,8 +2,11 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { usePageTracking } from '../../hooks/usePageTracking';
+import ScrollTracker from '../../components/tracking/ScrollTracker';
 
 export default function AccountPage() {
+  usePageTracking();
   const [activeTab, setActiveTab] = useState('profile');
   const [profileData, setProfileData] = useState({
     firstName: 'John',
