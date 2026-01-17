@@ -4,8 +4,11 @@ import Link from 'next/link';
 import { Text, Button, Badge } from '@shopify/polaris';
 import { products } from '../../data/products';
 import ProductCard from '../../components/ProductCard';
+import { usePageTracking } from '../../hooks/usePageTracking';
+import ScrollTracker from '../../components/tracking/ScrollTracker';
 
 export default function ElectronicsPage() {
+  usePageTracking();
   const electronicsProducts = products.filter(p => p.category === 'Electronics');
   const featuredProduct = electronicsProducts[0];
   const otherProducts = electronicsProducts.slice(1);

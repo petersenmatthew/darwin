@@ -1,12 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import { Text, Icon } from '@shopify/polaris';
 import { CartIcon, SearchIcon, PersonIcon } from '@shopify/polaris-icons';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 import AuthModal from './AuthModal';
+import TrackedLink from './tracking/TrackedLink';
 
 export default function Navigation() {
   const { getCartCount } = useCart();
@@ -28,41 +28,41 @@ export default function Navigation() {
         <div className="max-w-7xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <Link href="/" className="flex items-center gap-2">
+            <TrackedLink href="/" className="flex items-center gap-2">
               <div className="w-8 h-8 bg-green-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">S</span>
               </div>
               <Text as="span" variant="headingMd" fontWeight="bold">
                 ShopWave
               </Text>
-            </Link>
+            </TrackedLink>
 
             {/* Nav Links - Desktop */}
             <nav className="hidden lg:flex items-center gap-8">
-              <Link href="/products" className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors">
+              <TrackedLink href="/products" className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors">
                 All Products
-              </Link>
-              <Link href="/electronics" className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors">
+              </TrackedLink>
+              <TrackedLink href="/electronics" className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors">
                 Electronics
-              </Link>
-              <Link href="/clothing" className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors">
+              </TrackedLink>
+              <TrackedLink href="/clothing" className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors">
                 Clothing
-              </Link>
-              <Link href="/accessories" className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors">
+              </TrackedLink>
+              <TrackedLink href="/accessories" className="text-gray-600 hover:text-gray-900 text-sm font-medium transition-colors">
                 Accessories
-              </Link>
+              </TrackedLink>
             </nav>
 
             {/* Actions */}
             <div className="flex items-center gap-1">
-              <Link
+              <TrackedLink
                 href="/search"
                 className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-colors"
               >
                 <Icon source={SearchIcon} />
-              </Link>
+              </TrackedLink>
 
-              <Link
+              <TrackedLink
                 href="/wishlist"
                 className="relative p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-colors"
               >
@@ -74,7 +74,7 @@ export default function Navigation() {
                     {wishlistCount > 99 ? '99+' : wishlistCount}
                   </span>
                 )}
-              </Link>
+              </TrackedLink>
 
               <button
                 onClick={() => setShowAuthModal(true)}
@@ -83,14 +83,14 @@ export default function Navigation() {
                 <Icon source={PersonIcon} />
               </button>
 
-              <Link href="/cart" className="relative p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-colors">
+              <TrackedLink href="/cart" className="relative p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-colors">
                 <Icon source={CartIcon} />
                 {cartCount > 0 && (
                   <span className="absolute -top-1 -right-1 bg-green-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
                     {cartCount > 99 ? '99+' : cartCount}
                   </span>
                 )}
-              </Link>
+              </TrackedLink>
 
               {/* Mobile Menu Button */}
               <button
@@ -112,88 +112,88 @@ export default function Navigation() {
           {mobileMenuOpen && (
             <nav className="lg:hidden mt-4 pb-4 border-t pt-4">
               <div className="flex flex-col gap-4">
-                <Link
+                <TrackedLink
                   href="/products"
                   className="text-gray-600 hover:text-gray-900 font-medium transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   All Products
-                </Link>
-                <Link
+                </TrackedLink>
+                <TrackedLink
                   href="/electronics"
                   className="text-gray-600 hover:text-gray-900 font-medium transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Electronics
-                </Link>
-                <Link
+                </TrackedLink>
+                <TrackedLink
                   href="/clothing"
                   className="text-gray-600 hover:text-gray-900 font-medium transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Clothing
-                </Link>
-                <Link
+                </TrackedLink>
+                <TrackedLink
                   href="/accessories"
                   className="text-gray-600 hover:text-gray-900 font-medium transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Accessories
-                </Link>
+                </TrackedLink>
 
                 <div className="border-t pt-4 mt-2">
-                  <Link
+                  <TrackedLink
                     href="/account"
                     className="text-gray-600 hover:text-gray-900 font-medium transition-colors block mb-3"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     My Account
-                  </Link>
-                  <Link
+                  </TrackedLink>
+                  <TrackedLink
                     href="/wishlist"
                     className="text-gray-600 hover:text-gray-900 font-medium transition-colors block mb-3"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Wishlist {wishlistCount > 0 && `(${wishlistCount})`}
-                  </Link>
-                  <Link
+                  </TrackedLink>
+                  <TrackedLink
                     href="/cart"
                     className="text-gray-600 hover:text-gray-900 font-medium transition-colors block"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Cart {cartCount > 0 && `(${cartCount})`}
-                  </Link>
+                  </TrackedLink>
                 </div>
 
                 <div className="border-t pt-4 mt-2">
-                  <Link
+                  <TrackedLink
                     href="/about"
                     className="text-gray-500 hover:text-gray-700 text-sm transition-colors block mb-2"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     About Us
-                  </Link>
-                  <Link
+                  </TrackedLink>
+                  <TrackedLink
                     href="/contact"
                     className="text-gray-500 hover:text-gray-700 text-sm transition-colors block mb-2"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Contact
-                  </Link>
-                  <Link
+                  </TrackedLink>
+                  <TrackedLink
                     href="/faq"
                     className="text-gray-500 hover:text-gray-700 text-sm transition-colors block mb-2"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     FAQ
-                  </Link>
-                  <Link
+                  </TrackedLink>
+                  <TrackedLink
                     href="/shipping"
                     className="text-gray-500 hover:text-gray-700 text-sm transition-colors block"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     Shipping
-                  </Link>
+                  </TrackedLink>
                 </div>
               </div>
             </nav>

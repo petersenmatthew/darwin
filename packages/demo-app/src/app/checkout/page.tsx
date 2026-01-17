@@ -5,11 +5,46 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Text, Button, Divider } from '@shopify/polaris';
 import { useCart } from '../../context/CartContext';
+import { usePageTracking } from '../../hooks/usePageTracking';
+import ScrollTracker from '../../components/tracking/ScrollTracker';
+import { trackEvent } from '../../amplitude';
+import { useFormTracking } from '../../hooks/useFormTracking';
 
 export default function CheckoutPage() {
+  const { pageLoadTime } = usePageTracking();
   const router = useRouter();
   const { items, getCartTotal, clearCart } = useCart();
   const [step, setStep] = useState(1);
+  
+  // Form tracking for checkout forms
+  const {
+    trackFieldFocus,
+    trackFieldUnfocus,
+    trackFieldChanged,
+    trackFieldCompleted,
+    trackFormSubmitted,
+  } = useFormTracking({
+    formId: 'checkout_form',
+    formName: 'Checkout Form',
+    pageLoadTime,
+  });
+
+  // Helper functions for form field tracking
+  const handleFieldFocus = (fieldName: string, fieldType: string = 'text') => {
+    trackFieldFocus(fieldName, fieldType);
+  };
+
+  const handleFieldBlur = (fieldName: string, fieldType: string = 'text', e?: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const hasValue = e?.target?.value && e.target.value.trim() !== '';
+    trackFieldUnfocus(fieldName, fieldType, hasValue);
+    if (hasValue) {
+      trackFieldCompleted(fieldName, fieldType, true);
+    }
+  };
+
+  const handleFieldChange = (fieldName: string, fieldType: string = 'text', e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    trackFieldChanged(fieldName, fieldType, e.target.value);
+  };
 
   const subtotal = getCartTotal();
   const shipping = subtotal > 50 ? 0 : 9.99;
@@ -49,6 +84,16 @@ export default function CheckoutPage() {
   }
 
   const handlePlaceOrder = () => {
+    const timeSincePageLoad = pageLoadTime ? Date.now() - pageLoadTime : undefined;
+    trackEvent('button_clicked', {
+      button_id: 'place_order',
+      button_text: 'Place Order',
+      button_type: 'place_order',
+      cart_total: total,
+      time_since_page_load: timeSincePageLoad,
+    });
+    // Track form submission
+    trackFormSubmitted();
     clearCart();
     router.push('/checkout/success');
   };
@@ -100,7 +145,11 @@ export default function CheckoutPage() {
                     </label>
                     <input
                       type="text"
+                      name="firstName"
                       placeholder="John"
+                      onFocus={() => handleFieldFocus('shipping_first_name', 'text')}
+                      onChange={(e) => handleFieldChange('shipping_first_name', 'text', e)}
+                      onBlur={(e) => handleFieldBlur('shipping_first_name', 'text', e)}
                       className="w-full border rounded-md px-3 py-2"
                       required
                     />
@@ -111,7 +160,11 @@ export default function CheckoutPage() {
                     </label>
                     <input
                       type="text"
+                      name="lastName"
                       placeholder="Doe"
+                      onFocus={() => handleFieldFocus('shipping_last_name', 'text')}
+                      onChange={(e) => handleFieldChange('shipping_last_name', 'text', e)}
+                      onBlur={(e) => handleFieldBlur('shipping_last_name', 'text', e)}
                       className="w-full border rounded-md px-3 py-2"
                       required
                     />
@@ -122,7 +175,11 @@ export default function CheckoutPage() {
                     </label>
                     <input
                       type="email"
+                      name="email"
                       placeholder="john.doe@example.com"
+                      onFocus={() => handleFieldFocus('shipping_email', 'email')}
+                      onChange={(e) => handleFieldChange('shipping_email', 'email', e)}
+                      onBlur={(e) => handleFieldBlur('shipping_email', 'email', e)}
                       className="w-full border rounded-md px-3 py-2"
                       required
                     />
@@ -133,7 +190,11 @@ export default function CheckoutPage() {
                     </label>
                     <input
                       type="text"
+                      name="address"
                       placeholder="123 Main Street"
+                      onFocus={() => handleFieldFocus('shipping_address', 'text')}
+                      onChange={(e) => handleFieldChange('shipping_address', 'text', e)}
+                      onBlur={(e) => handleFieldBlur('shipping_address', 'text', e)}
                       className="w-full border rounded-md px-3 py-2"
                       required
                     />
@@ -144,7 +205,11 @@ export default function CheckoutPage() {
                     </label>
                     <input
                       type="text"
+                      name="apartment"
                       placeholder="Apt 4B"
+                      onFocus={() => handleFieldFocus('shipping_apartment', 'text')}
+                      onChange={(e) => handleFieldChange('shipping_apartment', 'text', e)}
+                      onBlur={(e) => handleFieldBlur('shipping_apartment', 'text', e)}
                       className="w-full border rounded-md px-3 py-2"
                     />
                   </div>
@@ -154,7 +219,11 @@ export default function CheckoutPage() {
                     </label>
                     <input
                       type="text"
+                      name="city"
                       placeholder="San Francisco"
+                      onFocus={() => handleFieldFocus('shipping_city', 'text')}
+                      onChange={(e) => handleFieldChange('shipping_city', 'text', e)}
+                      onBlur={(e) => handleFieldBlur('shipping_city', 'text', e)}
                       className="w-full border rounded-md px-3 py-2"
                       required
                     />
@@ -163,7 +232,14 @@ export default function CheckoutPage() {
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       State <span className="text-red-500">*</span>
                     </label>
-                    <select className="w-full border rounded-md px-3 py-2" required defaultValue="">
+                    <select
+                      name="state"
+                      className="w-full border rounded-md px-3 py-2"
+                      defaultValue=""
+                      onFocus={() => handleFieldFocus('shipping_state', 'select')}
+                      onChange={(e) => handleFieldChange('shipping_state', 'select', e)}
+                      onBlur={(e) => handleFieldBlur('shipping_state', 'select', e)}
+                    >
                       <option value="" disabled>Select state</option>
                       <option value="CA">California</option>
                       <option value="NY">New York</option>
@@ -176,7 +252,11 @@ export default function CheckoutPage() {
                     </label>
                     <input
                       type="text"
+                      name="zipCode"
                       placeholder="94102"
+                      onFocus={() => handleFieldFocus('shipping_zip_code', 'text')}
+                      onChange={(e) => handleFieldChange('shipping_zip_code', 'text', e)}
+                      onBlur={(e) => handleFieldBlur('shipping_zip_code', 'text', e)}
                       className="w-full border rounded-md px-3 py-2"
                       required
                     />
@@ -187,7 +267,11 @@ export default function CheckoutPage() {
                     </label>
                     <input
                       type="tel"
+                      name="phone"
                       placeholder="(555) 123-4567"
+                      onFocus={() => handleFieldFocus('shipping_phone', 'tel')}
+                      onChange={(e) => handleFieldChange('shipping_phone', 'tel', e)}
+                      onBlur={(e) => handleFieldBlur('shipping_phone', 'tel', e)}
                       className="w-full border rounded-md px-3 py-2"
                       required
                     />
@@ -236,7 +320,11 @@ export default function CheckoutPage() {
                     </label>
                     <input
                       type="text"
+                      name="cardNumber"
                       placeholder="1234 5678 9012 3456"
+                      onFocus={() => handleFieldFocus('payment_card_number', 'text')}
+                      onChange={(e) => handleFieldChange('payment_card_number', 'text', e)}
+                      onBlur={(e) => handleFieldBlur('payment_card_number', 'text', e)}
                       className="w-full border rounded-md px-3 py-2"
                       required
                     />
@@ -248,7 +336,11 @@ export default function CheckoutPage() {
                       </label>
                       <input
                         type="text"
+                        name="expiryDate"
                         placeholder="MM/YY"
+                        onFocus={() => handleFieldFocus('payment_expiry_date', 'text')}
+                        onChange={(e) => handleFieldChange('payment_expiry_date', 'text', e)}
+                        onBlur={(e) => handleFieldBlur('payment_expiry_date', 'text', e)}
                         className="w-full border rounded-md px-3 py-2"
                         required
                       />
@@ -259,7 +351,11 @@ export default function CheckoutPage() {
                       </label>
                       <input
                         type="text"
+                        name="cvc"
                         placeholder="123"
+                        onFocus={() => handleFieldFocus('payment_cvc', 'text')}
+                        onChange={(e) => handleFieldChange('payment_cvc', 'text', e)}
+                        onBlur={(e) => handleFieldBlur('payment_cvc', 'text', e)}
                         className="w-full border rounded-md px-3 py-2"
                         required
                       />
@@ -271,6 +367,10 @@ export default function CheckoutPage() {
                     </label>
                     <input
                       type="text"
+                      name="cardholderName"
+                      onFocus={() => handleFieldFocus('payment_cardholder_name', 'text')}
+                      onChange={(e) => handleFieldChange('payment_cardholder_name', 'text', e)}
+                      onBlur={(e) => handleFieldBlur('payment_cardholder_name', 'text', e)}
                       placeholder="John Doe"
                       className="w-full border rounded-md px-3 py-2"
                       required
@@ -305,7 +405,21 @@ export default function CheckoutPage() {
                           (555) 123-4567
                         </p>
                       </div>
-                      <Button variant="plain" onClick={() => setStep(1)}>Edit</Button>
+                      <Button 
+                        variant="plain" 
+                        onClick={() => {
+                          const timeSincePageLoad = pageLoadTime ? Date.now() - pageLoadTime : undefined;
+                          trackEvent('button_clicked', {
+                            button_id: 'edit_shipping_address',
+                            button_text: 'Edit',
+                            button_type: 'edit_shipping',
+                            time_since_page_load: timeSincePageLoad,
+                          });
+                          setStep(1);
+                        }}
+                      >
+                        Edit
+                      </Button>
                     </div>
                   </div>
 
@@ -318,7 +432,21 @@ export default function CheckoutPage() {
                           Expires 12/25
                         </p>
                       </div>
-                      <Button variant="plain" onClick={() => setStep(2)}>Edit</Button>
+                      <Button 
+                        variant="plain" 
+                        onClick={() => {
+                          const timeSincePageLoad = pageLoadTime ? Date.now() - pageLoadTime : undefined;
+                          trackEvent('button_clicked', {
+                            button_id: 'edit_payment_method',
+                            button_text: 'Edit',
+                            button_type: 'edit_payment',
+                            time_since_page_load: timeSincePageLoad,
+                          });
+                          setStep(2);
+                        }}
+                      >
+                        Edit
+                      </Button>
                     </div>
                   </div>
 
@@ -356,14 +484,55 @@ export default function CheckoutPage() {
             {/* Navigation */}
             <div className="mt-8 flex justify-between">
               {step > 1 ? (
-                <Button onClick={() => setStep(step - 1)}>Back</Button>
+                <Button 
+                  onClick={() => {
+                    const timeSincePageLoad = pageLoadTime ? Date.now() - pageLoadTime : undefined;
+                    trackEvent('button_clicked', {
+                      button_id: `checkout_back_step_${step}`,
+                      button_text: 'Back',
+                      button_type: 'checkout_navigation',
+                      current_step: step,
+                      new_step: step - 1,
+                      time_since_page_load: timeSincePageLoad,
+                    });
+                    setStep(step - 1);
+                  }}
+                >
+                  Back
+                </Button>
               ) : (
                 <Link href="/cart">
-                  <Button>Back to Cart</Button>
+                  <Button
+                    onClick={() => {
+                      const timeSincePageLoad = pageLoadTime ? Date.now() - pageLoadTime : undefined;
+                      trackEvent('button_clicked', {
+                        button_id: 'back_to_cart',
+                        button_text: 'Back to Cart',
+                        button_type: 'navigation',
+                        time_since_page_load: timeSincePageLoad,
+                      });
+                    }}
+                  >
+                    Back to Cart
+                  </Button>
                 </Link>
               )}
               {step < 3 ? (
-                <Button variant="primary" onClick={handleNextStep}>
+                <Button 
+                  variant="primary" 
+                  onClick={() => {
+                    const timeSincePageLoad = pageLoadTime ? Date.now() - pageLoadTime : undefined;
+                    trackEvent('button_clicked', {
+                      button_id: `checkout_next_step_${step}`,
+                      button_text: 'Continue',
+                      button_type: 'checkout_navigation',
+                      current_step: step,
+                      new_step: step + 1,
+                      time_since_page_load: timeSincePageLoad,
+                    });
+                    handleNextStep();
+                  }}
+                >
                   Continue
                 </Button>
               ) : (

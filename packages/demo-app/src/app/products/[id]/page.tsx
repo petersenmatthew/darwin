@@ -8,8 +8,12 @@ import { StarFilledIcon, CartIcon, HeartIcon, CheckIcon } from '@shopify/polaris
 import { products } from '../../../data/products';
 import { useCart } from '../../../context/CartContext';
 import ProductCard from '../../../components/ProductCard';
+import { usePageTracking } from '../../../hooks/usePageTracking';
+import ScrollTracker from '../../../components/tracking/ScrollTracker';
+import { trackEvent } from '../../../amplitude';
 
 export default function ProductDetailPage() {
+  const { pageLoadTime } = usePageTracking();
   const params = useParams();
   const router = useRouter();
   const product = products.find(p => p.id === params.id);
@@ -30,6 +34,16 @@ export default function ProductDetailPage() {
   }
 
   const handleAddToCart = () => {
+    const timeSincePageLoad = pageLoadTime ? Date.now() - pageLoadTime : undefined;
+    trackEvent('button_clicked', {
+      button_id: `add_to_cart_${product.id}`,
+      button_text: 'Add to Cart',
+      button_type: 'add_to_cart',
+      product_id: product.id,
+      product_name: product.title,
+      quantity: quantity,
+      time_since_page_load: timeSincePageLoad,
+    });
     addToCart(product, quantity);
     setAddedToCart(true);
     setTimeout(() => setAddedToCart(false), 2000);
@@ -128,14 +142,40 @@ export default function ProductDetailPage() {
               </Text>
               <div className="flex items-center border rounded-md">
                 <button
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  onClick={() => {
+                    const timeSincePageLoad = pageLoadTime ? Date.now() - pageLoadTime : undefined;
+                    trackEvent('button_clicked', {
+                      button_id: `quantity_decrease_${product.id}`,
+                      button_text: '-',
+                      button_type: 'quantity_decrease',
+                      product_id: product.id,
+                      product_name: product.title,
+                      current_quantity: quantity,
+                      new_quantity: Math.max(1, quantity - 1),
+                      time_since_page_load: timeSincePageLoad,
+                    });
+                    setQuantity(Math.max(1, quantity - 1));
+                  }}
                   className="px-3 py-2 hover:bg-gray-50"
                 >
                   -
                 </button>
                 <span className="px-4 py-2 border-x">{quantity}</span>
                 <button
-                  onClick={() => setQuantity(quantity + 1)}
+                  onClick={() => {
+                    const timeSincePageLoad = pageLoadTime ? Date.now() - pageLoadTime : undefined;
+                    trackEvent('button_clicked', {
+                      button_id: `quantity_increase_${product.id}`,
+                      button_text: '+',
+                      button_type: 'quantity_increase',
+                      product_id: product.id,
+                      product_name: product.title,
+                      current_quantity: quantity,
+                      new_quantity: quantity + 1,
+                      time_since_page_load: timeSincePageLoad,
+                    });
+                    setQuantity(quantity + 1);
+                  }}
                   className="px-3 py-2 hover:bg-gray-50"
                 >
                   +
@@ -158,7 +198,21 @@ export default function ProductDetailPage() {
                 <Icon source={addedToCart ? CheckIcon : CartIcon} />
                 {addedToCart ? 'Added to Cart!' : product.inStock ? 'Add to Cart' : 'Out of Stock'}
               </button>
-              <Button size="large" icon={HeartIcon}>
+              <Button 
+                size="large" 
+                icon={HeartIcon}
+                onClick={() => {
+                  const timeSincePageLoad = pageLoadTime ? Date.now() - pageLoadTime : undefined;
+                  trackEvent('button_clicked', {
+                    button_id: `save_to_wishlist_${product.id}`,
+                    button_text: 'Save',
+                    button_type: 'save_to_wishlist',
+                    product_id: product.id,
+                    product_name: product.title,
+                    time_since_page_load: timeSincePageLoad,
+                  });
+                }}
+              >
                 Save
               </Button>
             </div>

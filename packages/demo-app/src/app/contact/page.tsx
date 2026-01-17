@@ -2,8 +2,12 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { usePageTracking } from '../../hooks/usePageTracking';
+import ScrollTracker from '../../components/tracking/ScrollTracker';
+import { useFormTracking } from '../../hooks/useFormTracking';
 
 export default function ContactPage() {
+  const { pageLoadTime } = usePageTracking();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -16,6 +20,20 @@ export default function ContactPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [focusedField, setFocusedField] = useState<string | null>(null);
 
+  const {
+    trackFieldFocus,
+    trackFieldUnfocus,
+    trackFieldChanged,
+    trackFieldCompleted,
+    trackFieldSkipped,
+    trackFormError,
+    trackFormSubmitted,
+  } = useFormTracking({
+    formId: 'contact_form',
+    formName: 'Contact Form',
+    pageLoadTime,
+  });
+
   const validateEmail = (email: string) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
@@ -23,6 +41,10 @@ export default function ContactPage() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // Track field change
+    const fieldType = name === 'email' ? 'email' : name === 'phone' ? 'tel' : name === 'subject' ? 'select' : name === 'message' ? 'textarea' : 'text';
+    trackFieldChanged(name, fieldType, value);
 
     // Clear error when user starts typing
     if (errors[name]) {
@@ -32,16 +54,42 @@ export default function ContactPage() {
 
   const handleFocus = (fieldName: string) => {
     setFocusedField(fieldName);
+    // Determine field type based on field name and input type
+    let fieldType = 'text';
+    if (fieldName === 'email') {
+      fieldType = 'email';
+    } else if (fieldName === 'phone') {
+      fieldType = 'tel';
+    } else if (fieldName === 'subject') {
+      fieldType = 'select';
+    } else if (fieldName === 'message') {
+      fieldType = 'textarea';
+    }
+    trackFieldFocus(fieldName, fieldType);
   };
 
   const handleBlur = (fieldName: string) => {
     setFocusedField(null);
+    const fieldType = fieldName === 'email' ? 'email' : fieldName === 'phone' ? 'tel' : fieldName === 'subject' ? 'select' : fieldName === 'message' ? 'textarea' : 'text';
+    const hasValue = formData[fieldName as keyof typeof formData] && String(formData[fieldName as keyof typeof formData]).trim() !== '';
+    
+    // Track unfocus event
+    trackFieldUnfocus(fieldName, fieldType, hasValue);
+    
     // Validate on blur
     if (fieldName === 'email' && formData.email && !validateEmail(formData.email)) {
-      setErrors((prev) => ({ ...prev, email: 'Please enter a valid email address' }));
-    }
-    if (fieldName === 'name' && !formData.name) {
-      setErrors((prev) => ({ ...prev, name: 'Name is required' }));
+      const errorMsg = 'Please enter a valid email address';
+      setErrors((prev) => ({ ...prev, email: errorMsg }));
+      trackFormError(fieldName, errorMsg);
+    } else if (fieldName === 'name' && !formData.name) {
+      const errorMsg = 'Name is required';
+      setErrors((prev) => ({ ...prev, name: errorMsg }));
+      trackFormError(fieldName, errorMsg);
+    } else if (hasValue) {
+      trackFieldCompleted(fieldName, fieldType, true);
+    } else if (fieldName === 'name' || fieldName === 'email' || fieldName === 'subject' || fieldName === 'message') {
+      // Required fields that are empty
+      trackFieldSkipped(fieldName, fieldType);
     }
   };
 
@@ -58,8 +106,15 @@ export default function ContactPage() {
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
+      // Track errors
+      Object.entries(newErrors).forEach(([field, error]) => {
+        trackFormError(field, error);
+      });
       return;
     }
+
+    // Track form submission
+    trackFormSubmitted();
 
     // Simulate form submission
     setFormSubmitted(true);
@@ -102,6 +157,7 @@ export default function ContactPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
+      <ScrollTracker />
       {/* Breadcrumb */}
       <nav className="text-sm mb-8">
         <ol className="flex items-center gap-2">

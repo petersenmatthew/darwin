@@ -4,12 +4,16 @@ import Link from 'next/link';
 import { Text, Button } from '@shopify/polaris';
 import { products } from '../data/products';
 import ProductCard from '../components/ProductCard';
+import { usePageTracking } from '../hooks/usePageTracking';
+import ScrollTracker from '../components/tracking/ScrollTracker';
 
 export default function Home() {
+  usePageTracking();
   const featuredProducts = products.slice(0, 4);
 
   return (
     <div>
+      <ScrollTracker />
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-green-600 to-green-700 text-white">
         <div className="max-w-7xl mx-auto px-4 py-20">

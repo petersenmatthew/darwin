@@ -12,6 +12,7 @@
         "darwin:config": "ts-node --require ../darwin-sdk/polyfill.js ../darwin-sdk/cli/index.ts config"
     },
     "dependencies": {
+        "@amplitude/analytics-browser": "^2.33.4",
         "@shopify/polaris": "^12.0.0",
         "@shopify/polaris-icons": "^9.0.0",
         "darwin-ui": "*",
