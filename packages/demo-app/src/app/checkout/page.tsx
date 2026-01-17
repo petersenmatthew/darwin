@@ -16,6 +16,15 @@ export default function CheckoutPage() {
   const tax = subtotal * 0.08;
   const total = subtotal + shipping + tax;
 
+  const handleNextStep = () => {
+    const form = document.getElementById('checkout-form') as HTMLFormElement;
+    if (form.checkValidity()) {
+      setStep(step + 1);
+    } else {
+      form.reportValidity(); // shows browser validation errors
+    }
+  };
+
   if (items.length === 0) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-16 text-center">
@@ -80,49 +89,53 @@ export default function CheckoutPage() {
         <div className="lg:col-span-2">
           <div className="bg-white rounded-lg border p-6">
             {step === 1 && (
-              <>
+              <form id="checkout-form">
                 <Text as="h2" variant="headingLg" fontWeight="semibold">
                   Shipping Information
                 </Text>
                 <div className="grid grid-cols-2 gap-4 mt-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      First Name
+                      First Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
-                      defaultValue="John"
+                      placeholder="John"
                       className="w-full border rounded-md px-3 py-2"
+                      required
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Last Name
+                      Last Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
-                      defaultValue="Doe"
+                      placeholder="Doe"
                       className="w-full border rounded-md px-3 py-2"
+                      required
                     />
                   </div>
                   <div className="col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Email
+                      Email <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="email"
-                      defaultValue="john.doe@example.com"
+                      placeholder="john.doe@example.com"
                       className="w-full border rounded-md px-3 py-2"
+                      required
                     />
                   </div>
                   <div className="col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Address
+                      Address <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
-                      defaultValue="123 Main Street"
+                      placeholder="123 Main Street"
                       className="w-full border rounded-md px-3 py-2"
+                      required
                     />
                   </div>
                   <div className="col-span-2">
@@ -131,25 +144,27 @@ export default function CheckoutPage() {
                     </label>
                     <input
                       type="text"
-                      defaultValue="Apt 4B"
+                      placeholder="Apt 4B"
                       className="w-full border rounded-md px-3 py-2"
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      City
+                      City <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
-                      defaultValue="San Francisco"
+                      placeholder="San Francisco"
                       className="w-full border rounded-md px-3 py-2"
+                      required
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      State
+                      State <span className="text-red-500">*</span>
                     </label>
-                    <select className="w-full border rounded-md px-3 py-2" defaultValue="CA">
+                    <select className="w-full border rounded-md px-3 py-2" required defaultValue="">
+                      <option value="" disabled>Select state</option>
                       <option value="CA">California</option>
                       <option value="NY">New York</option>
                       <option value="TX">Texas</option>
@@ -157,22 +172,24 @@ export default function CheckoutPage() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      ZIP Code
+                      ZIP Code <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
-                      defaultValue="94102"
+                      placeholder="94102"
                       className="w-full border rounded-md px-3 py-2"
+                      required
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Phone
+                      Phone <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="tel"
-                      defaultValue="(555) 123-4567"
+                      placeholder="(555) 123-4567"
                       className="w-full border rounded-md px-3 py-2"
+                      required
                     />
                   </div>
                 </div>
@@ -204,58 +221,59 @@ export default function CheckoutPage() {
                     </label>
                   </div>
                 </div>
-              </>
+              </form>
             )}
 
             {step === 2 && (
-              <>
+              <form id="checkout-form">
                 <Text as="h2" variant="headingLg" fontWeight="semibold">
                   Payment Information
                 </Text>
                 <div className="mt-6 space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Card Number
+                      Card Number <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       placeholder="1234 5678 9012 3456"
-                      defaultValue="4242 4242 4242 4242"
                       className="w-full border rounded-md px-3 py-2"
+                      required
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Expiry Date
+                        Expiry Date <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
                         placeholder="MM/YY"
-                        defaultValue="12/25"
                         className="w-full border rounded-md px-3 py-2"
+                        required
                       />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        CVC
+                        CVC <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
                         placeholder="123"
-                        defaultValue="123"
                         className="w-full border rounded-md px-3 py-2"
+                        required
                       />
                     </div>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Name on Card
+                      Name on Card <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
-                      defaultValue="John Doe"
+                      placeholder="John Doe"
                       className="w-full border rounded-md px-3 py-2"
+                      required
                     />
                   </div>
                 </div>
@@ -266,7 +284,7 @@ export default function CheckoutPage() {
                     <span className="text-sm">Billing address same as shipping</span>
                   </label>
                 </div>
-              </>
+              </form>
             )}
 
             {step === 3 && (
@@ -345,7 +363,7 @@ export default function CheckoutPage() {
                 </Link>
               )}
               {step < 3 ? (
-                <Button variant="primary" onClick={() => setStep(step + 1)}>
+                <Button variant="primary" onClick={handleNextStep}>
                   Continue
                 </Button>
               ) : (
