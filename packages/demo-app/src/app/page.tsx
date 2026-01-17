@@ -6,9 +6,10 @@ import { products } from '../data/products';
 import ProductCard from '../components/ProductCard';
 import { usePageTracking } from '../hooks/usePageTracking';
 import ScrollTracker from '../components/tracking/ScrollTracker';
+import { trackEvent } from '../amplitude';
 
 export default function Home() {
-  usePageTracking();
+  const { pageLoadTime } = usePageTracking();
   const featuredProducts = products.slice(0, 4);
 
   return (
@@ -26,7 +27,20 @@ export default function Home() {
             </p>
             <div className="mt-8 flex gap-4">
               <Link href="/products">
-                <Button size="large">Shop Now</Button>
+                <Button 
+                  size="large"
+                  onClick={() => {
+                    const timeSincePageLoad = pageLoadTime ? Date.now() - pageLoadTime : undefined;
+                    trackEvent('button_clicked', {
+                      button_id: 'shop_now',
+                      button_text: 'Shop Now',
+                      button_type: 'cta',
+                      time_since_page_load: timeSincePageLoad,
+                    });
+                  }}
+                >
+                  Shop Now
+                </Button>
               </Link>
               <Button size="large" variant="plain">
                 Learn More
