@@ -26,6 +26,7 @@ export default function TrackedForm({
   
   const {
     trackFieldFocus,
+    trackFieldUnfocus,
     trackFieldCompleted,
     trackFieldSkipped,
     trackFormError,
@@ -76,6 +77,10 @@ export default function TrackedForm({
             },
             onBlur: (e: any) => {
               const hasValue = e.target.value && e.target.value.trim() !== '';
+              
+              // Track unfocus event
+              trackFieldUnfocus(fieldName, fieldType, hasValue);
+              
               if (hasValue) {
                 trackFieldCompleted(fieldName, fieldType, true);
               } else if (childProps.required) {

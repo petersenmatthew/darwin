@@ -15,6 +15,7 @@ export const useFormTracking = (options: FormTrackingOptions) => {
   const hasTrackedStart = useRef<boolean>(false);
   const focusedFields = useRef<Set<string>>(new Set());
   const completedFields = useRef<Set<string>>(new Set());
+  const fieldChangeTimeouts = useRef<Map<string, NodeJS.Timeout>>(new Map());
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const trackFormStart = () => {
@@ -37,20 +38,39 @@ export const useFormTracking = (options: FormTrackingOptions) => {
   const trackFieldFocus = (fieldName: string, fieldType?: string) => {
     trackFormStart();
     
-    if (!focusedFields.current.has(fieldName)) {
-      focusedFields.current.add(fieldName);
-      const timeSincePageLoad = pageLoadTime 
-        ? Date.now() - pageLoadTime 
-        : undefined;
+    // Track focus every time (allow multiple focus events)
+    const timeSincePageLoad = pageLoadTime 
+      ? Date.now() - pageLoadTime 
+      : undefined;
 
-      trackEvent('form_field_focused', {
-        form_id: formId,
-        field_name: fieldName,
-        field_type: fieldType || 'text',
-        time_since_page_load: timeSincePageLoad,
-        page_name: getPageName(),
-      });
-    }
+    const eventData = {
+      form_id: formId,
+      field_name: fieldName,
+      field_type: fieldType || 'text',
+      time_since_page_load: timeSincePageLoad,
+      page_name: getPageName(),
+    };
+
+    // Track the event
+    trackEvent('form_field_focused', eventData);
+
+    // Mark field as focused (for tracking completion/skipped)
+    focusedFields.current.add(fieldName);
+  };
+
+  const trackFieldUnfocus = (fieldName: string, fieldType?: string, hasValue?: boolean) => {
+    const timeSincePageLoad = pageLoadTime 
+      ? Date.now() - pageLoadTime 
+      : undefined;
+
+    trackEvent('form_field_unfocused', {
+      form_id: formId,
+      field_name: fieldName,
+      field_type: fieldType || 'text',
+      has_value: hasValue !== undefined ? hasValue : false,
+      time_since_page_load: timeSincePageLoad,
+      page_name: getPageName(),
+    });
   };
 
   const trackFieldCompleted = (fieldName: string, fieldType?: string, hasValue: boolean = true) => {
@@ -135,9 +155,42 @@ export const useFormTracking = (options: FormTrackingOptions) => {
     });
   };
 
+  const trackFieldChanged = (fieldName: string, fieldType?: string, value?: string) => {
+    trackFormStart();
+    
+    // Clear existing timeout for this field
+    const existingTimeout = fieldChangeTimeouts.current.get(fieldName);
+    if (existingTimeout) {
+      clearTimeout(existingTimeout);
+    }
+
+    // Debounce the change event (track after 500ms of no changes)
+    const timeout = setTimeout(() => {
+      const timeSincePageLoad = pageLoadTime 
+        ? Date.now() - pageLoadTime 
+        : undefined;
+
+      trackEvent('form_field_changed', {
+        form_id: formId,
+        field_name: fieldName,
+        field_type: fieldType || 'text',
+        has_value: value !== undefined && value.trim() !== '',
+        value_length: value?.length || 0,
+        time_since_page_load: timeSincePageLoad,
+        page_name: getPageName(),
+      });
+
+      fieldChangeTimeouts.current.delete(fieldName);
+    }, 500); // 500ms debounce
+
+    fieldChangeTimeouts.current.set(fieldName, timeout);
+  };
+
   return {
     trackFormStart,
     trackFieldFocus,
+    trackFieldUnfocus,
+    trackFieldChanged,
     trackFieldCompleted,
     trackFieldSkipped,
     trackFormError,

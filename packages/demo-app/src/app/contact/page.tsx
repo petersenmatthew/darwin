@@ -22,6 +22,8 @@ export default function ContactPage() {
 
   const {
     trackFieldFocus,
+    trackFieldUnfocus,
+    trackFieldChanged,
     trackFieldCompleted,
     trackFieldSkipped,
     trackFormError,
@@ -40,6 +42,10 @@ export default function ContactPage() {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
 
+    // Track field change
+    const fieldType = name === 'email' ? 'email' : name === 'phone' ? 'tel' : name === 'subject' ? 'select' : name === 'message' ? 'textarea' : 'text';
+    trackFieldChanged(name, fieldType, value);
+
     // Clear error when user starts typing
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: '' }));
@@ -48,14 +54,27 @@ export default function ContactPage() {
 
   const handleFocus = (fieldName: string) => {
     setFocusedField(fieldName);
-    const fieldType = fieldName === 'email' ? 'email' : fieldName === 'phone' ? 'tel' : 'text';
+    // Determine field type based on field name and input type
+    let fieldType = 'text';
+    if (fieldName === 'email') {
+      fieldType = 'email';
+    } else if (fieldName === 'phone') {
+      fieldType = 'tel';
+    } else if (fieldName === 'subject') {
+      fieldType = 'select';
+    } else if (fieldName === 'message') {
+      fieldType = 'textarea';
+    }
     trackFieldFocus(fieldName, fieldType);
   };
 
   const handleBlur = (fieldName: string) => {
     setFocusedField(null);
-    const fieldType = fieldName === 'email' ? 'email' : fieldName === 'phone' ? 'tel' : 'text';
-    const hasValue = formData[fieldName as keyof typeof formData] && formData[fieldName as keyof typeof formData].trim() !== '';
+    const fieldType = fieldName === 'email' ? 'email' : fieldName === 'phone' ? 'tel' : fieldName === 'subject' ? 'select' : fieldName === 'message' ? 'textarea' : 'text';
+    const hasValue = formData[fieldName as keyof typeof formData] && String(formData[fieldName as keyof typeof formData]).trim() !== '';
+    
+    // Track unfocus event
+    trackFieldUnfocus(fieldName, fieldType, hasValue);
     
     // Validate on blur
     if (fieldName === 'email' && formData.email && !validateEmail(formData.email)) {

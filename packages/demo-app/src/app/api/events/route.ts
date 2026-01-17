@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import * as fs from 'fs';
 import * as path from 'path';
 
+// Get the correct path to events.json (should be in the demo-app directory)
+// When Next.js runs, process.cwd() is typically the directory where package.json is located
 const EVENTS_FILE_PATH = path.join(process.cwd(), 'events.json');
 
 export async function POST(request: NextRequest) {
