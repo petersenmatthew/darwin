@@ -2,16 +2,47 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Text, Button, Badge, Divider } from '@shopify/polaris';
-import { cartItems } from '../../data/products';
+import { useRouter } from 'next/navigation';
+import { Text, Button, Divider } from '@shopify/polaris';
+import { useCart } from '../../context/CartContext';
 
 export default function CheckoutPage() {
+  const router = useRouter();
+  const { items, getCartTotal, clearCart } = useCart();
   const [step, setStep] = useState(1);
 
-  const subtotal = cartItems.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+  const subtotal = getCartTotal();
   const shipping = subtotal > 50 ? 0 : 9.99;
   const tax = subtotal * 0.08;
   const total = subtotal + shipping + tax;
+
+  if (items.length === 0) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 py-16 text-center">
+        <div className="max-w-md mx-auto">
+          <div className="text-6xl mb-4">🛒</div>
+          <Text as="h1" variant="headingXl" fontWeight="bold">
+            Your cart is empty
+          </Text>
+          <Text as="p" variant="bodyMd" tone="subdued">
+            Add some items to your cart before checking out.
+          </Text>
+          <div className="mt-8">
+            <Link href="/products">
+              <Button variant="primary" size="large">
+                Browse Products
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const handlePlaceOrder = () => {
+    clearCart();
+    router.push('/checkout/success');
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
@@ -276,7 +307,7 @@ export default function CheckoutPage() {
                   <div>
                     <Text as="h3" variant="bodyMd" fontWeight="semibold">Order Items</Text>
                     <div className="mt-3 space-y-3">
-                      {cartItems.map((item) => (
+                      {items.map((item) => (
                         <div key={item.product.id} className="flex items-center gap-4">
                           <div className="w-16 h-16 bg-gray-100 rounded-md overflow-hidden">
                             <img
@@ -318,7 +349,7 @@ export default function CheckoutPage() {
                   Continue
                 </Button>
               ) : (
-                <Button variant="primary" onClick={() => alert('Order placed! (Demo)')}>
+                <Button variant="primary" onClick={handlePlaceOrder}>
                   Place Order
                 </Button>
               )}
@@ -334,7 +365,7 @@ export default function CheckoutPage() {
             </Text>
 
             <div className="mt-4 space-y-3">
-              {cartItems.map((item) => (
+              {items.map((item) => (
                 <div key={item.product.id} className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-gray-100 rounded-md overflow-hidden relative">
                     <img

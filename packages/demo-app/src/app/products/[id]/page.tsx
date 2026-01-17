@@ -2,16 +2,21 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
-import { Text, Button, Badge, Icon, Divider } from '@shopify/polaris';
+import { useParams, useRouter } from 'next/navigation';
+import { Text, Button, Badge, Icon } from '@shopify/polaris';
 import { StarFilledIcon, CartIcon, HeartIcon, CheckIcon } from '@shopify/polaris-icons';
 import { products } from '../../../data/products';
+import { useCart } from '../../../context/CartContext';
+import ProductCard from '../../../components/ProductCard';
 
 export default function ProductDetailPage() {
   const params = useParams();
+  const router = useRouter();
   const product = products.find(p => p.id === params.id);
   const [quantity, setQuantity] = useState(1);
   const [selectedTab, setSelectedTab] = useState('description');
+  const [addedToCart, setAddedToCart] = useState(false);
+  const { addToCart } = useCart();
 
   if (!product) {
     return (
@@ -23,6 +28,12 @@ export default function ProductDetailPage() {
       </div>
     );
   }
+
+  const handleAddToCart = () => {
+    addToCart(product, quantity);
+    setAddedToCart(true);
+    setTimeout(() => setAddedToCart(false), 2000);
+  };
 
   const relatedProducts = products.filter(p => p.category === product.category && p.id !== product.id).slice(0, 4);
 
@@ -133,9 +144,20 @@ export default function ProductDetailPage() {
             </div>
 
             <div className="flex gap-3">
-              <Button variant="primary" size="large" icon={CartIcon} fullWidth disabled={!product.inStock}>
-                {product.inStock ? 'Add to Cart' : 'Out of Stock'}
-              </Button>
+              <button
+                onClick={handleAddToCart}
+                disabled={!product.inStock}
+                className={`flex-1 py-3 px-6 rounded-md font-medium flex items-center justify-center gap-2 transition-colors ${
+                  addedToCart
+                    ? 'bg-green-700 text-white'
+                    : product.inStock
+                    ? 'bg-green-600 hover:bg-green-700 text-white'
+                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                }`}
+              >
+                <Icon source={addedToCart ? CheckIcon : CartIcon} />
+                {addedToCart ? 'Added to Cart!' : product.inStock ? 'Add to Cart' : 'Out of Stock'}
+              </button>
               <Button size="large" icon={HeartIcon}>
                 Save
               </Button>
@@ -221,11 +243,11 @@ export default function ProductDetailPage() {
                       <div>
                         <div className="font-medium">{review.name}</div>
                         <div className="flex">
-                          {[1, 2, 3, 4, 5].map((i) => (
+                          {[1, 2, 3, 4, 5].map((j) => (
                             <Icon
-                              key={i}
+                              key={j}
                               source={StarFilledIcon}
-                              tone={i <= review.rating ? 'warning' : 'subdued'}
+                              tone={j <= review.rating ? 'warning' : 'subdued'}
                             />
                           ))}
                         </div>
@@ -251,21 +273,7 @@ export default function ProductDetailPage() {
           </Text>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-6">
             {relatedProducts.map((p) => (
-              <Link key={p.id} href={`/products/${p.id}`}>
-                <div className="bg-white rounded-lg border overflow-hidden hover:shadow-lg transition-shadow">
-                  <div className="aspect-square bg-gray-100">
-                    <img src={p.image} alt={p.title} className="w-full h-full object-cover" />
-                  </div>
-                  <div className="p-4">
-                    <Text as="p" variant="bodyMd" fontWeight="medium" truncate>
-                      {p.title}
-                    </Text>
-                    <Text as="p" variant="bodyLg" fontWeight="bold">
-                      ${p.price}
-                    </Text>
-                  </div>
-                </div>
-              </Link>
+              <ProductCard key={p.id} product={p} />
             ))}
           </div>
         </div>
