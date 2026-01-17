@@ -3,8 +3,11 @@
 import Link from 'next/link';
 import { Text, Button, Icon } from '@shopify/polaris';
 import { CheckIcon } from '@shopify/polaris-icons';
+import { usePageTracking } from '../../../hooks/usePageTracking';
+import ScrollTracker from '../../../components/tracking/ScrollTracker';
 
 export default function CheckoutSuccessPage() {
+  usePageTracking();
   const orderNumber = `SW-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
 
   return (

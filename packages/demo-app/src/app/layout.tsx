@@ -9,6 +9,7 @@ import { WishlistProvider } from '../context/WishlistContext';
 import Link from 'next/link';
 import { initAmplitude } from '../amplitude';
 import { useEffect } from 'react';
+import { useSessionTracking } from '../hooks/useSessionTracking';
 // export const metadata: Metadata = {
 //   title: 'ShopWave - Demo Store',
 //   description: 'A demo e-commerce store',
@@ -21,7 +22,10 @@ export default function RootLayout({
 }) {
   useEffect(() => {
     initAmplitude();
-  }, [])
+  }, []);
+
+  // Track session start/end
+  useSessionTracking();
 
   return (  
     <html lang="en">

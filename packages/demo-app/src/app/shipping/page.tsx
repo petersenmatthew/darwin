@@ -2,8 +2,11 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { usePageTracking } from '../../hooks/usePageTracking';
+import ScrollTracker from '../../components/tracking/ScrollTracker';
 
 export default function ShippingPage() {
+  usePageTracking();
   const [selectedCountry, setSelectedCountry] = useState('us');
   const [postalCode, setPostalCode] = useState('');
   const [calculatedRates, setCalculatedRates] = useState<null | { standard: string; express: string; overnight: string }>(null);
