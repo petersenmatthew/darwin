@@ -2,6 +2,8 @@ import { runClaude } from '../helpers/claude-helper';
 import * as path from 'path';
 import { GoogleGenAI } from "@google/genai"
 import { AnalyticsSnapshot, AnalysisResult } from '../helpers/analytic-types'
+import { ThoughtEntry } from './browser-agent';
+import { log } from 'console';
 
 export class Analyst {
   private targetAppPath: string;
@@ -9,17 +11,22 @@ export class Analyst {
 
   constructor(targetAppPath?: string) {
     this.targetAppPath = targetAppPath || path.resolve(__dirname, '../../demo-app');
-    this.analyst = new GoogleGenAI({});
+
+    const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY or GOOGLE_API_KEY environment variable is required");
+    }
+    this.analyst = new GoogleGenAI({ apiKey });
   }
 
-  async analyze(analytics: AnalyticsSnapshot): Promise<AnalysisResult> {
+  async analyze(analytics: AnalyticsSnapshot, logic: ThoughtEntry[]): Promise<AnalysisResult> {
     const model = "gemini-3-flash-preview";
     const systemPrompt = `
     You are a senior product analyst and growth engineer.
 
     Your task:
-    - Analyze product analytics
-    - Identify the MOST impactful user experience problems
+    - Analyze product analytics and user thoughts
+    - Identify the MOST impactful user experience problems (i.e. components)
     - Base conclusions ONLY on provided data
     - Output STRICT JSON matching the schema
     - Be concise, evidence-driven, and actionable
@@ -28,6 +35,9 @@ export class Analyst {
       const userPrompt = `
     Analytics snapshot:
     ${JSON.stringify(analytics, null, 2)}
+
+    User thought process snapshot:
+    ${JSON.stringify(logic, null, 2)}
 
     JSON schema:
     {
@@ -64,7 +74,19 @@ export class Analyst {
       };
     }
 
-    return JSON.parse(rawText);
+    // Strip markdown code blocks if present
+    let jsonText = rawText.trim();
+    if (jsonText.startsWith("```json")) {
+      jsonText = jsonText.slice(7);
+    } else if (jsonText.startsWith("```")) {
+      jsonText = jsonText.slice(3);
+    }
+    if (jsonText.endsWith("```")) {
+      jsonText = jsonText.slice(0, -3);
+    }
+    jsonText = jsonText.trim();
+
+    return JSON.parse(jsonText);
   }
 
   buildUXAgentPrompt(analysis: AnalysisResult): string {

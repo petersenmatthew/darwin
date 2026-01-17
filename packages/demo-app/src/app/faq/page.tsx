@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { usePageTracking } from '../../hooks/usePageTracking';
+import ScrollTracker from '../../components/tracking/ScrollTracker';
 
 interface FAQItem {
   question: string;
@@ -10,6 +12,7 @@ interface FAQItem {
 }
 
 export default function FAQPage() {
+  usePageTracking();
   const [openItems, setOpenItems] = useState<Set<number>>(new Set());
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');

@@ -10,11 +10,12 @@
         "build": "tsc",
         "start": "node dist/cli/index.js",
         "dev": "ts-node --require ./polyfill.js cli/index.ts",
-        "evolve": "ts-node --require ./polyfill.js evolve.ts"
+        "evolve": "ts-node --require ./polyfill.js cli/index.ts evolve"
     },
     "dependencies": {
         "@amplitude/analytics-node": "^1.0.0",
         "@browserbasehq/stagehand": "^3.0.0",
+        "@google/genai": "^0.7.0",
         "chalk": "^4.1.2",
         "chokidar": "^3.5.3",
         "commander": "^11.0.0",

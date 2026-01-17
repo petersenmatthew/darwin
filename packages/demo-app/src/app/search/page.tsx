@@ -7,8 +7,11 @@ import { Text, Button, Icon } from '@shopify/polaris';
 import { SearchIcon } from '@shopify/polaris-icons';
 import { products } from '../../data/products';
 import ProductCard from '../../components/ProductCard';
+import { usePageTracking } from '../../hooks/usePageTracking';
+import ScrollTracker from '../../components/tracking/ScrollTracker';
 
 export default function SearchPage() {
+  usePageTracking();
   const searchParams = useSearchParams();
   const initialQuery = searchParams.get('q') || '';
   const [query, setQuery] = useState(initialQuery);

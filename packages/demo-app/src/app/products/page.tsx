@@ -5,8 +5,10 @@ import { Text, Button, Icon } from '@shopify/polaris';
 import { FilterIcon } from '@shopify/polaris-icons';
 import { products, categories } from '../../data/products';
 import ProductCard from '../../components/ProductCard';
+import { usePageTracking } from '../../hooks/usePageTracking';
 
 export default function ProductsPage() {
+  usePageTracking();
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [sortBy, setSortBy] = useState('featured');
 
