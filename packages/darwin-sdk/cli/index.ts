@@ -98,16 +98,16 @@ program
 
       try {
         await agent.init();
-        const result = await agent.execute();
+        const thoughts = await agent.execute();
 
-        console.log(chalk.green(`\n✓ Task completed: ${result.success ? "Success" : "Failed"}`));
-        if (result.message) {
-          console.log(chalk.cyan(`  Message: ${result.message}`));
-        }
-        console.log(chalk.cyan(`  Actions: ${result.actions?.length || 0}`));
+        console.log(chalk.green(`\n✓ Task completed`));
+        console.log(chalk.cyan(`  Thoughts captured: ${thoughts.length}`));
 
-        // Exit with appropriate code
-        process.exit(result.success ? 0 : 1);
+        // Output thoughts as JSON
+        console.log(chalk.cyan(`\n📋 Thoughts JSON:`));
+        console.log(JSON.stringify(thoughts, null, 2));
+
+        process.exit(0);
       } finally {
         await agent.close();
       }
