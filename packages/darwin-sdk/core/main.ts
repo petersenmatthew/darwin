@@ -35,6 +35,7 @@ export function startDarwin() {
         apiKey,
         projectId,
         systemPrompt,
+        thinkingFormat,
       } = req.body;
 
       if (!website || !task) {
@@ -56,6 +57,7 @@ export function startDarwin() {
         if (apiKey) config.apiKey = apiKey;
         if (projectId) config.projectId = projectId;
         if (systemPrompt) config.systemPrompt = systemPrompt;
+        if (thinkingFormat) config.thinkingFormat = thinkingFormat;
       } catch {
         // No config file, use request body only
         config = {
@@ -67,6 +69,7 @@ export function startDarwin() {
           apiKey,
           projectId,
           systemPrompt,
+          thinkingFormat,
         };
       }
 
@@ -110,6 +113,7 @@ export function startDarwin() {
         apiKey,
         projectId,
         systemPrompt,
+        thinkingFormat,
       } = req.body;
 
       if (!website || !task) {
@@ -130,6 +134,7 @@ export function startDarwin() {
         if (apiKey) config.apiKey = apiKey;
         if (projectId) config.projectId = projectId;
         if (systemPrompt) config.systemPrompt = systemPrompt;
+        if (thinkingFormat) config.thinkingFormat = thinkingFormat;
       } catch {
         config = {
           website,
@@ -140,6 +145,7 @@ export function startDarwin() {
           apiKey,
           projectId,
           systemPrompt,
+          thinkingFormat,
         };
       }
 
