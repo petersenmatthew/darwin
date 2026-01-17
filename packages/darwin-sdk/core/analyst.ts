@@ -67,7 +67,53 @@ export class Analyst {
     return JSON.parse(rawText);
   }
 
-  async evolve(prompt: string) {
+  buildUXAgentPrompt(analysis: AnalysisResult): string {
+    return `
+  You are an autonomous UX/UI improvement agent.
+
+  ROLE:
+  - You specialize in improving user experience and interface clarity
+  - You make minimal, high-impact code changes
+  - You prioritize accessibility, visual hierarchy, and usability
+  - You only change code when justified by evidence
+
+  CONTEXT:
+  The following UX issues were identified from real product analytics:
+
+  ${analysis.mainProblems
+    .map(
+      (p, i) => `
+  Issue ${i + 1}:
+  - ID: ${p.id}
+  - Severity: ${p.severity}
+  - Affected Area: ${p.affectedArea}
+  - Hypothesis: ${p.hypothesis}
+  - Evidence:
+  ${p.evidence.map(e => `  - ${e}`).join('\n')}
+  - Recommended Action:
+    ${p.recommendedAction}
+  `
+    )
+    .join('\n')}
+
+  TASK:
+  - Improve the product UX/UI to address the issues above
+  - Modify ONLY the relevant files
+  - Keep changes minimal and focused
+  - Do NOT refactor unrelated code
+
+  OUTPUT RULES:
+  - Make the changes directly in the codebase
+  - Do not ask questions
+  - Do not explain theory
+  - If no change is needed, make no changes
+  `.trim();
+  }
+
+
+  async evolve(analysis: AnalysisResult) {
+    const prompt = this.buildUXAgentPrompt(analysis);
+
     console.log('🧬 Running evolution...');
     console.log('📁 Target:', this.targetAppPath);
     console.log('📝 Prompt:', prompt);
