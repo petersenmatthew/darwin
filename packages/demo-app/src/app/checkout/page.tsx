@@ -51,6 +51,15 @@ export default function CheckoutPage() {
   const tax = subtotal * 0.08;
   const total = subtotal + shipping + tax;
 
+  const handleNextStep = () => {
+    const form = document.getElementById('checkout-form') as HTMLFormElement;
+    if (form.checkValidity()) {
+      setStep(step + 1);
+    } else {
+      form.reportValidity(); // shows browser validation errors
+    }
+  };
+
   if (items.length === 0) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-16 text-center">
@@ -125,65 +134,69 @@ export default function CheckoutPage() {
         <div className="lg:col-span-2">
           <div className="bg-white rounded-lg border p-6">
             {step === 1 && (
-              <>
+              <form id="checkout-form">
                 <Text as="h2" variant="headingLg" fontWeight="semibold">
                   Shipping Information
                 </Text>
                 <div className="grid grid-cols-2 gap-4 mt-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      First Name
+                      First Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       name="firstName"
-                      defaultValue="John"
+                      placeholder="John"
                       onFocus={() => handleFieldFocus('shipping_first_name', 'text')}
                       onChange={(e) => handleFieldChange('shipping_first_name', 'text', e)}
                       onBlur={(e) => handleFieldBlur('shipping_first_name', 'text', e)}
                       className="w-full border rounded-md px-3 py-2"
+                      required
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Last Name
+                      Last Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       name="lastName"
-                      defaultValue="Doe"
+                      placeholder="Doe"
                       onFocus={() => handleFieldFocus('shipping_last_name', 'text')}
                       onChange={(e) => handleFieldChange('shipping_last_name', 'text', e)}
                       onBlur={(e) => handleFieldBlur('shipping_last_name', 'text', e)}
                       className="w-full border rounded-md px-3 py-2"
+                      required
                     />
                   </div>
                   <div className="col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Email
+                      Email <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="email"
                       name="email"
-                      defaultValue="john.doe@example.com"
+                      placeholder="john.doe@example.com"
                       onFocus={() => handleFieldFocus('shipping_email', 'email')}
                       onChange={(e) => handleFieldChange('shipping_email', 'email', e)}
                       onBlur={(e) => handleFieldBlur('shipping_email', 'email', e)}
                       className="w-full border rounded-md px-3 py-2"
+                      required
                     />
                   </div>
                   <div className="col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Address
+                      Address <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       name="address"
-                      defaultValue="123 Main Street"
+                      placeholder="123 Main Street"
                       onFocus={() => handleFieldFocus('shipping_address', 'text')}
                       onChange={(e) => handleFieldChange('shipping_address', 'text', e)}
                       onBlur={(e) => handleFieldBlur('shipping_address', 'text', e)}
                       className="w-full border rounded-md px-3 py-2"
+                      required
                     />
                   </div>
                   <div className="col-span-2">
@@ -193,7 +206,7 @@ export default function CheckoutPage() {
                     <input
                       type="text"
                       name="apartment"
-                      defaultValue="Apt 4B"
+                      placeholder="Apt 4B"
                       onFocus={() => handleFieldFocus('shipping_apartment', 'text')}
                       onChange={(e) => handleFieldChange('shipping_apartment', 'text', e)}
                       onBlur={(e) => handleFieldBlur('shipping_apartment', 'text', e)}
@@ -202,30 +215,32 @@ export default function CheckoutPage() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      City
+                      City <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       name="city"
-                      defaultValue="San Francisco"
+                      placeholder="San Francisco"
                       onFocus={() => handleFieldFocus('shipping_city', 'text')}
                       onChange={(e) => handleFieldChange('shipping_city', 'text', e)}
                       onBlur={(e) => handleFieldBlur('shipping_city', 'text', e)}
                       className="w-full border rounded-md px-3 py-2"
+                      required
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      State
+                      State <span className="text-red-500">*</span>
                     </label>
                     <select
                       name="state"
                       className="w-full border rounded-md px-3 py-2"
-                      defaultValue="CA"
+                      defaultValue=""
                       onFocus={() => handleFieldFocus('shipping_state', 'select')}
                       onChange={(e) => handleFieldChange('shipping_state', 'select', e)}
                       onBlur={(e) => handleFieldBlur('shipping_state', 'select', e)}
                     >
+                      <option value="" disabled>Select state</option>
                       <option value="CA">California</option>
                       <option value="NY">New York</option>
                       <option value="TX">Texas</option>
@@ -233,30 +248,32 @@ export default function CheckoutPage() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      ZIP Code
+                      ZIP Code <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       name="zipCode"
-                      defaultValue="94102"
+                      placeholder="94102"
                       onFocus={() => handleFieldFocus('shipping_zip_code', 'text')}
                       onChange={(e) => handleFieldChange('shipping_zip_code', 'text', e)}
                       onBlur={(e) => handleFieldBlur('shipping_zip_code', 'text', e)}
                       className="w-full border rounded-md px-3 py-2"
+                      required
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Phone
+                      Phone <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="tel"
                       name="phone"
-                      defaultValue="(555) 123-4567"
+                      placeholder="(555) 123-4567"
                       onFocus={() => handleFieldFocus('shipping_phone', 'tel')}
                       onChange={(e) => handleFieldChange('shipping_phone', 'tel', e)}
                       onBlur={(e) => handleFieldBlur('shipping_phone', 'tel', e)}
                       className="w-full border rounded-md px-3 py-2"
+                      required
                     />
                   </div>
                 </div>
@@ -288,74 +305,75 @@ export default function CheckoutPage() {
                     </label>
                   </div>
                 </div>
-              </>
+              </form>
             )}
 
             {step === 2 && (
-              <>
+              <form id="checkout-form">
                 <Text as="h2" variant="headingLg" fontWeight="semibold">
                   Payment Information
                 </Text>
                 <div className="mt-6 space-y-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Card Number
+                      Card Number <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       name="cardNumber"
                       placeholder="1234 5678 9012 3456"
-                      defaultValue="4242 4242 4242 4242"
                       onFocus={() => handleFieldFocus('payment_card_number', 'text')}
                       onChange={(e) => handleFieldChange('payment_card_number', 'text', e)}
                       onBlur={(e) => handleFieldBlur('payment_card_number', 'text', e)}
                       className="w-full border rounded-md px-3 py-2"
+                      required
                     />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Expiry Date
+                        Expiry Date <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
                         name="expiryDate"
                         placeholder="MM/YY"
-                        defaultValue="12/25"
                         onFocus={() => handleFieldFocus('payment_expiry_date', 'text')}
                         onChange={(e) => handleFieldChange('payment_expiry_date', 'text', e)}
                         onBlur={(e) => handleFieldBlur('payment_expiry_date', 'text', e)}
                         className="w-full border rounded-md px-3 py-2"
+                        required
                       />
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
-                        CVC
+                        CVC <span className="text-red-500">*</span>
                       </label>
                       <input
                         type="text"
                         name="cvc"
                         placeholder="123"
-                        defaultValue="123"
                         onFocus={() => handleFieldFocus('payment_cvc', 'text')}
                         onChange={(e) => handleFieldChange('payment_cvc', 'text', e)}
                         onBlur={(e) => handleFieldBlur('payment_cvc', 'text', e)}
                         className="w-full border rounded-md px-3 py-2"
+                        required
                       />
                     </div>
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Name on Card
+                      Name on Card <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
                       name="cardholderName"
-                      defaultValue="John Doe"
                       onFocus={() => handleFieldFocus('payment_cardholder_name', 'text')}
                       onChange={(e) => handleFieldChange('payment_cardholder_name', 'text', e)}
                       onBlur={(e) => handleFieldBlur('payment_cardholder_name', 'text', e)}
+                      placeholder="John Doe"
                       className="w-full border rounded-md px-3 py-2"
+                      required
                     />
                   </div>
                 </div>
@@ -366,7 +384,7 @@ export default function CheckoutPage() {
                     <span className="text-sm">Billing address same as shipping</span>
                   </label>
                 </div>
-              </>
+              </form>
             )}
 
             {step === 3 && (
@@ -512,7 +530,7 @@ export default function CheckoutPage() {
                       new_step: step + 1,
                       time_since_page_load: timeSincePageLoad,
                     });
-                    setStep(step + 1);
+                    handleNextStep();
                   }}
                 >
                   Continue
