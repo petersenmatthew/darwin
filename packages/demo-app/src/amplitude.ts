@@ -8,9 +8,14 @@ const AMPLITUDE_API_KEY = "a5083b95e11ada160a4775cadac7177d";
 let sessionId: string | null = null;
 let userId: string | null = null;
 let sessionStartTime: number | null = null;
+let isAmplitudeInitialized = false;
 
 export const initAmplitude = () => {
   if (typeof window === 'undefined') return;
+
+  // Prevent duplicate initialization that could cause loops
+  if (isAmplitudeInitialized) return;
+  isAmplitudeInitialized = true;
 
   amplitude.init(AMPLITUDE_API_KEY, {
     fetchRemoteConfig: true,
@@ -26,8 +31,14 @@ export const initAmplitude = () => {
   initializeSession();
 };
 
+let isSessionInitialized = false;
+
 export const initializeSession = () => {
   if (typeof window === 'undefined') return;
+
+  // Prevent duplicate session initialization
+  if (isSessionInitialized) return;
+  isSessionInitialized = true;
 
   // Get or create session ID
   sessionId = sessionStorage.getItem('analytics_session_id') || `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;

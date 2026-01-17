@@ -11,7 +11,12 @@ export class Analyst {
 
   constructor(targetAppPath?: string) {
     this.targetAppPath = targetAppPath || path.resolve(__dirname, '../../demo-app');
-    this.analyst = new GoogleGenAI({});
+
+    const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY or GOOGLE_API_KEY environment variable is required");
+    }
+    this.analyst = new GoogleGenAI({ apiKey });
   }
 
   async analyze(analytics: AnalyticsSnapshot, logic: ThoughtEntry[]): Promise<AnalysisResult> {
@@ -69,7 +74,19 @@ export class Analyst {
       };
     }
 
-    return JSON.parse(rawText);
+    // Strip markdown code blocks if present
+    let jsonText = rawText.trim();
+    if (jsonText.startsWith("```json")) {
+      jsonText = jsonText.slice(7);
+    } else if (jsonText.startsWith("```")) {
+      jsonText = jsonText.slice(3);
+    }
+    if (jsonText.endsWith("```")) {
+      jsonText = jsonText.slice(0, -3);
+    }
+    jsonText = jsonText.trim();
+
+    return JSON.parse(jsonText);
   }
 
   buildUXAgentPrompt(analysis: AnalysisResult): string {
