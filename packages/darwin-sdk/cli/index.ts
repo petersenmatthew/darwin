@@ -1,27 +1,156 @@
 #!/usr/bin/env node
-import { Command } from 'commander';
-import { Analyst } from '../core/analyst';
+// Polyfill is loaded via --require flag in package.json scripts
+// Load environment variables from .env file
+import * as dotenv from "dotenv";
+import * as path from "path";
+
+// Load .env from project root (two levels up from packages/darwin-sdk)
+const envPath = path.resolve(__dirname, "../../../.env");
+dotenv.config({ path: envPath });
+
+// Also try loading from current directory
+dotenv.config();
+
+import { Command } from "commander";
+import { BrowserAgent } from "../core/browser-agent";
+import {
+  loadConfig,
+  saveConfig,
+  createDefaultConfig,
+  toBrowserAgentConfig,
+  type DarwinConfig,
+} from "../core/config";
+import chalk from "chalk";
 
 const program = new Command();
 
 program
-  .name('darwin')
-  .description('DarwinUI: The Interface That Evolves Itself')
-  .version('0.0.1');
+  .name("darwin")
+  .description("Darwin: Browser automation with Stagehand")
+  .version("0.0.1");
 
 program
-  .command('evolve')
-  .description('Trigger an evolution')
-  .option('-t, --target <path>', 'Path to target app')
-  .option('-p, --prompt <prompt>', 'Custom prompt to run')
-  .argument('[promptKey]', 'Preset prompt key: changeButtonColor, addListItem, updateCardTitle')
-  .action(async (promptKey, options) => {
-    const analyst = new Analyst(options.target);
+  .command("init")
+  .description("Create a default configuration file")
+  .option("-c, --config <path>", "Path to config file", "darwin.config.json")
+  .action((options) => {
+    try {
+      createDefaultConfig(options.config);
+      console.log(chalk.green("✓ Configuration file created!"));
+      console.log(
+        chalk.cyan(
+          `\nEdit ${options.config} to set your website and task, then run:`
+        )
+      );
+      console.log(chalk.yellow("  darwin run\n"));
+    } catch (error: any) {
+      console.error(chalk.red(`Error: ${error.message}`));
+      process.exit(1);
+    }
+  });
 
-    if (options.prompt) {
-      await analyst.runCustomPrompt(options.prompt);
-    } else {
-      await analyst.evolve(promptKey);
+program
+  .command("run")
+  .description("Run the browser agent with the configured task")
+  .option("-c, --config <path>", "Path to config file", "darwin.config.json")
+  .option("-w, --website <url>", "Override website URL")
+  .option("-t, --task <task>", "Override task description")
+  .option("-m, --model <model>", "Override model")
+  .option("-s, --steps <number>", "Override max steps", parseInt)
+  .option("--env <env>", "Environment: LOCAL or BROWSERBASE", "LOCAL")
+  .action(async (options) => {
+    try {
+      // Load config
+      let config: DarwinConfig;
+      try {
+        config = loadConfig(options.config);
+      } catch (error: any) {
+        if (error.message.includes("not found")) {
+          console.error(chalk.red(error.message));
+          console.log(
+            chalk.yellow(
+              `\nRun 'darwin init' to create a configuration file.\n`
+            )
+          );
+          process.exit(1);
+        }
+        throw error;
+      }
+
+      // Override with command line options
+      if (options.website) config.website = options.website;
+      if (options.task) config.task = options.task;
+      if (options.model) config.model = options.model;
+      if (options.steps) config.maxSteps = options.steps;
+      if (options.env) config.env = options.env as "LOCAL" | "BROWSERBASE";
+
+      // Validate
+      if (!config.website) {
+        throw new Error("Website is required. Set it in config or use --website");
+      }
+      if (!config.task) {
+        throw new Error("Task is required. Set it in config or use --task");
+      }
+
+      // Create and run agent
+      const agentConfig = toBrowserAgentConfig(config);
+      const agent = new BrowserAgent(agentConfig);
+
+      try {
+        await agent.init();
+        const result = await agent.execute();
+        agent.printLogSummary();
+
+        // Exit with appropriate code
+        process.exit(result.success ? 0 : 1);
+      } finally {
+        await agent.close();
+      }
+    } catch (error: any) {
+      console.error(chalk.red(`\nError: ${error.message}`));
+      if (error.stack && process.env.DEBUG) {
+        console.error(chalk.gray(error.stack));
+      }
+      process.exit(1);
+    }
+  });
+
+program
+  .command("config")
+  .description("Manage configuration")
+  .option("-c, --config <path>", "Path to config file", "darwin.config.json")
+  .option("--set-website <url>", "Set website URL")
+  .option("--set-task <task>", "Set task description")
+  .option("--set-model <model>", "Set model")
+  .option("--set-steps <number>", "Set max steps", parseInt)
+  .action((options) => {
+    try {
+      let config: DarwinConfig;
+      try {
+        config = loadConfig(options.config);
+      } catch (error: any) {
+        if (error.message.includes("not found")) {
+          // Create default config if it doesn't exist
+          createDefaultConfig(options.config);
+          config = loadConfig(options.config);
+        } else {
+          throw error;
+        }
+      }
+
+      // Update config values
+      if (options.setWebsite) config.website = options.setWebsite;
+      if (options.setTask) config.task = options.setTask;
+      if (options.setModel) config.model = options.setModel;
+      if (options.setSteps) config.maxSteps = options.setSteps;
+
+      // Save updated config
+      saveConfig(config, options.config);
+      console.log(chalk.green(`✓ Configuration updated: ${options.config}`));
+      console.log(chalk.cyan(JSON.stringify(config, null, 2)));
+    } catch (error: any) {
+      console.error(chalk.red(`Error: ${error.message}`));
+      process.exit(1);
     }
   });
 

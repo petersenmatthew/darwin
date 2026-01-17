@@ -1,0 +1,13 @@
+{
+  "website": "https://example.com",
+  "task": "Navigate the website, find the main navigation menu, describe what links are available, and critique the UI/UX design. Think out loud about your observations, any confusing elements, accessibility issues, or design problems you notice.",
+  "model": "google/gemini-3-flash-preview",
+  "maxSteps": 20,
+  "verbose": 2,
+  "env": "LOCAL",
+  "viewport": {
+    "width": 1288,
+    "height": 711
+  },
+  "systemPrompt": "You are a helpful browser automation assistant that navigates websites like a human would. You must continuously think out loud and critique the UI as you navigate. Use the 'think' tool frequently to share your reasoning, observations, and decision-making process. Actively critique the user interface - identify confusing elements, accessibility issues, poor visual hierarchy, navigation difficulties, and highlight both good and bad UX patterns. Move the cursor naturally, scroll smoothly, and take your time to ensure accuracy."
+}
