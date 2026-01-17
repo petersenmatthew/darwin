@@ -4,20 +4,47 @@ import { useEffect, useRef } from 'react';
 import { usePathname } from 'next/navigation';
 import { trackEvent, getPageName } from '../amplitude';
 
+// Global tracking to prevent duplicates across component instances
+const trackedPages = new Map<string, number>();
+const TRACKING_WINDOW_MS = 1000; // Only track once per second per page
+
 export const usePageTracking = () => {
   const pathname = usePathname();
   const pageLoadTime = useRef<number>(Date.now());
   const hasTrackedPageView = useRef<boolean>(false);
+  const trackedPathname = useRef<string | null>(null);
   const abandonmentTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    // Track page view
+    const currentPathname = pathname || getPageName();
+    const now = Date.now();
+    
+    // Reset tracking if pathname changed
+    if (trackedPathname.current !== currentPathname) {
+      hasTrackedPageView.current = false;
+      trackedPathname.current = currentPathname;
+      pageLoadTime.current = now;
+    }
+
+    // Track page view only once per pathname change
     if (!hasTrackedPageView.current) {
-      trackEvent('page_viewed', {
-        page_name: pathname || getPageName(),
-      });
-      hasTrackedPageView.current = true;
-      pageLoadTime.current = Date.now();
+      // Check if we've tracked this page recently (within tracking window)
+      const lastTracked = trackedPages.get(currentPathname);
+      if (!lastTracked || (now - lastTracked) > TRACKING_WINDOW_MS) {
+        trackEvent('page_viewed', {
+          page_name: currentPathname,
+        });
+        trackedPages.set(currentPathname, now);
+        hasTrackedPageView.current = true;
+        pageLoadTime.current = now;
+        
+        // Clean up old entries from the map (older than 5 minutes)
+        trackedPages.forEach((timestamp, page) => {
+          if (now - timestamp > 300000) {
+            trackedPages.delete(page);
+          }
+        });
+      }
     }
 
     // Track page refresh
