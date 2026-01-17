@@ -5448,5 +5448,281 @@
     "timestamp": 1768690920391,
     "page_name": "/checkout",
     "time_on_page": 75980
+  },
+  {
+    "event": "session_started",
+    "session_id": "session_1768692041986_564svpm69",
+    "user_id": "user_1768692041986_i41bk77jz",
+    "timestamp": 1768692042022,
+    "page_name": "/",
+    "referrer": ""
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768692041986_564svpm69",
+    "user_id": "user_1768692041986_i41bk77jz",
+    "timestamp": 1768692042297,
+    "page_name": "/",
+    "time_on_page": 277
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768692041986_564svpm69",
+    "user_id": "user_1768692041986_i41bk77jz",
+    "timestamp": 1768692042297,
+    "page_name": "/",
+    "time_on_page": 277
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768692041986_564svpm69",
+    "user_id": "user_1768692041986_i41bk77jz",
+    "timestamp": 1768692042297,
+    "page_name": "/",
+    "time_on_page": 277
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768692041986_564svpm69",
+    "user_id": "user_1768692041986_i41bk77jz",
+    "timestamp": 1768692042298,
+    "page_name": "/",
+    "time_on_page": 278
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768692041986_564svpm69",
+    "user_id": "user_1768692041986_i41bk77jz",
+    "timestamp": 1768692042020,
+    "page_name": "/"
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768692041986_564svpm69",
+    "user_id": "user_1768692041986_i41bk77jz",
+    "timestamp": 1768692042298,
+    "page_name": "/",
+    "time_on_page": 278
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768692041986_564svpm69",
+    "user_id": "user_1768692041986_i41bk77jz",
+    "timestamp": 1768692042298,
+    "page_name": "/",
+    "time_on_page": 278
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768692041986_564svpm69",
+    "user_id": "user_1768692041986_i41bk77jz",
+    "timestamp": 1768692042298,
+    "page_name": "/",
+    "time_on_page": 278
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768692041986_564svpm69",
+    "user_id": "user_1768692041986_i41bk77jz",
+    "timestamp": 1768692042298,
+    "page_name": "/",
+    "time_on_page": 278
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768692041986_564svpm69",
+    "user_id": "user_1768692041986_i41bk77jz",
+    "timestamp": 1768692042298,
+    "page_name": "/",
+    "time_on_page": 278
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768692041986_564svpm69",
+    "user_id": "user_1768692041986_i41bk77jz",
+    "timestamp": 1768692044843,
+    "page_name": "/"
+  },
+  {
+    "event": "session_started",
+    "session_id": "session_1768692041986_564svpm69",
+    "user_id": "user_1768692041986_i41bk77jz",
+    "timestamp": 1768692044844,
+    "page_name": "/",
+    "referrer": ""
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768692041986_564svpm69",
+    "user_id": "user_1768692041986_i41bk77jz",
+    "timestamp": 1768692045134,
+    "page_name": "/",
+    "time_on_page": 291
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768692041986_564svpm69",
+    "user_id": "user_1768692041986_i41bk77jz",
+    "timestamp": 1768692045134,
+    "page_name": "/",
+    "time_on_page": 290
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768692041986_564svpm69",
+    "user_id": "user_1768692041986_i41bk77jz",
+    "timestamp": 1768692045134,
+    "page_name": "/",
+    "time_on_page": 290
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768692041986_564svpm69",
+    "user_id": "user_1768692041986_i41bk77jz",
+    "timestamp": 1768692045135,
+    "page_name": "/",
+    "time_on_page": 291
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768692041986_564svpm69",
+    "user_id": "user_1768692041986_i41bk77jz",
+    "timestamp": 1768692045135,
+    "page_name": "/",
+    "time_on_page": 291
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768692041986_564svpm69",
+    "user_id": "user_1768692041986_i41bk77jz",
+    "timestamp": 1768692045135,
+    "page_name": "/",
+    "time_on_page": 291
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768692041986_564svpm69",
+    "user_id": "user_1768692041986_i41bk77jz",
+    "timestamp": 1768692045135,
+    "page_name": "/",
+    "time_on_page": 291
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768692041986_564svpm69",
+    "user_id": "user_1768692041986_i41bk77jz",
+    "timestamp": 1768692045135,
+    "page_name": "/",
+    "time_on_page": 291
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768692041986_564svpm69",
+    "user_id": "user_1768692041986_i41bk77jz",
+    "timestamp": 1768692045135,
+    "page_name": "/",
+    "time_on_page": 291
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768692041986_564svpm69",
+    "user_id": "user_1768692041986_i41bk77jz",
+    "timestamp": 1768692045135,
+    "page_name": "/",
+    "time_on_page": 291
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768692041986_564svpm69",
+    "user_id": "user_1768692041986_i41bk77jz",
+    "timestamp": 1768692045135,
+    "page_name": "/",
+    "time_on_page": 291
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768692041986_564svpm69",
+    "user_id": "user_1768692041986_i41bk77jz",
+    "timestamp": 1768692045135,
+    "page_name": "/",
+    "time_on_page": 291
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768692041986_564svpm69",
+    "user_id": "user_1768692041986_i41bk77jz",
+    "timestamp": 1768692045135,
+    "page_name": "/",
+    "time_on_page": 291
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768692041986_564svpm69",
+    "user_id": "user_1768692041986_i41bk77jz",
+    "timestamp": 1768692045135,
+    "page_name": "/",
+    "time_on_page": 291
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768692041986_564svpm69",
+    "user_id": "user_1768692041986_i41bk77jz",
+    "timestamp": 1768692045135,
+    "page_name": "/",
+    "time_on_page": 291
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768692041986_564svpm69",
+    "user_id": "user_1768692041986_i41bk77jz",
+    "timestamp": 1768692045135,
+    "page_name": "/",
+    "time_on_page": 291
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768692041986_564svpm69",
+    "user_id": "user_1768692041986_i41bk77jz",
+    "timestamp": 1768692045443,
+    "page_name": "/"
+  },
+  {
+    "event": "session_started",
+    "session_id": "session_1768692041986_564svpm69",
+    "user_id": "user_1768692041986_i41bk77jz",
+    "timestamp": 1768692045444,
+    "page_name": "/",
+    "referrer": ""
+  },
+  {
+    "event": "page_abandoned",
+    "session_id": "session_1768692041986_564svpm69",
+    "user_id": "user_1768692041986_i41bk77jz",
+    "timestamp": 1768692075722,
+    "page_name": "/",
+    "time_on_page": 30279
+  },
+  {
+    "event": "session_started",
+    "session_id": "session_1768692315661_7msr7iw0y",
+    "user_id": "user_1768692315661_zmmcieuni",
+    "timestamp": 1768692315783,
+    "page_name": "/",
+    "referrer": ""
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768692315661_7msr7iw0y",
+    "user_id": "user_1768692315661_zmmcieuni",
+    "timestamp": 1768692315781,
+    "page_name": "/"
+  },
+  {
+    "event": "page_abandoned",
+    "session_id": "session_1768692315661_7msr7iw0y",
+    "user_id": "user_1768692315661_zmmcieuni",
+    "timestamp": 1768692346722,
+    "page_name": "/",
+    "time_on_page": 30942
   }
 ]

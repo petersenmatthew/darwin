@@ -7,7 +7,11 @@
   "scripts": {
     "dev": "npm run dev --workspaces",
     "build": "npm run build --workspaces",
+    "start:services": "concurrently -n \"API,Dashboard\" -c \"cyan,magenta\" \"cd packages/darwin-sdk/core && npm run start:dev\" \"cd packages/darwin-sdk/dashboard && npm run dev\"",
     "run-sdk-on-demo": "cd packages/demo-app && npx ts-node --require ../darwin-sdk/polyfill.js ../darwin-sdk/cli/index.ts run",
     "evolve": "cd packages/demo-app && npx ts-node --require ../darwin-sdk/polyfill.js ../darwin-sdk/cli/index.ts evolve"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
   }
 }
