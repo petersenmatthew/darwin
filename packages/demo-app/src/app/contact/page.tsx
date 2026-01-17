@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePageTracking } from '../../hooks/usePageTracking';
-import ScrollTracker from '../../components/tracking/ScrollTracker';
 import { useFormTracking } from '../../hooks/useFormTracking';
 
 export default function ContactPage() {
@@ -157,7 +156,6 @@ export default function ContactPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      <ScrollTracker />
       {/* Breadcrumb */}
       <nav className="text-sm mb-8">
         <ol className="flex items-center gap-2">

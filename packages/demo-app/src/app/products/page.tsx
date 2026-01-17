@@ -6,7 +6,6 @@ import { FilterIcon } from '@shopify/polaris-icons';
 import { products, categories } from '../../data/products';
 import ProductCard from '../../components/ProductCard';
 import { usePageTracking } from '../../hooks/usePageTracking';
-import ScrollTracker from '../../components/tracking/ScrollTracker';
 
 export default function ProductsPage() {
   usePageTracking();
@@ -32,7 +31,6 @@ export default function ProductsPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      <ScrollTracker />
       {/* Header */}
       <div className="mb-8">
         <Text as="h1" variant="headingXl" fontWeight="bold">

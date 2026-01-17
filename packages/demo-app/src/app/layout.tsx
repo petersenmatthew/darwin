@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { initAmplitude } from '../amplitude';
 import { useEffect } from 'react';
 import { useSessionTracking } from '../hooks/useSessionTracking';
+import ScrollTracker from '../components/tracking/ScrollTracker';
 // export const metadata: Metadata = {
 //   title: 'ShopWave - Demo Store',
 //   description: 'A demo e-commerce store',
@@ -33,6 +34,7 @@ export default function RootLayout({
         <PolarisProvider>
           <CartProvider>
             <WishlistProvider>
+              <ScrollTracker />
               <Navigation />
               <main>{children}</main>
 

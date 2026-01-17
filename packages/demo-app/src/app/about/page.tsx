@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePageTracking } from '../../hooks/usePageTracking';
-import ScrollTracker from '../../components/tracking/ScrollTracker';
 import SectionTracker from '../../components/tracking/SectionTracker';
 
 export default function AboutPage() {
@@ -74,7 +73,6 @@ export default function AboutPage() {
 
   return (
     <div className="min-h-screen">
-      <ScrollTracker />
       {/* Breadcrumb */}
       <div className="max-w-7xl mx-auto px-4 py-8">
         <nav className="text-sm mb-8">
