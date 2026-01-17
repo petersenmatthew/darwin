@@ -5,8 +5,19 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Text, Button, Divider } from '@shopify/polaris';
 import { useCart } from '../../context/CartContext';
+import { usePageTracking } from '../../hooks/usePageTracking';
+import ScrollTracker from '../../components/tracking/ScrollTracker';
+import { trackEvent } from '../../amplitude';
+import { useEffect } from 'react';
 
 export default function CheckoutPage() {
+  const { pageLoadTime } = usePageTracking();
+  
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      (window as any).checkoutStartTime = pageLoadTime;
+    }
+  }, [pageLoadTime]);
   const router = useRouter();
   const { items, getCartTotal, clearCart } = useCart();
   const [step, setStep] = useState(1);
@@ -40,6 +51,15 @@ export default function CheckoutPage() {
   }
 
   const handlePlaceOrder = () => {
+    // Track checkout completion
+    const checkoutStartTime = Date.now() - (typeof window !== 'undefined' ? (window as any).checkoutStartTime || Date.now() : Date.now());
+    trackEvent('goal_completed', {
+      goal_type: 'checkout',
+      goal_id: `checkout_complete_${Date.now()}`,
+      cart_value: total,
+      time_on_goal: checkoutStartTime,
+      page_name: 'checkout',
+    });
     clearCart();
     router.push('/checkout/success');
   };

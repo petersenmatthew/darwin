@@ -4,8 +4,11 @@ import Link from 'next/link';
 import { Text, Button, Badge, Icon, Divider } from '@shopify/polaris';
 import { DeleteIcon } from '@shopify/polaris-icons';
 import { useCart } from '../../context/CartContext';
+import { usePageTracking } from '../../hooks/usePageTracking';
+import ScrollTracker from '../../components/tracking/ScrollTracker';
 
 export default function CartPage() {
+  usePageTracking();
   const { items, updateQuantity, removeFromCart, getCartTotal } = useCart();
 
   const subtotal = getCartTotal();

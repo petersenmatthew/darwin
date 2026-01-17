@@ -8,8 +8,11 @@ import { StarFilledIcon, CartIcon, HeartIcon, CheckIcon } from '@shopify/polaris
 import { products } from '../../../data/products';
 import { useCart } from '../../../context/CartContext';
 import ProductCard from '../../../components/ProductCard';
+import { usePageTracking } from '../../../hooks/usePageTracking';
+import ScrollTracker from '../../../components/tracking/ScrollTracker';
 
 export default function ProductDetailPage() {
+  usePageTracking();
   const params = useParams();
   const router = useRouter();
   const product = products.find(p => p.id === params.id);

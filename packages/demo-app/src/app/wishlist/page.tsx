@@ -5,8 +5,11 @@ import Link from 'next/link';
 import { useWishlist } from '../../context/WishlistContext';
 import { useCart } from '../../context/CartContext';
 import { products } from '../../data/products';
+import { usePageTracking } from '../../hooks/usePageTracking';
+import ScrollTracker from '../../components/tracking/ScrollTracker';
 
 export default function WishlistPage() {
+  usePageTracking();
   const { items, removeFromWishlist, clearWishlist, addToWishlist } = useWishlist();
   const { addToCart } = useCart();
   const [showAddedMessage, setShowAddedMessage] = useState<string | null>(null);
