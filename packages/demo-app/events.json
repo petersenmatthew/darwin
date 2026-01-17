@@ -3,147 +3,243 @@
     "event": "navigation_clicked",
     "session_id": "session_1768676781826_cezicv2i1",
     "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768677878815,
-    "page_name": "/cart",
-    "link_href": "/",
-    "link_text": "Link",
-    "time_since_page_load": 14335
+    "timestamp": 1768678170297,
+    "page_name": "/",
+    "link_href": "/clothing",
+    "link_text": "Clothing",
+    "time_since_page_load": 24583
   },
   {
     "event": "page_viewed",
     "session_id": "session_1768676781826_cezicv2i1",
     "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768677879061,
+    "timestamp": 1768678172049,
+    "page_name": "/clothing"
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768678211700,
+    "page_name": "/products/4"
+  },
+  {
+    "event": "button_clicked",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768678217865,
+    "page_name": "/products/4",
+    "button_id": "add_to_cart_4",
+    "button_text": "Add to Cart",
+    "button_type": "add_to_cart",
+    "product_id": "4",
+    "product_name": "Organic Cotton T-Shirt",
+    "quantity": 1,
+    "time_since_page_load": 6182
+  },
+  {
+    "event": "page_abandoned",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768678257471,
+    "page_name": "/products/4",
+    "time_on_page": 45771
+  },
+  {
+    "event": "session_started",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768678426377,
+    "page_name": "/products/4",
+    "referrer": "http://localhost:3000/products/4"
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768678426371,
+    "page_name": "/products/4"
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768678454031,
+    "page_name": "/products/4"
+  },
+  {
+    "event": "session_started",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768678454036,
+    "page_name": "/products/4",
+    "referrer": "http://localhost:3000/products/4"
+  },
+  {
+    "event": "page_abandoned",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768678484480,
+    "page_name": "/products/4",
+    "time_on_page": 30449
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768678501521,
+    "page_name": "/products/4",
+    "time_on_page": 47490
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768678501522,
+    "page_name": "/products/4",
+    "time_on_page": 47490
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768678501523,
+    "page_name": "/products/4",
+    "time_on_page": 47490
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768678501523,
+    "page_name": "/products/4",
+    "time_on_page": 47491
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768678501524,
+    "page_name": "/products/4",
+    "time_on_page": 47492
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768678503496,
+    "page_name": "/products/4"
+  },
+  {
+    "event": "session_started",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768678503503,
+    "page_name": "/products/4",
+    "referrer": "http://localhost:3000/products/4"
+  },
+  {
+    "event": "back_button_clicked",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768678512505,
+    "page_name": "/products/4",
+    "previous_page": "/clothing",
+    "time_since_page_load": 9054
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768678512778,
+    "page_name": "/clothing"
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768678521053,
+    "page_name": "/clothing"
+  },
+  {
+    "event": "session_started",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768678521058,
+    "page_name": "/clothing",
+    "referrer": "http://localhost:3000/clothing"
+  },
+  {
+    "event": "navigation_clicked",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768678539785,
+    "page_name": "/clothing",
+    "link_href": "/",
+    "link_text": "Link",
+    "time_since_page_load": 18732
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768678540025,
     "page_name": "/"
   },
   {
     "event": "page_viewed",
     "session_id": "session_1768676781826_cezicv2i1",
     "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768677881897,
+    "timestamp": 1768678544622,
+    "page_name": "/clothing"
+  },
+  {
+    "event": "navigation_clicked",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768678552401,
+    "page_name": "/clothing",
+    "link_href": "/",
+    "link_text": "Link",
+    "time_since_page_load": 12376
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768678552426,
+    "page_name": "/"
+  },
+  {
+    "event": "navigation_clicked",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768678554228,
+    "page_name": "/",
+    "link_href": "/products",
+    "link_text": "All Products",
+    "time_since_page_load": 9606
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768676781826_cezicv2i1",
+    "user_id": "user_1768676781826_9r82zapnx",
+    "timestamp": 1768678555746,
     "page_name": "/products"
   },
   {
     "event": "page_viewed",
     "session_id": "session_1768676781826_cezicv2i1",
     "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768677885164,
-    "page_name": "/products/1"
-  },
-  {
-    "event": "button_clicked",
-    "session_id": "session_1768676781826_cezicv2i1",
-    "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768677893217,
-    "page_name": "/products/1",
-    "button_id": "add_to_cart_1",
-    "button_text": "Add to Cart",
-    "button_type": "add_to_cart",
-    "product_id": "1",
-    "product_name": "Wireless Bluetooth Headphones",
-    "quantity": 1,
-    "time_since_page_load": 8073
-  },
-  {
-    "event": "button_clicked",
-    "session_id": "session_1768676781826_cezicv2i1",
-    "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768677906916,
-    "page_name": "/products/1",
-    "button_id": "save_to_wishlist_1",
-    "button_text": "Save",
-    "button_type": "save_to_wishlist",
-    "product_id": "1",
-    "product_name": "Wireless Bluetooth Headphones",
-    "time_since_page_load": 21751
-  },
-  {
-    "event": "navigation_clicked",
-    "session_id": "session_1768676781826_cezicv2i1",
-    "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768677914176,
-    "page_name": "/products/1",
-    "link_href": "/wishlist",
-    "link_text": "Link",
-    "time_since_page_load": 29011
-  },
-  {
-    "event": "page_viewed",
-    "session_id": "session_1768676781826_cezicv2i1",
-    "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768677915689,
-    "page_name": "/wishlist"
+    "timestamp": 1768678560877,
+    "page_name": "/"
   },
   {
     "event": "page_abandoned",
     "session_id": "session_1768676781826_cezicv2i1",
     "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768677946471,
-    "page_name": "/wishlist",
-    "time_on_page": 30782
-  },
-  {
-    "event": "page_abandoned",
-    "session_id": "session_1768676781826_cezicv2i1",
-    "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768677946471,
-    "page_name": "/wishlist",
-    "time_on_page": 30781
-  },
-  {
-    "event": "page_abandoned",
-    "session_id": "session_1768676781826_cezicv2i1",
-    "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768677946472,
-    "page_name": "/wishlist",
-    "time_on_page": 30782
-  },
-  {
-    "event": "page_abandoned",
-    "session_id": "session_1768676781826_cezicv2i1",
-    "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768677946472,
-    "page_name": "/wishlist",
-    "time_on_page": 30782
-  },
-  {
-    "event": "page_abandoned",
-    "session_id": "session_1768676781826_cezicv2i1",
-    "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768677946472,
-    "page_name": "/wishlist",
-    "time_on_page": 30782
-  },
-  {
-    "event": "page_abandoned",
-    "session_id": "session_1768676781826_cezicv2i1",
-    "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768677946472,
-    "page_name": "/wishlist",
-    "time_on_page": 30782
-  },
-  {
-    "event": "page_abandoned",
-    "session_id": "session_1768676781826_cezicv2i1",
-    "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768677946473,
-    "page_name": "/wishlist",
-    "time_on_page": 30783
-  },
-  {
-    "event": "page_abandoned",
-    "session_id": "session_1768676781826_cezicv2i1",
-    "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768677946474,
-    "page_name": "/wishlist",
-    "time_on_page": 30784
-  },
-  {
-    "event": "page_abandoned",
-    "session_id": "session_1768676781826_cezicv2i1",
-    "user_id": "user_1768676781826_9r82zapnx",
-    "timestamp": 1768677946474,
-    "page_name": "/wishlist",
-    "time_on_page": 30784
+    "timestamp": 1768678591483,
+    "page_name": "/",
+    "time_on_page": 30606
   }
 ]
