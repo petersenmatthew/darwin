@@ -3,6 +3,7 @@ import type { AgentResult } from "@browserbasehq/stagehand";
 import { ElevenLabsClient } from "@elevenlabs/elevenlabs-js";
 import * as dotenv from "dotenv";
 import * as path from "path";
+import * as fs from "fs";
 import chalk from "chalk";
 
 // Load environment variables
@@ -116,82 +117,121 @@ export class BrowserAgent {
    */
   private async injectOverlay(page: any) {
     try {
-      await page.evaluate(() => {
-        (window as any).createAgentOverlay = () => {
-          if (document.getElementById("agent-overlay")) return;
+        // Read local avatar file
+        const avatarPath = path.resolve(__dirname, "assets/avatar.glb");
+        let avatarDataUri = "";
+        
+        try {
+            if (fs.existsSync(avatarPath)) {
+                const avatarBuffer = fs.readFileSync(avatarPath);
+                avatarDataUri = `data:model/gltf-binary;base64,${avatarBuffer.toString('base64')}`;
+                console.log("Loaded local avatar model.");
+            } else {
+                console.warn("Local avatar not found, using fallback URL.");
+                avatarDataUri = "https://models.readyplayer.me/64b73eac23865614945417e9.glb";
+            }
+        } catch (err) {
+            console.error("Error reading avatar file:", err);
+            avatarDataUri = "https://models.readyplayer.me/64b73eac23865614945417e9.glb";
+        }
 
-          console.log("Injecting Agent Overlay...");
+        await page.evaluate((avatarUri: string) => {
+            (window as any).createAgentOverlay = () => {
+                if (document.getElementById('agent-overlay')) return;
+                
+                console.log("Overlay: Creating container...");
+                
+                const container = document.createElement('div');
+                container.id = 'agent-overlay';
+                container.style.position = 'fixed';
+                container.style.bottom = '20px';
+                container.style.left = '20px';
+                container.style.width = '250px';
+                container.style.height = '250px';
+                container.style.zIndex = '2147483647';
+                container.style.pointerEvents = 'none';
+                container.style.borderRadius = '50%';
+                container.style.overflow = 'hidden';
+                container.style.border = '4px solid yellow';
+                container.style.backgroundColor = 'rgba(0,0,0,0.5)';
+                container.style.fontFamily = 'sans-serif';
+                container.style.fontSize = '14px';
+                
+                // Create separate elements for loading text and canvas
+                container.innerHTML = `
+                    <div id="agent-loading" style="position:absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:white; z-index:10;">Initializing...</div>
+                    <div id="agent-canvas" style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:1;"></div>
+                `;
+                
+                document.body.appendChild(container);
 
-          const container = document.createElement("div");
-          container.id = "agent-overlay";
-          container.style.position = "fixed";
-          container.style.bottom = "20px";
-          container.style.left = "20px";
-          container.style.width = "250px";
-          container.style.height = "250px";
-          container.style.zIndex = "2147483647";
-          container.style.pointerEvents = "none";
-          container.style.borderRadius = "50%";
-          container.style.overflow = "hidden";
-          container.style.border = "4px solid yellow"; // Loading state
-          container.style.backgroundColor = "rgba(0,0,0,0.8)";
-          container.style.transition = "border-color 0.5s";
-          container.innerHTML =
-            '<div style="color:white; text-align:center; padding-top:100px; font-family:sans-serif;">Initializing Agent...</div>';
-
-          document.body.appendChild(container);
-
-          const mod = document.createElement("script");
-          mod.type = "module";
-          mod.textContent = `
-                    import { TalkingHead } from "https://esm.sh/@met4citizen/talkinghead@1.7.0";
+                const mod = document.createElement('script');
+                mod.type = 'module';
+                mod.textContent = `
+                    // Use esm.sh for automatic dependency resolution
+                    import { TalkingHead } from "https://esm.sh/@met4citizen/talkinghead";
                     
                     (async () => {
+                        const nodeCanvas = document.getElementById('agent-canvas');
+                        const nodeLoading = document.getElementById('agent-loading');
+                        const container = document.getElementById('agent-overlay');
+                        
                         try {
-                            const node = document.getElementById('agent-overlay');
-                            if (!node) return;
-                            node.innerHTML = '';
+                            if (nodeLoading) nodeLoading.innerText = 'Loading Engine...';
                             
-                            const head = new TalkingHead(node, {
-                                cameraView: "head",
+                            // Initialize TalkingHead on the dedicated canvas div
+                            const head = new TalkingHead(nodeCanvas, {
+                                cameraView: "upper",
                                 avatarMood: "neutral",
                                 lipsyncModules: ["en"],
-                                cameraDistance: 1.5
+                                cameraDistance: 2.5
                             });
 
-                            await head.loadAvatar("https://models.readyplayer.me/64b73eac23865614945417e9.glb");
+                            if (nodeLoading) nodeLoading.innerText = 'Loading Avatar...';
                             
-                            node.style.borderColor = '#00ff00'; // Ready state
-                            node.style.backgroundColor = 'rgba(0,0,0,0.5)';
+                            // Load the avatar from Data URI
+                            await head.showAvatar({
+                                url: "${avatarUri}",
+                                body: "M",
+                                avatarMood: "neutral",
+                                ttsLang: "en-GB",
+                                ttsVoice: "en-GB-Standard-A",
+                                lipsyncLang: "en"
+                            });
+                            
+                            if (container) {
+                                container.style.borderColor = '#00ff00'; // Green = Success
+                                container.style.backgroundColor = 'rgba(0,0,0,0.1)'; // Transparent background
+                            }
+                            if (nodeLoading) nodeLoading.style.display = 'none'; // Hide loading text
                             
                             head.start();
                             window.agentHead = head;
-                            console.log("Agent Head Ready");
+                            console.log("Overlay: Agent Head Ready");
                         } catch(e) {
-                            console.error("Agent Head Init Failed:", e);
-                            const node = document.getElementById('agent-overlay');
-                            if(node) {
-                                node.style.borderColor = 'red';
-                                node.innerHTML = '<div style="color:red; text-align:center; padding-top:100px;">Load Failed</div>';
+                            console.error("Overlay Error:", e);
+                            if (container) container.style.borderColor = 'red';
+                            if (nodeLoading) {
+                                nodeLoading.innerHTML = "Load Failed:<br>" + e.message;
+                                nodeLoading.style.color = 'red';
                             }
                         }
                     })();
                 `;
-          document.body.appendChild(mod);
-        };
+                document.body.appendChild(mod);
+            };
 
-        (window as any).createAgentOverlay();
-
-        // Persistence logic
-        const observer = new MutationObserver(() => {
-          if (!document.getElementById("agent-overlay")) {
             (window as any).createAgentOverlay();
-          }
-        });
-        observer.observe(document.body, { childList: true });
-      });
+
+            const observer = new MutationObserver(() => {
+                if (!document.getElementById('agent-overlay')) {
+                    (window as any).createAgentOverlay();
+                }
+            });
+            observer.observe(document.body, { childList: true });
+        }, avatarDataUri);
     } catch (e) {
-      console.error(chalk.red(`Failed to inject overlay: ${e}`));
+        console.error(chalk.red(`Failed to inject overlay: ${e}`));
     }
   }
 
@@ -204,28 +244,37 @@ export class BrowserAgent {
     if (!page) return;
 
     try {
-      const dataUri = `data:audio/mpeg;base64,${base64Audio}`;
-      await page.evaluate(
-        ({ uri, text }) => {
-          // Try to use the 3D Head first
-          if ((window as any).agentHead) {
-            fetch(uri)
-              .then((res) => res.arrayBuffer())
-              .then((buffer) => {
-                (window as any).agentHead.speakAudio(buffer, { text: text });
-              })
-              .catch((e) => console.error("Head Playback error:", e));
-          } else {
-            // Fallback: Play audio directly if head isn't ready
-            console.log("Agent Head not ready, playing audio only.");
-            const audio = new Audio(uri);
-            audio.play().catch((e) => console.error("Audio Playback error:", e));
-          }
-        },
-        { uri: dataUri, text }
-      );
+        const dataUri = `data:audio/mpeg;base64,${base64Audio}`;
+        await page.evaluate(async ({ uri, text }) => {
+            // Helper to wait for head
+            const waitForHead = async () => {
+                for(let i=0; i<30; i++) { // Wait up to 3 seconds
+                    if((window as any).agentHead) return (window as any).agentHead;
+                    await new Promise(r => setTimeout(r, 100));
+                }
+                return null;
+            };
+
+            const head = await waitForHead();
+
+            if (head) {
+                console.log("Browser: Speaking via 3D Head");
+                fetch(uri)
+                    .then(res => res.arrayBuffer())
+                    .then(buffer => {
+                        head.speakAudio(buffer, { text: text });
+                    })
+                    .catch(e => console.error("Head Playback error:", e));
+            } else {
+                console.log("Browser: Agent Head NOT ready (timeout), playing audio fallback.");
+                const audio = new Audio(uri);
+                audio.play() 
+                    .then(() => console.log("Audio playback started successfully"))
+                    .catch(e => console.error("Audio Playback error:", e));
+            }
+        }, { uri: dataUri, text });
     } catch (error) {
-      console.error("Failed to speak in browser:", error);
+        console.error("Failed to speak in browser:", error);
     }
   }
 
@@ -339,7 +388,7 @@ export class BrowserAgent {
           "";
 
         if (thought) {
-          const thoughtText =
+          const thoughtText = 
             typeof thought === "string" ? thought : JSON.stringify(thought);
           if (!seenThoughts.has(thoughtText)) {
             seenThoughts.add(thoughtText);
