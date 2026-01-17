@@ -99,7 +99,12 @@ program
       try {
         await agent.init();
         const result = await agent.execute();
-        agent.printLogSummary();
+
+        console.log(chalk.green(`\n✓ Task completed: ${result.success ? "Success" : "Failed"}`));
+        if (result.message) {
+          console.log(chalk.cyan(`  Message: ${result.message}`));
+        }
+        console.log(chalk.cyan(`  Actions: ${result.actions?.length || 0}`));
 
         // Exit with appropriate code
         process.exit(result.success ? 0 : 1);
@@ -133,7 +138,7 @@ program
           // Create default config if it doesn't exist
           createDefaultConfig(options.config);
           config = loadConfig(options.config);
-        } else {
+    } else {
           throw error;
         }
       }
