@@ -2620,5 +2620,139 @@
     "field_name": "shipping_state",
     "field_type": "select",
     "time_since_page_load": 94815
+  },
+  {
+    "event": "session_started",
+    "session_id": "session_1768687788168_jplnfvluw",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768687788210,
+    "page_name": "/",
+    "referrer": ""
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768687788168_jplnfvluw",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768687788208,
+    "page_name": "/"
+  },
+  {
+    "event": "page_abandoned",
+    "session_id": "session_1768687788168_jplnfvluw",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768687820677,
+    "page_name": "/",
+    "time_on_page": 32469
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768687788168_jplnfvluw",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768687844853,
+    "page_name": "/",
+    "scroll_direction": "down",
+    "scroll_position": 83,
+    "scroll_percent": 5,
+    "time_since_page_load": 56645
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768687788168_jplnfvluw",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768687846426,
+    "page_name": "/accessories"
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768687788168_jplnfvluw",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768687847565,
+    "page_name": "/accessories",
+    "scroll_direction": "down",
+    "scroll_position": 439,
+    "scroll_percent": 9,
+    "time_since_page_load": 59357
+  },
+  {
+    "event": "button_clicked",
+    "session_id": "session_1768687788168_jplnfvluw",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768687848105,
+    "page_name": "/accessories",
+    "button_id": "add_to_cart_5",
+    "button_text": "Add to Cart",
+    "button_type": "add_to_cart",
+    "product_id": "5",
+    "product_name": "Stainless Steel Water Bottle",
+    "time_since_page_load": 1709
+  },
+  {
+    "event": "navigation_clicked",
+    "session_id": "session_1768687788168_jplnfvluw",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768687849040,
+    "page_name": "/accessories",
+    "link_href": "/cart",
+    "link_text": "Link",
+    "time_since_page_load": 2614
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768687788168_jplnfvluw",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768687849149,
+    "page_name": "/cart"
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768687788168_jplnfvluw",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768687849453,
+    "page_name": "/cart",
+    "scroll_direction": "up",
+    "scroll_position": 0,
+    "scroll_percent": 0,
+    "time_since_page_load": 3027
+  },
+  {
+    "event": "button_clicked",
+    "session_id": "session_1768687788168_jplnfvluw",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768687863899,
+    "page_name": "/cart",
+    "button_id": "proceed_to_checkout",
+    "button_text": "Proceed to Checkout",
+    "button_type": "checkout",
+    "cart_total": 47.7792,
+    "time_since_page_load": 14758
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768687788168_jplnfvluw",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768687863998,
+    "page_name": "/checkout"
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768687788168_jplnfvluw",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768687864945,
+    "page_name": "/checkout",
+    "scroll_direction": "down",
+    "scroll_position": 140,
+    "scroll_percent": 17,
+    "time_since_page_load": 15796
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768687788168_jplnfvluw",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768687869009,
+    "page_name": "/checkout",
+    "scroll_direction": "down",
+    "scroll_position": 141,
+    "scroll_percent": 17,
+    "time_since_page_load": 19860
   }
 ]

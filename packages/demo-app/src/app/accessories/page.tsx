@@ -21,7 +21,7 @@ export default function AccessoriesPage() {
               <Text as="p" variant="bodySm" fontWeight="medium">
                 <span className="text-gray-400">PREMIUM COLLECTION</span>
               </Text>
-              <Text as="h1" variant="heading3xl" fontWeight="bold">
+              <Text as="h1" variant="heading2xl" fontWeight="bold">
                 Accessories That Define You
               </Text>
               <p className="mt-4 text-lg text-gray-400">

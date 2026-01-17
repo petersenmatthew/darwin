@@ -21,7 +21,7 @@ export default function ElectronicsPage() {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
               <Badge tone="info">Featured</Badge>
-              <Text as="h1" variant="heading3xl" fontWeight="bold">
+              <Text as="h1" variant="heading2xl" fontWeight="bold">
                 {featuredProduct.title}
               </Text>
               <p className="mt-4 text-lg text-gray-300">

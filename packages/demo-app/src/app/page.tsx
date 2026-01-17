@@ -17,7 +17,7 @@ export default function Home() {
       <section className="bg-gradient-to-r from-green-600 to-green-700 text-white">
         <div className="max-w-7xl mx-auto px-4 py-20">
           <div className="max-w-2xl">
-            <Text as="h1" variant="heading3xl" fontWeight="bold">
+            <Text as="h1" variant="heading2xl" fontWeight="bold">
               New Season Arrivals
             </Text>
             <p className="mt-4 text-lg text-green-100">
