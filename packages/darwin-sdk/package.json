@@ -1,0 +1,32 @@
+{
+    "name": "darwin-ui",
+    "version": "0.0.1",
+    "description": "The Interface That Evolves Itself",
+    "main": "dist/index.js",
+    "bin": {
+        "darwin": "./dist/cli/index.js"
+    },
+    "scripts": {
+        "build": "tsc",
+        "start": "node dist/cli/index.js",
+        "dev": "ts-node cli/index.ts"
+    },
+    "dependencies": {
+        "@amplitude/analytics-node": "^1.0.0",
+        "chalk": "^4.1.2",
+        "chokidar": "^3.5.3",
+        "commander": "^11.0.0",
+        "cors": "^2.8.5",
+        "express": "^4.18.2",
+        "langchain": "^0.1.0",
+        "openai": "^4.0.0",
+        "playwright": "^1.40.0"
+    },
+    "devDependencies": {
+        "@types/cors": "^2.8.17",
+        "@types/express": "^4.17.21",
+        "@types/node": "^20.0.0",
+        "ts-node": "^10.9.1",
+        "typescript": "^5.0.0"
+    }
+}
