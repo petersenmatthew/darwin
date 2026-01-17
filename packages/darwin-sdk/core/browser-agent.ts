@@ -1,5 +1,4 @@
 import { Stagehand } from "@browserbasehq/stagehand";
-import type { AgentResult } from "@browserbasehq/stagehand";
 
 export interface BrowserAgentConfig {
   website: string;
@@ -12,6 +11,13 @@ export interface BrowserAgentConfig {
   verbose?: 0 | 1 | 2;
   systemPrompt?: string;
   thinkingFormat?: string;
+}
+
+export interface ThoughtEntry {
+  step: number;
+  text: string;
+  timestamp: string;
+  source: 'stream' | 'step_finish' | 'tool_result' | 'final_reasoning';
 }
 
 export class BrowserAgent {
@@ -60,7 +66,7 @@ export class BrowserAgent {
   /**
    * Execute the task and stream output
    */
-  async execute(): Promise<AgentResult> {
+  async execute(): Promise<ThoughtEntry[]> {
     if (!this.stagehand) {
       throw new Error("Agent not initialized. Call init() first.");
     }
@@ -104,7 +110,21 @@ ${thinkingFormatInstructions}
     await page.goto(this.config.website);
 
     // Track seen thoughts to avoid duplicates
+    const thoughts: ThoughtEntry[] = [];
     const seenThoughts = new Set<string>();
+
+    const addThought = (text: string, source: ThoughtEntry['source'], step: number) => {
+      if (!seenThoughts.has(text)) {
+        seenThoughts.add(text);
+        thoughts.push({
+          step,
+          text,
+          timestamp: new Date().toISOString(),
+          source,
+        });
+        console.log('\n💭 Thinking:', text);
+      }
+    };
 
     // Track step history to force thinking
     let stepNumber = 0;
@@ -146,26 +166,22 @@ ${thinkingFormatInstructions}
           if (event.toolCalls) {
             lastStepToolCalls = event.toolCalls;
             lastStepHadThink = event.toolCalls.some((tc: any) => tc.toolName === 'think');
-            
+
             for (const toolCall of event.toolCalls) {
               if (toolCall.toolName === 'think') {
                 // Extract thought from think tool call
-                const thought = toolCall.args?.thought || 
-                              toolCall.args?.text || 
+                const thought = toolCall.args?.thought ||
+                              toolCall.args?.text ||
                               toolCall.args?.input ||
                               toolCall.input ||
                               toolCall.args || '';
-                
+
                 if (thought) {
-                  const thoughtText = typeof thought === 'string' 
-                    ? thought 
+                  const thoughtText = typeof thought === 'string'
+                    ? thought
                     : JSON.stringify(thought, null, 2);
-                  
-                  // Avoid duplicates
-                  if (!seenThoughts.has(thoughtText)) {
-                    seenThoughts.add(thoughtText);
-                    console.log('\n💭 Thinking:', thoughtText);
-                  }
+
+                  addThought(thoughtText, 'step_finish', stepNumber);
                 }
               } else if (toolCall.toolName !== 'think') {
                 // Show other tool calls
@@ -183,43 +199,32 @@ ${thinkingFormatInstructions}
     // Stream fullStream to capture think tool calls in real-time
     for await (const event of streamResult.fullStream) {
       const eventAny = event as any;
-      
+
       // Look for think tool calls in the stream
       if (event.type === 'tool-call' && eventAny.toolName === 'think') {
         // Extract thinking from think tool calls
-        const thought = eventAny.args?.thought || 
-                       eventAny.args?.text || 
+        const thought = eventAny.args?.thought ||
+                       eventAny.args?.text ||
                        eventAny.args?.input ||
                        eventAny.input ||
                        eventAny.args || '';
-        
+
         if (thought) {
-          const thoughtText = typeof thought === 'string' 
-            ? thought 
+          const thoughtText = typeof thought === 'string'
+            ? thought
             : JSON.stringify(thought, null, 2);
-          
-          // Avoid duplicates
-          if (!seenThoughts.has(thoughtText)) {
-            seenThoughts.add(thoughtText);
-            console.log('\n💭 Thinking:', thoughtText);
-          }
+
+          addThought(thoughtText, 'stream', stepNumber);
         }
-      } else if (event.type === 'tool-call' && eventAny.toolName !== 'think') {
-        // Show other tool calls (avoid duplicates with onStepFinish)
-        // Only log if we haven't seen it in onStepFinish
-        // For now, we'll let onStepFinish handle most tool calls
       } else if (event.type === 'tool-result' && eventAny.toolName === 'think') {
         // Think tool results - sometimes the result contains the thought
         const result = eventAny.result;
         if (result) {
-          const resultText = typeof result === 'string' 
-            ? result 
+          const resultText = typeof result === 'string'
+            ? result
             : JSON.stringify(result, null, 2);
-          
-          if (!seenThoughts.has(resultText)) {
-            seenThoughts.add(resultText);
-            console.log('\n💭 Thought Result:', resultText);
-          }
+
+          addThought(resultText, 'tool_result', stepNumber);
         }
       }
     }
@@ -269,12 +274,12 @@ ${thinkingFormatInstructions}
             .trim();
         }
         if (reasoning) {
-          console.log('\n💭 Final Reasoning:', reasoning);
+          addThought(reasoning, 'final_reasoning', stepNumber);
         }
       }
     }
-    
-    return finalResult;
+
+    return thoughts;
   }
 
   /**
