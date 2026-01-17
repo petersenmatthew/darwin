@@ -56,9 +56,15 @@ export const usePageTracking = () => {
       }
     }
 
-    // Track page refresh
+    // Track page refresh - debounced to prevent duplicate events
+    let lastRefreshTrack = 0;
     const handleBeforeUnload = () => {
-      const timeOnPage = Date.now() - pageLoadTime.current;
+      const now = Date.now();
+      // Prevent duplicate refresh events within 100ms
+      if (now - lastRefreshTrack < 100) return;
+      lastRefreshTrack = now;
+
+      const timeOnPage = now - pageLoadTime.current;
       trackEvent('page_refresh', {
         page_name: pathname || getPageName(),
         time_on_page: timeOnPage,

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Text, Button, Divider } from '@shopify/polaris';
@@ -10,11 +10,42 @@ import ScrollTracker from '../../components/tracking/ScrollTracker';
 import { trackEvent } from '../../amplitude';
 import { useFormTracking } from '../../hooks/useFormTracking';
 
+const US_STATES = [
+  { code: 'AL', name: 'Alabama' }, { code: 'AK', name: 'Alaska' }, { code: 'AZ', name: 'Arizona' },
+  { code: 'AR', name: 'Arkansas' }, { code: 'CA', name: 'California' }, { code: 'CO', name: 'Colorado' },
+  { code: 'CT', name: 'Connecticut' }, { code: 'DE', name: 'Delaware' }, { code: 'FL', name: 'Florida' },
+  { code: 'GA', name: 'Georgia' }, { code: 'HI', name: 'Hawaii' }, { code: 'ID', name: 'Idaho' },
+  { code: 'IL', name: 'Illinois' }, { code: 'IN', name: 'Indiana' }, { code: 'IA', name: 'Iowa' },
+  { code: 'KS', name: 'Kansas' }, { code: 'KY', name: 'Kentucky' }, { code: 'LA', name: 'Louisiana' },
+  { code: 'ME', name: 'Maine' }, { code: 'MD', name: 'Maryland' }, { code: 'MA', name: 'Massachusetts' },
+  { code: 'MI', name: 'Michigan' }, { code: 'MN', name: 'Minnesota' }, { code: 'MS', name: 'Mississippi' },
+  { code: 'MO', name: 'Missouri' }, { code: 'MT', name: 'Montana' }, { code: 'NE', name: 'Nebraska' },
+  { code: 'NV', name: 'Nevada' }, { code: 'NH', name: 'New Hampshire' }, { code: 'NJ', name: 'New Jersey' },
+  { code: 'NM', name: 'New Mexico' }, { code: 'NY', name: 'New York' }, { code: 'NC', name: 'North Carolina' },
+  { code: 'ND', name: 'North Dakota' }, { code: 'OH', name: 'Ohio' }, { code: 'OK', name: 'Oklahoma' },
+  { code: 'OR', name: 'Oregon' }, { code: 'PA', name: 'Pennsylvania' }, { code: 'RI', name: 'Rhode Island' },
+  { code: 'SC', name: 'South Carolina' }, { code: 'SD', name: 'South Dakota' }, { code: 'TN', name: 'Tennessee' },
+  { code: 'TX', name: 'Texas' }, { code: 'UT', name: 'Utah' }, { code: 'VT', name: 'Vermont' },
+  { code: 'VA', name: 'Virginia' }, { code: 'WA', name: 'Washington' }, { code: 'WV', name: 'West Virginia' },
+  { code: 'WI', name: 'Wisconsin' }, { code: 'WY', name: 'Wyoming' }, { code: 'DC', name: 'District of Columbia' },
+];
+
 export default function CheckoutPage() {
   const { pageLoadTime } = usePageTracking();
   const router = useRouter();
-  const { items, getCartTotal, clearCart } = useCart();
+  const { items, getCartTotal, clearCart, appliedPromo, getDiscount } = useCart();
   const [step, setStep] = useState(1);
+  const [stateSearch, setStateSearch] = useState('');
+  const [selectedState, setSelectedState] = useState('');
+  const [showStateDropdown, setShowStateDropdown] = useState(false);
+
+  const filteredStates = useMemo(() => {
+    if (!stateSearch) return US_STATES;
+    const search = stateSearch.toLowerCase();
+    return US_STATES.filter(
+      state => state.name.toLowerCase().includes(search) || state.code.toLowerCase().includes(search)
+    );
+  }, [stateSearch]);
   
   // Form tracking for checkout forms
   const {
@@ -47,9 +78,10 @@ export default function CheckoutPage() {
   };
 
   const subtotal = getCartTotal();
+  const discount = getDiscount();
   const shipping = subtotal > 50 ? 0 : 9.99;
-  const tax = subtotal * 0.08;
-  const total = subtotal + shipping + tax;
+  const tax = (subtotal - discount) * 0.08;
+  const total = subtotal - discount + shipping + tax;
 
   const handleNextStep = () => {
     const form = document.getElementById('checkout-form') as HTMLFormElement;
@@ -227,6 +259,59 @@ export default function CheckoutPage() {
                       className="w-full border rounded-md px-3 py-2"
                       required
                     />
+                  </div>
+                  <div className="relative">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      State <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      name="state"
+                      placeholder="Type to search..."
+                      value={stateSearch || selectedState}
+                      onFocus={() => {
+                        handleFieldFocus('shipping_state', 'autocomplete');
+                        setShowStateDropdown(true);
+                        if (selectedState) {
+                          setStateSearch('');
+                        }
+                      }}
+                      onChange={(e) => {
+                        setStateSearch(e.target.value);
+                        setSelectedState('');
+                        setShowStateDropdown(true);
+                      }}
+                      onBlur={(e) => {
+                        setTimeout(() => setShowStateDropdown(false), 150);
+                        handleFieldBlur('shipping_state', 'autocomplete', e);
+                      }}
+                      className="w-full border rounded-md px-3 py-2"
+                      required
+                      autoComplete="off"
+                    />
+                    <input type="hidden" name="stateCode" value={selectedState ? US_STATES.find(s => s.name === selectedState)?.code || '' : ''} required />
+                    {showStateDropdown && (
+                      <ul className="absolute z-10 w-full bg-white border rounded-md mt-1 max-h-48 overflow-y-auto shadow-lg">
+                        {filteredStates.length > 0 ? (
+                          filteredStates.map((state) => (
+                            <li
+                              key={state.code}
+                              className="px-3 py-2 hover:bg-gray-100 cursor-pointer text-sm"
+                              onMouseDown={() => {
+                                setSelectedState(state.name);
+                                setStateSearch('');
+                                setShowStateDropdown(false);
+                                trackFieldCompleted('shipping_state', 'autocomplete', true);
+                              }}
+                            >
+                              {state.name} ({state.code})
+                            </li>
+                          ))
+                        ) : (
+                          <li className="px-3 py-2 text-gray-500 text-sm">No states found</li>
+                        )}
+                      </ul>
+                    )}
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -463,66 +548,6 @@ export default function CheckoutPage() {
               </>
             )}
 
-            {/* Navigation */}
-            <div className="mt-8 flex justify-between">
-              {step > 1 ? (
-                <Button 
-                  onClick={() => {
-                    const timeSincePageLoad = pageLoadTime ? Date.now() - pageLoadTime : undefined;
-                    trackEvent('button_clicked', {
-                      button_id: `checkout_back_step_${step}`,
-                      button_text: 'Back',
-                      button_type: 'checkout_navigation',
-                      current_step: step,
-                      new_step: step - 1,
-                      time_since_page_load: timeSincePageLoad,
-                    });
-                    setStep(step - 1);
-                  }}
-                >
-                  Back
-                </Button>
-              ) : (
-                <Link href="/cart">
-                  <Button
-                    onClick={() => {
-                      const timeSincePageLoad = pageLoadTime ? Date.now() - pageLoadTime : undefined;
-                      trackEvent('button_clicked', {
-                        button_id: 'back_to_cart',
-                        button_text: 'Back to Cart',
-                        button_type: 'navigation',
-                        time_since_page_load: timeSincePageLoad,
-                      });
-                    }}
-                  >
-                    Back to Cart
-                  </Button>
-                </Link>
-              )}
-              {step < 3 ? (
-                <Button 
-                  variant="primary" 
-                  onClick={() => {
-                    const timeSincePageLoad = pageLoadTime ? Date.now() - pageLoadTime : undefined;
-                    trackEvent('button_clicked', {
-                      button_id: `checkout_next_step_${step}`,
-                      button_text: 'Continue',
-                      button_type: 'checkout_navigation',
-                      current_step: step,
-                      new_step: step + 1,
-                      time_since_page_load: timeSincePageLoad,
-                    });
-                    handleNextStep();
-                  }}
-                >
-                  Continue
-                </Button>
-              ) : (
-                <Button variant="primary" onClick={handlePlaceOrder}>
-                  Place Order
-                </Button>
-              )}
-            </div>
           </div>
         </div>
 
@@ -565,6 +590,12 @@ export default function CheckoutPage() {
                 <span className="text-gray-500">Subtotal</span>
                 <span>${subtotal.toFixed(2)}</span>
               </div>
+              {appliedPromo && (
+                <div className="flex justify-between text-sm text-green-600">
+                  <span>Discount ({appliedPromo})</span>
+                  <span>-${discount.toFixed(2)}</span>
+                </div>
+              )}
               <div className="flex justify-between text-sm">
                 <span className="text-gray-500">Shipping</span>
                 <span>{shipping === 0 ? 'Free' : `$${shipping.toFixed(2)}`}</span>
@@ -582,6 +613,81 @@ export default function CheckoutPage() {
           </div>
         </div>
       </div>
+
+      {/* Sticky Navigation Footer */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t shadow-lg p-4 z-50">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <div className="flex items-center gap-4">
+            {step > 1 ? (
+              <Button
+                onClick={() => {
+                  const timeSincePageLoad = pageLoadTime ? Date.now() - pageLoadTime : undefined;
+                  trackEvent('button_clicked', {
+                    button_id: `checkout_back_step_${step}`,
+                    button_text: 'Back',
+                    button_type: 'checkout_navigation',
+                    current_step: step,
+                    new_step: step - 1,
+                    time_since_page_load: timeSincePageLoad,
+                  });
+                  setStep(step - 1);
+                }}
+              >
+                Back
+              </Button>
+            ) : (
+              <Link href="/cart">
+                <Button
+                  onClick={() => {
+                    const timeSincePageLoad = pageLoadTime ? Date.now() - pageLoadTime : undefined;
+                    trackEvent('button_clicked', {
+                      button_id: 'back_to_cart',
+                      button_text: 'Back to Cart',
+                      button_type: 'navigation',
+                      time_since_page_load: timeSincePageLoad,
+                    });
+                  }}
+                >
+                  Back to Cart
+                </Button>
+              </Link>
+            )}
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="text-right hidden sm:block">
+              <Text as="span" variant="bodySm" tone="subdued">Total</Text>
+              <Text as="p" variant="bodyLg" fontWeight="bold">${total.toFixed(2)}</Text>
+            </div>
+            {step < 3 ? (
+              <Button
+                variant="primary"
+                size="large"
+                onClick={() => {
+                  const timeSincePageLoad = pageLoadTime ? Date.now() - pageLoadTime : undefined;
+                  trackEvent('button_clicked', {
+                    button_id: `checkout_next_step_${step}`,
+                    button_text: 'Continue',
+                    button_type: 'checkout_navigation',
+                    current_step: step,
+                    new_step: step + 1,
+                    time_since_page_load: timeSincePageLoad,
+                  });
+                  handleNextStep();
+                }}
+              >
+                Continue
+              </Button>
+            ) : (
+              <Button variant="primary" size="large" onClick={handlePlaceOrder}>
+                Place Order
+              </Button>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Spacer for sticky footer */}
+      <div className="h-24"></div>
     </div>
   );
 }

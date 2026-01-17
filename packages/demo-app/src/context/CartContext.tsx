@@ -16,12 +16,18 @@ interface CartContextType {
   clearCart: () => void;
   getCartTotal: () => number;
   getCartCount: () => number;
+  // Promo code support
+  appliedPromo: string | null;
+  applyPromo: (code: string) => boolean;
+  removePromo: () => void;
+  getDiscount: () => number;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
+  const [appliedPromo, setAppliedPromo] = useState<string | null>(null);
 
   const addToCart = (product: Product, quantity: number = 1) => {
     setItems((currentItems) => {
@@ -58,6 +64,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const clearCart = () => {
     setItems([]);
+    setAppliedPromo(null);
   };
 
   const getCartTotal = () => {
@@ -66,6 +73,25 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const getCartCount = () => {
     return items.reduce((count, item) => count + item.quantity, 0);
+  };
+
+  const applyPromo = (code: string): boolean => {
+    const normalizedCode = code.trim().toUpperCase();
+    if (normalizedCode === 'WELCOME10') {
+      setAppliedPromo(normalizedCode);
+      return true;
+    }
+    return false;
+  };
+
+  const removePromo = () => {
+    setAppliedPromo(null);
+  };
+
+  const getDiscount = () => {
+    if (!appliedPromo) return 0;
+    const subtotal = getCartTotal();
+    return subtotal * 0.1; // 10% discount
   };
 
   return (
@@ -78,6 +104,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
         clearCart,
         getCartTotal,
         getCartCount,
+        appliedPromo,
+        applyPromo,
+        removePromo,
+        getDiscount,
       }}
     >
       {children}
