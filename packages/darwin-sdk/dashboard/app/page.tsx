@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AgentConfigForm } from "@/components/AgentConfigForm";
+import { AgentConfigForm, AgentMode } from "@/components/AgentConfigForm";
 import { AgentExecution } from "@/components/AgentExecution";
 import { apiClient } from "@/lib/api-client";
 import { Card, CardContent } from "@/components/ui/card";
@@ -9,12 +9,15 @@ import { Card, CardContent } from "@/components/ui/card";
 export default function Dashboard() {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [currentMode, setCurrentMode] = useState<AgentMode>("run");
 
-  const handleStartAgent = async (config: any) => {
+  const handleStartAgent = async (config: any, mode: AgentMode) => {
     setIsLoading(true);
+    setCurrentMode(mode);
     try {
-      const result = await apiClient.startAgent(config);
-      // The Express API returns a simple response, we'll use a timestamp as session ID
+      const result = mode === "evolve"
+        ? await apiClient.startEvolve(config)
+        : await apiClient.startAgent(config);
       setSessionId(result.sessionId || `session-${Date.now()}`);
     } catch (error: any) {
       alert(`Error: ${error.message}`);
@@ -33,7 +36,9 @@ export default function Dashboard() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Darwin Orchestrator</h1>
           <p className="text-muted-foreground mt-2">
-            Configure and run browser agents with real-time monitoring
+            {sessionId && currentMode === "evolve"
+              ? "Running evolution pipeline: Agent → Analyze → Claude fixes code"
+              : "Configure and run browser agents with real-time monitoring"}
           </p>
         </div>
 

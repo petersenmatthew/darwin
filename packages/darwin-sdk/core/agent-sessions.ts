@@ -2,11 +2,18 @@ import { EventEmitter } from "events";
 import type { BrowserAgentConfig } from "./browser-agent";
 import type { AgentResult } from "@browserbasehq/stagehand";
 
+export interface EvolutionResult {
+  success: boolean;
+  message: string;
+}
+
+export type SessionResult = AgentResult | EvolutionResult;
+
 export interface AgentSession {
   id: string;
   status: "initializing" | "running" | "completed" | "error" | "cancelled";
   config: BrowserAgentConfig;
-  result?: AgentResult;
+  result?: SessionResult;
   error?: string;
   createdAt: Date;
   completedAt?: Date;
@@ -62,7 +69,7 @@ class AgentSessionManager extends EventEmitter {
     }
   }
 
-  setSessionResult(id: string, result: AgentResult): void {
+  setSessionResult(id: string, result: SessionResult): void {
     const session = this.sessions.get(id);
     if (session) {
       session.result = result;

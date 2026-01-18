@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Text, Button, Divider } from '@shopify/polaris';
@@ -10,42 +10,25 @@ import ScrollTracker from '../../components/tracking/ScrollTracker';
 import { trackEvent } from '../../amplitude';
 import { useFormTracking } from '../../hooks/useFormTracking';
 
-const US_STATES = [
-  { code: 'AL', name: 'Alabama' }, { code: 'AK', name: 'Alaska' }, { code: 'AZ', name: 'Arizona' },
-  { code: 'AR', name: 'Arkansas' }, { code: 'CA', name: 'California' }, { code: 'CO', name: 'Colorado' },
-  { code: 'CT', name: 'Connecticut' }, { code: 'DE', name: 'Delaware' }, { code: 'FL', name: 'Florida' },
-  { code: 'GA', name: 'Georgia' }, { code: 'HI', name: 'Hawaii' }, { code: 'ID', name: 'Idaho' },
-  { code: 'IL', name: 'Illinois' }, { code: 'IN', name: 'Indiana' }, { code: 'IA', name: 'Iowa' },
-  { code: 'KS', name: 'Kansas' }, { code: 'KY', name: 'Kentucky' }, { code: 'LA', name: 'Louisiana' },
-  { code: 'ME', name: 'Maine' }, { code: 'MD', name: 'Maryland' }, { code: 'MA', name: 'Massachusetts' },
-  { code: 'MI', name: 'Michigan' }, { code: 'MN', name: 'Minnesota' }, { code: 'MS', name: 'Mississippi' },
-  { code: 'MO', name: 'Missouri' }, { code: 'MT', name: 'Montana' }, { code: 'NE', name: 'Nebraska' },
-  { code: 'NV', name: 'Nevada' }, { code: 'NH', name: 'New Hampshire' }, { code: 'NJ', name: 'New Jersey' },
-  { code: 'NM', name: 'New Mexico' }, { code: 'NY', name: 'New York' }, { code: 'NC', name: 'North Carolina' },
-  { code: 'ND', name: 'North Dakota' }, { code: 'OH', name: 'Ohio' }, { code: 'OK', name: 'Oklahoma' },
-  { code: 'OR', name: 'Oregon' }, { code: 'PA', name: 'Pennsylvania' }, { code: 'RI', name: 'Rhode Island' },
-  { code: 'SC', name: 'South Carolina' }, { code: 'SD', name: 'South Dakota' }, { code: 'TN', name: 'Tennessee' },
-  { code: 'TX', name: 'Texas' }, { code: 'UT', name: 'Utah' }, { code: 'VT', name: 'Vermont' },
-  { code: 'VA', name: 'Virginia' }, { code: 'WA', name: 'Washington' }, { code: 'WV', name: 'West Virginia' },
-  { code: 'WI', name: 'Wisconsin' }, { code: 'WY', name: 'Wyoming' }, { code: 'DC', name: 'District of Columbia' },
-];
-
 export default function CheckoutPage() {
   const { pageLoadTime } = usePageTracking();
   const router = useRouter();
-  const { items, getCartTotal, clearCart, appliedPromo, getDiscount } = useCart();
+  const { items, getCartTotal, clearCart, appliedPromo, applyPromo, removePromo, getDiscount } = useCart();
   const [step, setStep] = useState(1);
-  const [stateSearch, setStateSearch] = useState('');
-  const [selectedState, setSelectedState] = useState('');
-  const [showStateDropdown, setShowStateDropdown] = useState(false);
+  const [promoCode, setPromoCode] = useState('');
+  const [promoError, setPromoError] = useState('');
 
-  const filteredStates = useMemo(() => {
-    if (!stateSearch) return US_STATES;
-    const search = stateSearch.toLowerCase();
-    return US_STATES.filter(
-      state => state.name.toLowerCase().includes(search) || state.code.toLowerCase().includes(search)
-    );
-  }, [stateSearch]);
+  const handleApplyPromo = () => {
+    if (appliedPromo) {
+      setPromoError('Promo code already applied');
+      return;
+    }
+    if (applyPromo(promoCode)) {
+      setPromoError('');
+    } else {
+      setPromoError('Invalid promo code');
+    }
+  };
   
   // Form tracking for checkout forms
   const {
@@ -245,7 +228,7 @@ export default function CheckoutPage() {
                       className="w-full border rounded-md px-3 py-2"
                     />
                   </div>
-                  <div>
+                  <div className="col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       City <span className="text-red-500">*</span>
                     </label>
@@ -259,59 +242,6 @@ export default function CheckoutPage() {
                       className="w-full border rounded-md px-3 py-2"
                       required
                     />
-                  </div>
-                  <div className="relative">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      State <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      name="state"
-                      placeholder="Type to search..."
-                      value={stateSearch || selectedState}
-                      onFocus={() => {
-                        handleFieldFocus('shipping_state', 'autocomplete');
-                        setShowStateDropdown(true);
-                        if (selectedState) {
-                          setStateSearch('');
-                        }
-                      }}
-                      onChange={(e) => {
-                        setStateSearch(e.target.value);
-                        setSelectedState('');
-                        setShowStateDropdown(true);
-                      }}
-                      onBlur={(e) => {
-                        setTimeout(() => setShowStateDropdown(false), 150);
-                        handleFieldBlur('shipping_state', 'autocomplete', e);
-                      }}
-                      className="w-full border rounded-md px-3 py-2"
-                      required
-                      autoComplete="off"
-                    />
-                    <input type="hidden" name="stateCode" value={selectedState ? US_STATES.find(s => s.name === selectedState)?.code || '' : ''} required />
-                    {showStateDropdown && (
-                      <ul className="absolute z-10 w-full bg-white border rounded-md mt-1 max-h-48 overflow-y-auto shadow-lg">
-                        {filteredStates.length > 0 ? (
-                          filteredStates.map((state) => (
-                            <li
-                              key={state.code}
-                              className="px-3 py-2 hover:bg-gray-100 cursor-pointer text-sm"
-                              onMouseDown={() => {
-                                setSelectedState(state.name);
-                                setStateSearch('');
-                                setShowStateDropdown(false);
-                                trackFieldCompleted('shipping_state', 'autocomplete', true);
-                              }}
-                            >
-                              {state.name} ({state.code})
-                            </li>
-                          ))
-                        ) : (
-                          <li className="px-3 py-2 text-gray-500 text-sm">No states found</li>
-                        )}
-                      </ul>
-                    )}
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -468,7 +398,7 @@ export default function CheckoutPage() {
                         <p className="text-sm text-gray-600 mt-1">
                           John Doe<br />
                           123 Main Street, Apt 4B<br />
-                          San Francisco, CA 94102<br />
+                          San Francisco, 94102<br />
                           (555) 123-4567
                         </p>
                       </div>
@@ -609,6 +539,56 @@ export default function CheckoutPage() {
                 <span>Total</span>
                 <span>${total.toFixed(2)}</span>
               </div>
+            </div>
+
+            {/* Promo Code */}
+            <div className="mt-6 pt-4 border-t">
+              <Text as="h3" variant="bodySm" fontWeight="medium">
+                Have a promo code?
+              </Text>
+              {appliedPromo ? (
+                <div className="mt-2 p-3 bg-green-50 rounded-md text-sm text-green-700 flex items-center justify-between">
+                  <span>Code &quot;{appliedPromo}&quot; applied - 10% off!</span>
+                  <button
+                    onClick={() => {
+                      removePromo();
+                      setPromoCode('');
+                    }}
+                    className="text-green-800 hover:underline text-xs"
+                  >
+                    Remove
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <div className="flex gap-2 mt-2">
+                    <input
+                      type="text"
+                      placeholder="Enter code"
+                      value={promoCode}
+                      onChange={(e) => setPromoCode(e.target.value)}
+                      className="flex-1 border rounded-md px-3 py-2 text-sm"
+                    />
+                    <Button
+                      onClick={() => {
+                        const timeSincePageLoad = pageLoadTime ? Date.now() - pageLoadTime : undefined;
+                        trackEvent('button_clicked', {
+                          button_id: 'apply_promo_code_checkout',
+                          button_text: 'Apply',
+                          button_type: 'apply_promo',
+                          time_since_page_load: timeSincePageLoad,
+                        });
+                        handleApplyPromo();
+                      }}
+                    >
+                      Apply
+                    </Button>
+                  </div>
+                  {promoError && (
+                    <p className="mt-1 text-sm text-red-600">{promoError}</p>
+                  )}
+                </>
+              )}
             </div>
           </div>
         </div>

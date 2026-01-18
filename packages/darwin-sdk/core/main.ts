@@ -373,67 +373,119 @@ export function startDarwin() {
         };
       }
 
-      console.log(chalk.blue("🚀 Starting evolution pipeline..."));
-
-      // Step 1: Run the browser agent
-      console.log(chalk.cyan("Step 1: Running browser agent..."));
       const agentConfig = toBrowserAgentConfig(config);
-      const agent = new BrowserAgent(agentConfig);
 
-      let thoughts: ThoughtEntry[] = [];
-      try {
-        await agent.init();
-        const executeResult = await agent.execute();
-        thoughts = executeResult.thoughts;
-        console.log(chalk.green(`✓ Agent completed with ${thoughts.length} thoughts`));
-      } finally {
-        await agent.close();
-      }
-
-      // Step 2: Load events from events.json
-      console.log(chalk.cyan("Step 2: Loading analytics events..."));
-      const eventsFilePath = targetAppPath
-        ? path.join(targetAppPath, "events.json")
-        : path.join(process.cwd(), "../demo-app/events.json");
-
-      let analyticsSnapshot: AnalyticsSnapshot = { events: [] };
-      if (fs.existsSync(eventsFilePath)) {
-        try {
-          const eventsContent = fs.readFileSync(eventsFilePath, "utf-8");
-          const events = JSON.parse(eventsContent);
-          analyticsSnapshot = { events: Array.isArray(events) ? events : [] };
-          console.log(chalk.green(`✓ Loaded ${analyticsSnapshot.events.length} events`));
-        } catch (error) {
-          console.log(chalk.yellow("⚠ Could not parse events.json, using empty events"));
+      // Create session for streaming logs
+      const sessionId = sessionManager.createSession(agentConfig);
+      agentConfig.onEvent = (type, data) => {
+        if (type === 'think') {
+          sessionManager.addLog(sessionId, 'think', data.thought || JSON.stringify(data));
+        } else if (type === 'action') {
+          sessionManager.addLog(sessionId, 'action', data.toolName || JSON.stringify(data));
+        } else if (type === 'status') {
+          sessionManager.addLog(sessionId, 'status', data.status || JSON.stringify(data));
+        } else if (type === 'error') {
+          sessionManager.addLog(sessionId, 'error', data.message || JSON.stringify(data));
         }
-      } else {
-        console.log(chalk.yellow("⚠ No events.json found, using empty events"));
-      }
+      };
 
-      // Step 3: Run the analyst
-      console.log(chalk.cyan("Step 3: Analyzing data with Gemini..."));
-      const appPath = targetAppPath || path.resolve(process.cwd(), "../demo-app");
-      const analyst = new Analyst(appPath);
-      const analysis = await analyst.analyze(analyticsSnapshot, thoughts);
-      console.log(chalk.green(`✓ Analysis complete: ${analysis.mainProblems.length} issues found`));
-      console.log(chalk.gray(`  Summary: ${analysis.summary}`));
+      // Start intercepting console logs
+      sessionManager.startLogging(sessionId);
+      sessionManager.addLog(sessionId, "status", "Evolution pipeline started...");
 
-      // Step 4: Evolve the codebase with Claude
-      console.log(chalk.cyan("Step 4: Evolving codebase with Claude..."));
-      const evolutionResult = await analyst.evolve(analysis);
-      console.log(chalk.green("✓ Evolution complete!"));
+      // Run the evolution pipeline asynchronously
+      (async () => {
+        try {
+          console.log(chalk.blue("🚀 Starting evolution pipeline..."));
 
+          // Step 1: Run the browser agent
+          console.log(chalk.cyan("Step 1: Running browser agent..."));
+          sessionManager.addLog(sessionId, "status", "Step 1: Running browser agent...");
+          const agent = new BrowserAgent(agentConfig);
+
+          let thoughts: ThoughtEntry[] = [];
+          try {
+            await agent.init();
+            sessionManager.updateSessionStatus(sessionId, "running");
+            const executeResult = await agent.execute();
+            thoughts = executeResult.thoughts;
+            console.log(chalk.green(`✓ Agent completed with ${thoughts.length} thoughts`));
+            sessionManager.addLog(sessionId, "status", `Agent completed with ${thoughts.length} thoughts`);
+          } finally {
+            await agent.close();
+          }
+
+          // Step 2: Load events from events.json
+          console.log(chalk.cyan("Step 2: Loading analytics events..."));
+          sessionManager.addLog(sessionId, "status", "Step 2: Loading analytics events...");
+          const appPath = targetAppPath || path.resolve(process.cwd(), "../../demo-app");
+          const eventsFilePath = path.join(appPath, "events.json");
+
+          let analyticsSnapshot: AnalyticsSnapshot = { events: [] };
+          if (fs.existsSync(eventsFilePath)) {
+            try {
+              const eventsContent = fs.readFileSync(eventsFilePath, "utf-8");
+              const events = JSON.parse(eventsContent);
+              analyticsSnapshot = { events: Array.isArray(events) ? events : [] };
+              console.log(chalk.green(`✓ Loaded ${analyticsSnapshot.events.length} events`));
+              sessionManager.addLog(sessionId, "status", `Loaded ${analyticsSnapshot.events.length} analytics events`);
+            } catch (error) {
+              console.log(chalk.yellow("⚠ Could not parse events.json, using empty events"));
+              sessionManager.addLog(sessionId, "log", "Could not parse events.json, using empty events");
+            }
+          } else {
+            console.log(chalk.yellow("⚠ No events.json found, using empty events"));
+            sessionManager.addLog(sessionId, "log", "No events.json found, using empty events");
+          }
+
+          // Step 3: Run the analyst
+          console.log(chalk.cyan("Step 3: Analyzing data with Gemini..."));
+          sessionManager.addLog(sessionId, "status", "Step 3: Analyzing data with Gemini...");
+          const analyst = new Analyst(appPath);
+          const analysis = await analyst.analyze(analyticsSnapshot, thoughts);
+          console.log(chalk.green(`✓ Analysis complete: ${analysis.mainProblems.length} issues found`));
+          console.log(chalk.gray(`  Summary: ${analysis.summary}`));
+          sessionManager.addLog(sessionId, "status", `Analysis complete: ${analysis.mainProblems.length} issues found`);
+          sessionManager.addLog(sessionId, "think", `Summary: ${analysis.summary}`);
+
+          // Log each problem found
+          for (const problem of analysis.mainProblems) {
+            sessionManager.addLog(sessionId, "think", `Issue [${problem.severity}]: ${problem.hypothesis}`);
+          }
+
+          // Step 4: Evolve the codebase with Claude
+          console.log(chalk.cyan("Step 4: Evolving codebase with Claude..."));
+          sessionManager.addLog(sessionId, "status", "Step 4: Evolving codebase with Claude...");
+          const evolutionResult = await analyst.evolve(analysis);
+          console.log(chalk.green("✓ Evolution complete!"));
+
+          sessionManager.addLog(sessionId, "status", "Evolution complete!");
+          if (evolutionResult.stdout) {
+            sessionManager.addLog(sessionId, "result", evolutionResult.stdout);
+          }
+
+          sessionManager.setSessionResult(sessionId, {
+            success: true,
+            message: `Evolution pipeline completed - ${thoughts.length} thoughts, ${analyticsSnapshot.events.length} events, ${analysis.mainProblems.length} issues fixed`,
+          });
+          sessionManager.stopLogging();
+        } catch (error: any) {
+          console.error(chalk.red(`Pipeline error: ${error.message}`));
+          sessionManager.addLog(sessionId, "error", error.message);
+          sessionManager.setSessionError(sessionId, error.message);
+          sessionManager.stopLogging();
+        }
+      })();
+
+      // Return immediately with session ID for streaming
       res.json({
-        status: "completed",
-        pipeline: {
-          thoughts: thoughts.length,
-          events: analyticsSnapshot.events.length,
-          issues: analysis.mainProblems.length,
-          analysis: analysis,
-        },
-        evolution: {
-          stdout: evolutionResult.stdout,
-          stderr: evolutionResult.stderr,
+        sessionId,
+        status: "started",
+        message: "Evolution pipeline started",
+        config: {
+          website: config.website,
+          task: config.task,
+          targetAppPath: targetAppPath || "../../demo-app",
         },
       });
     } catch (error: any) {

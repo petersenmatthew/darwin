@@ -14,12 +14,15 @@ import {
 } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
+export type AgentMode = "run" | "evolve";
+
 interface AgentConfigFormProps {
-  onSubmit: (config: any) => Promise<void>;
+  onSubmit: (config: any, mode: AgentMode) => Promise<void>;
   isLoading?: boolean;
 }
 
 export function AgentConfigForm({ onSubmit, isLoading }: AgentConfigFormProps) {
+  const [mode, setMode] = useState<AgentMode>("run");
   const [formData, setFormData] = useState({
     website: "https://example.com",
     task: "",
@@ -31,6 +34,7 @@ export function AgentConfigForm({ onSubmit, isLoading }: AgentConfigFormProps) {
     verbose: 1 as 0 | 1 | 2,
     systemPrompt: "",
     thinkingFormat: "",
+    targetAppPath: "",
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -51,8 +55,11 @@ export function AgentConfigForm({ onSubmit, isLoading }: AgentConfigFormProps) {
 
     if (formData.systemPrompt) config.systemPrompt = formData.systemPrompt;
     if (formData.thinkingFormat) config.thinkingFormat = formData.thinkingFormat;
+    if (mode === "evolve" && formData.targetAppPath) {
+      config.targetAppPath = formData.targetAppPath;
+    }
 
-    await onSubmit(config);
+    await onSubmit(config, mode);
   };
 
   return (
@@ -63,6 +70,33 @@ export function AgentConfigForm({ onSubmit, isLoading }: AgentConfigFormProps) {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <Label>Mode</Label>
+            <div className="flex gap-2">
+              <Button
+                type="button"
+                variant={mode === "run" ? "default" : "outline"}
+                className="flex-1"
+                onClick={() => setMode("run")}
+              >
+                Run Agent
+              </Button>
+              <Button
+                type="button"
+                variant={mode === "evolve" ? "default" : "outline"}
+                className="flex-1"
+                onClick={() => setMode("evolve")}
+              >
+                Evolve
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {mode === "run"
+                ? "Run the browser agent to test your app"
+                : "Full evolution loop: Agent → Analyze → Claude fixes code"}
+            </p>
+          </div>
+
           <div className="space-y-2">
             <Label htmlFor="website">Website URL</Label>
             <Input
@@ -236,8 +270,32 @@ export function AgentConfigForm({ onSubmit, isLoading }: AgentConfigFormProps) {
             />
           </div>
 
+          {mode === "evolve" && (
+            <div className="space-y-2">
+              <Label htmlFor="targetAppPath">Target App Path</Label>
+              <Input
+                id="targetAppPath"
+                type="text"
+                value={formData.targetAppPath}
+                onChange={(e) =>
+                  setFormData({ ...formData, targetAppPath: e.target.value })
+                }
+                placeholder="../../demo-app (default)"
+              />
+              <p className="text-xs text-muted-foreground">
+                Path to the app codebase that Claude will modify
+              </p>
+            </div>
+          )}
+
           <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? "Starting..." : "Start Agent"}
+            {isLoading
+              ? mode === "evolve"
+                ? "Evolving..."
+                : "Starting..."
+              : mode === "evolve"
+              ? "Start Evolution"
+              : "Start Agent"}
           </Button>
         </form>
       </CardContent>
