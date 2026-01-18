@@ -156,11 +156,11 @@ export default function ProductDetailPage() {
                     });
                     setQuantity(Math.max(1, quantity - 1));
                   }}
-                  className="px-3 py-2 hover:bg-gray-50"
+                  className="px-3 py-2 hover:bg-gray-50 flex items-center justify-center"
                 >
                   -
                 </button>
-                <span className="px-4 py-2 border-x">{quantity}</span>
+                <span className="px-4 py-2 border-x flex items-center justify-center min-w-[3rem]">{quantity}</span>
                 <button
                   onClick={() => {
                     const timeSincePageLoad = pageLoadTime ? Date.now() - pageLoadTime : undefined;
@@ -176,18 +176,18 @@ export default function ProductDetailPage() {
                     });
                     setQuantity(quantity + 1);
                   }}
-                  className="px-3 py-2 hover:bg-gray-50"
+                  className="px-3 py-2 hover:bg-gray-50 flex items-center justify-center"
                 >
                   +
                 </button>
               </div>
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex items-center gap-3">
               <button
                 onClick={handleAddToCart}
                 disabled={!product.inStock}
-                className={`flex-1 py-3 px-6 rounded-md font-medium flex items-center justify-center gap-2 transition-colors ${
+                className={`flex-1 py-3 px-6 rounded-md font-medium flex items-center justify-center gap-2 transition-colors h-12 ${
                   addedToCart
                     ? 'bg-green-700 text-white'
                     : product.inStock
