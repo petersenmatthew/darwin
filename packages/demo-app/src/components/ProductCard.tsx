@@ -45,7 +45,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             className="w-full h-full object-cover"
           />
           {product.compareAtPrice && (
-            <div className="absolute top-2 left-2">
+            <div className="absolute top-2 right-2 flex items-center justify-end gap-1">
               <Badge tone="success">Sale</Badge>
             </div>
           )}
@@ -61,7 +61,6 @@ export default function ProductCard({ product }: ProductCardProps) {
                 onClick={handleAddToCart}
                 className="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md text-sm font-medium flex items-center justify-center gap-2"
               >
-                <Icon source={CartIcon} />
                 Add to Cart
               </button>
             </div>
@@ -71,8 +70,16 @@ export default function ProductCard({ product }: ProductCardProps) {
           <Text as="p" variant="bodyMd" fontWeight="medium" truncate>
             {product.title}
           </Text>
-          <div className="flex items-center gap-1 mt-1">
-            <Icon source={StarFilledIcon} tone="warning" />
+          <div className="flex items-center gap-2 mt-1 justify-start">
+            <div className="flex items-center">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <Icon
+                  key={i}
+                  source={StarFilledIcon}
+                  tone={i <= Math.floor(product.rating) ? 'warning' : 'subdued'}
+                />
+              ))}
+            </div>
             <Text as="span" variant="bodySm" tone="subdued">
               {product.rating} ({product.reviews})
             </Text>
