@@ -11,10 +11,44 @@ export default function ProductsPage() {
   usePageTracking();
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [sortBy, setSortBy] = useState('featured');
+  const [priceFilters, setPriceFilters] = useState({
+    under50: false,
+    between50and100: false,
+    between100and200: false,
+    over200: false,
+  });
+  const [availabilityFilters, setAvailabilityFilters] = useState({
+    inStock: true,
+    outOfStock: false,
+  });
 
-  const filteredProducts = selectedCategory === 'All'
+  const categoryFiltered = selectedCategory === 'All'
     ? products
     : products.filter(p => p.category === selectedCategory);
+
+  const anyPriceSelected = Object.values(priceFilters).some(Boolean);
+  const priceMatches = (price: number) => {
+    const matchUnder50 = price < 50 && priceFilters.under50;
+    const match50to100 = price >= 50 && price < 100 && priceFilters.between50and100;
+    const match100to200 = price >= 100 && price < 200 && priceFilters.between100and200;
+    const matchOver200 = price >= 200 && priceFilters.over200;
+    return matchUnder50 || match50to100 || match100to200 || matchOver200;
+  };
+
+  const anyAvailabilitySelected = Object.values(availabilityFilters).some(Boolean);
+  const availabilityMatches = (inStock: boolean) => {
+    // If neither availability checkbox is on, allow all
+    if (!anyAvailabilitySelected) return true;
+    if (availabilityFilters.inStock && inStock) return true;
+    if (availabilityFilters.outOfStock && !inStock) return true;
+    return false;
+  };
+
+  const filteredProducts = categoryFiltered.filter((p) => {
+    const priceOk = anyPriceSelected ? priceMatches(p.price) : true;
+    const availOk = availabilityMatches(p.inStock);
+    return priceOk && availOk;
+  });
 
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     switch (sortBy) {
@@ -70,19 +104,47 @@ export default function ProductsPage() {
               </Text>
               <div className="mt-4 space-y-2">
                 <label className="flex items-center gap-2 text-sm text-gray-600">
-                  <input type="checkbox" className="rounded" />
+                  <input
+                    type="checkbox"
+                    className="rounded"
+                    checked={priceFilters.under50}
+                    onChange={(e) =>
+                      setPriceFilters((prev) => ({ ...prev, under50: e.target.checked }))
+                    }
+                  />
                   Under $50
                 </label>
                 <label className="flex items-center gap-2 text-sm text-gray-600">
-                  <input type="checkbox" className="rounded" />
+                  <input
+                    type="checkbox"
+                    className="rounded"
+                    checked={priceFilters.between50and100}
+                    onChange={(e) =>
+                      setPriceFilters((prev) => ({ ...prev, between50and100: e.target.checked }))
+                    }
+                  />
                   $50 - $100
                 </label>
                 <label className="flex items-center gap-2 text-sm text-gray-600">
-                  <input type="checkbox" className="rounded" />
+                  <input
+                    type="checkbox"
+                    className="rounded"
+                    checked={priceFilters.between100and200}
+                    onChange={(e) =>
+                      setPriceFilters((prev) => ({ ...prev, between100and200: e.target.checked }))
+                    }
+                  />
                   $100 - $200
                 </label>
                 <label className="flex items-center gap-2 text-sm text-gray-600">
-                  <input type="checkbox" className="rounded" />
+                  <input
+                    type="checkbox"
+                    className="rounded"
+                    checked={priceFilters.over200}
+                    onChange={(e) =>
+                      setPriceFilters((prev) => ({ ...prev, over200: e.target.checked }))
+                    }
+                  />
                   Over $200
                 </label>
               </div>
@@ -94,11 +156,25 @@ export default function ProductsPage() {
               </Text>
               <div className="mt-4 space-y-2">
                 <label className="flex items-center gap-2 text-sm text-gray-600">
-                  <input type="checkbox" className="rounded" defaultChecked />
+                  <input
+                    type="checkbox"
+                    className="rounded"
+                    checked={availabilityFilters.inStock}
+                    onChange={(e) =>
+                      setAvailabilityFilters((prev) => ({ ...prev, inStock: e.target.checked }))
+                    }
+                  />
                   In Stock
                 </label>
                 <label className="flex items-center gap-2 text-sm text-gray-600">
-                  <input type="checkbox" className="rounded" />
+                  <input
+                    type="checkbox"
+                    className="rounded"
+                    checked={availabilityFilters.outOfStock}
+                    onChange={(e) =>
+                      setAvailabilityFilters((prev) => ({ ...prev, outOfStock: e.target.checked }))
+                    }
+                  />
                   Out of Stock
                 </label>
               </div>

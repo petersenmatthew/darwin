@@ -33,8 +33,20 @@ export default function ClothingPage() {
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <div className="aspect-[3/4] bg-gray-200 rounded-lg"></div>
-              <div className="aspect-[3/4] bg-gray-300 rounded-lg mt-8"></div>
+              <div className="aspect-[3/4] rounded-lg overflow-hidden">
+                <img
+                  src={clothingProducts[0]?.image}
+                  alt={clothingProducts[0]?.title ?? 'Featured look 1'}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="aspect-[3/4] rounded-lg mt-8 overflow-hidden">
+                <img
+                  src={clothingProducts[1]?.image}
+                  alt={clothingProducts[1]?.title ?? 'Featured look 2'}
+                  className="w-full h-full object-cover"
+                />
+              </div>
             </div>
           </div>
         </div>
