@@ -14,11 +14,11 @@ export function QuickActions() {
 
   return (
     <>
-      <Card className="border-2 border-primary/20 bg-primary/5 shadow-lg">
+      <Card className="border-2 border-primary/20 bg-primary/5 shadow-lg h-full flex flex-col">
         <CardHeader className="pb-4">
           <CardTitle className="text-base font-semibold">Quick Actions</CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-col gap-3">
+        <CardContent className="flex flex-col gap-3 flex-1">
           <Button
             className="w-full justify-start gap-2 h-12 text-base"
             asChild

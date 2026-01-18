@@ -117,10 +117,6 @@ export function AnalyticsOverview() {
                 <div className="text-2xl font-semibold">{avgClicks.toFixed(1)}</div>
               </div>
             </div>
-            <div className="pt-2 border-t border-border">
-              <div className="text-xs text-muted-foreground mb-2">Tasks Tracked</div>
-              <div className="text-sm font-medium">{analytics.length}</div>
-            </div>
           </div>
         )}
       </CardContent>

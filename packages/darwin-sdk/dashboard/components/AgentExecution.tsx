@@ -164,15 +164,7 @@ export function AgentExecution({ sessionId, onCancel }: AgentExecutionProps) {
         const data = JSON.parse(event.data);
         setResult(data);
         setStatus("completed");
-        setLogs((prev) => [
-          ...prev,
-          {
-            type: "result",
-            timestamp: new Date().toISOString(),
-            message: data.message || "Task completed",
-            data: data,
-          },
-        ]);
+        // Don't add result logs - they will be replaced with a friendly message in LogViewer
         // Close the connection after receiving result
         setTimeout(() => {
           eventSource.close();

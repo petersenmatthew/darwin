@@ -178,6 +178,16 @@ Before taking any action, you MUST use the 'think' tool to explain:
       cleaned = cleaned.replace(/^\s*["']?text["']?\s*:\s*/i, '');
       cleaned = cleaned.replace(/^\s*["']?input["']?\s*:\s*/i, '');
       
+      // Unescape quotes: replace escaped quotes with regular quotes
+      // Handle \" -> " (escaped double quotes)
+      cleaned = cleaned.replace(/\\"/g, '"');
+      // Handle \' -> ' (escaped single quotes)
+      cleaned = cleaned.replace(/\\'/g, "'");
+      // Handle \\ -> \ (escaped backslashes, but only if not followed by quote)
+      // This is tricky - we want to preserve \\" as \" but convert \\ to \
+      // Actually, let's be more careful - only unescape if it's clearly an escape sequence
+      // For now, just handle the quote cases which are the main issue
+      
       return cleaned.trim();
     };
 

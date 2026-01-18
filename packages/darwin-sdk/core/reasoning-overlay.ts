@@ -193,15 +193,11 @@ function generateReasoningOverlayHTML(options: Required<ReasoningOverlayOptions>
       
       #darwin-reasoning-overlay .darwin-word {
         display: inline;
-        margin-right: 0.2em;
+        margin-right: 0;
         opacity: 0;
         filter: blur(4px);
         animation: darwin-word-reveal 0.15s ease-out forwards;
         white-space: pre-wrap;
-      }
-      
-      #darwin-reasoning-overlay .darwin-word:last-child {
-        margin-right: 0;
       }
       
       #darwin-reasoning-overlay .darwin-space {

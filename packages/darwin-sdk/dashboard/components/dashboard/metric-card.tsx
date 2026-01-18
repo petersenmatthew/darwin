@@ -26,8 +26,16 @@ export function MetricCard({
   icon,
   className,
 }: MetricCardProps) {
-  const isPositiveTrend = trend && trend > 0;
-  const trendColor = isPositiveTrend ? "#22c55e" : "#ef4444";
+  const isPositiveTrend = trend !== undefined && trend > 0;
+  const isNeutralTrend = trend !== undefined && trend === 0;
+  const isNegativeTrend = trend !== undefined && trend < 0;
+  
+  // Determine trend color: green for positive, red for negative, gray for neutral
+  const trendColor = isPositiveTrend 
+    ? "#22c55e" 
+    : isNeutralTrend 
+    ? "#6b7280" 
+    : "#ef4444";
 
   return (
     <Card className={cn("relative overflow-hidden", className)}>
@@ -45,13 +53,17 @@ export function MetricCard({
               <div className="flex items-center gap-1 mt-1">
                 {isPositiveTrend ? (
                   <TrendingUp className="h-3 w-3 text-success" />
-                ) : (
+                ) : isNegativeTrend ? (
                   <TrendingDown className="h-3 w-3 text-destructive" />
-                )}
+                ) : null}
                 <span
                   className={cn(
                     "text-xs font-medium",
-                    isPositiveTrend ? "text-success" : "text-destructive"
+                    isPositiveTrend 
+                      ? "text-success" 
+                      : isNeutralTrend 
+                      ? "text-muted-foreground" 
+                      : "text-destructive"
                   )}
                 >
                   {isPositiveTrend ? "+" : ""}

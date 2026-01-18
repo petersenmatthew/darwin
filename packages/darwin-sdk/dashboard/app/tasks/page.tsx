@@ -89,7 +89,45 @@ function TaskTypeBadge({ type }: { type: Task["type"] }) {
 const Loading = () => null;
 
 // Convert SavedTask to Task format for display
-function savedTaskToTask(savedTask: SavedTask): Task {
+function savedTaskToTask(savedTask: SavedTask, analyticsData?: any[]): Task {
+  // Find matching analytics data by task description (taskName in analytics matches description)
+  const taskAnalytics = analyticsData?.find(
+    (a) => a.taskName === savedTask.description
+  );
+
+  // Calculate last run date from the most recent run
+  let lastRun: string | null = null;
+  if (taskAnalytics?.runs && taskAnalytics.runs.length > 0) {
+    const mostRecentRun = taskAnalytics.runs[taskAnalytics.runs.length - 1];
+    if (mostRecentRun.endTime) {
+      const date = new Date(mostRecentRun.endTime);
+      const now = new Date();
+      const diffMs = now.getTime() - date.getTime();
+      const diffMins = Math.floor(diffMs / 60000);
+      const diffHours = Math.floor(diffMs / 3600000);
+      const diffDays = Math.floor(diffMs / 86400000);
+
+      if (diffMins < 1) {
+        lastRun = "Just now";
+      } else if (diffMins < 60) {
+        lastRun = `${diffMins} minute${diffMins > 1 ? "s" : ""} ago`;
+      } else if (diffHours < 24) {
+        lastRun = `${diffHours} hour${diffHours > 1 ? "s" : ""} ago`;
+      } else if (diffDays < 7) {
+        lastRun = `${diffDays} day${diffDays > 1 ? "s" : ""} ago`;
+      } else {
+        lastRun = date.toLocaleDateString();
+      }
+    }
+  }
+
+  // Calculate success rate (assuming runs with endTime are successful)
+  let successRate = 0;
+  if (taskAnalytics?.runs && taskAnalytics.runs.length > 0) {
+    const successfulRuns = taskAnalytics.runs.filter((r: any) => r.endTime).length;
+    successRate = Math.round((successfulRuns / taskAnalytics.runs.length) * 100);
+  }
+
   return {
     id: savedTask.id,
     name: savedTask.name,
@@ -97,9 +135,9 @@ function savedTaskToTask(savedTask: SavedTask): Task {
     type: "custom" as Task["type"], // Default to custom since we removed type from TaskConfig
     targetUrl: "", // Not stored anymore
     status: "draft" as Task["status"], // Default to draft for new tasks
-    lastRun: null,
-    successRate: 0,
-    totalRuns: 0,
+    lastRun,
+    successRate,
+    totalRuns: taskAnalytics?.totalRuns || 0,
     createdAt: savedTask.createdAt,
   };
 }
@@ -110,12 +148,35 @@ export default function TasksPage() {
   const [showCreateTask, setShowCreateTask] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const [filterStatus, setFilterStatus] = useState<"all" | Task["status"]>("all");
+  const [analyticsData, setAnalyticsData] = useState<any[]>([]);
 
-  // Load tasks from localStorage
+  // Fetch analytics data
+  useEffect(() => {
+    const fetchAnalytics = async () => {
+      try {
+        const response = await fetch('/api/analytics');
+        if (response.ok) {
+          const data = await response.json();
+          setAnalyticsData(data.tasks || []);
+        }
+      } catch (error) {
+        console.error("Failed to fetch analytics:", error);
+      }
+    };
+
+    fetchAnalytics();
+    // Refresh analytics every 5 seconds
+    const interval = setInterval(fetchAnalytics, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Load tasks from localStorage and merge with analytics
   useEffect(() => {
     const loadTasks = () => {
       const savedTasks = getSavedTasks();
-      const convertedTasks = savedTasks.map(savedTaskToTask);
+      const convertedTasks = savedTasks.map((savedTask) => 
+        savedTaskToTask(savedTask, analyticsData)
+      );
       setTasks(convertedTasks);
     };
     
@@ -133,7 +194,7 @@ export default function TasksPage() {
       window.removeEventListener("storage", handleStorageChange);
       clearInterval(interval);
     };
-  }, []);
+  }, [analyticsData]);
 
   const filteredTasks = tasks.filter((task) => {
     const matchesSearch =

@@ -331,7 +331,7 @@ export default function AnalyticsPage() {
                           <YAxis label={{ value: 'Page Clicks', angle: -90, position: 'insideLeft' }} />
                           <Tooltip />
                           <Legend />
-                          <Bar dataKey="pageClicks" fill="#8884d8" name="Page Clicks" />
+                          <Bar dataKey="pageClicks" fill="#0088fe" name="Page Clicks" />
                         </BarChart>
                       </ResponsiveContainer>
                     </CardContent>

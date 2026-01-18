@@ -203,6 +203,44 @@ class AgentSessionManager extends EventEmitter {
     console.log = (...args: any[]) => {
       const message = formatMessage(args);
       
+      // Skip prompt logs
+      if (message.includes('📝 Prompt:') || message.includes('Prompt:')) {
+        // Don't log prompt messages
+        this.originalConsoleLog(...args);
+        return;
+      }
+      
+      // Skip evolution-related logs, but keep Summary and Issue messages
+      if (
+        message.includes('🧬 Running evolution') ||
+        message.includes('📁 Target:') ||
+        message.includes('✅ Done!') ||
+        message.includes('✓ Evolution complete') ||
+        message.includes('Evolution complete!') ||
+        message.includes('✓ Parsed') ||
+        (message.includes('Parsed') && message.includes('changes from output')) ||
+        message.includes('Step 4: Evolving') ||
+        message.includes('YOLO mode is enabled') ||
+        message.trim() === '---' ||
+        message.includes('```json') ||
+        (message.includes('```') && message.includes('changes')) ||
+        // Filter out JSON-like content (long explanations with quotes and colons)
+        (message.includes('"type":') && message.includes('"modified"')) ||
+        (message.includes('"type":') && message.includes('"added"')) ||
+        (message.includes('"type":') && message.includes('"removed"')) ||
+        (message.includes('"file":') && message.includes('"explanation":')) ||
+        // Filter out cut-off JSON fragments
+        (message.includes('field to include') && message.includes('border')) ||
+        (message.includes('This change directly addresses') && message.includes('analytics'))
+      ) {
+        // Don't log evolution-related messages or JSON blocks
+        // But allow Summary: and Issue [ messages through
+        if (!message.includes('Summary:') && !message.includes('Issue [')) {
+          this.originalConsoleLog(...args);
+          return;
+        }
+      }
+      
       // Check if it's a thinking message
       if (message.includes('💭 Thinking:') || message.includes('Thinking:')) {
         const thought = message.replace(/.*(?:💭 Thinking:|Thinking:)\s*/, '').trim();

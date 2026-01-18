@@ -538,6 +538,8 @@ export function startDarwin() {
           if (evolutionResult.changes && evolutionResult.changes.length > 0) {
             sessionManager.setSessionChanges(sessionId, evolutionResult.changes);
             console.log(chalk.green(`✓ Parsed ${evolutionResult.changes.length} changes from output`));
+            // Add a log message indicating changes were generated
+            sessionManager.addLog(sessionId, "result", `Generated ${evolutionResult.changes.length} code change${evolutionResult.changes.length === 1 ? '' : 's'}`);
           }
 
           sessionManager.setSessionResult(sessionId, {

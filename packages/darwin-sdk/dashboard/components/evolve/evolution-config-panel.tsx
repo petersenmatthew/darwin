@@ -131,7 +131,7 @@ export function EvolutionConfigPanel({
 
         {/* Task Selection */}
         <Card>
-          <CardHeader className="pb-4">
+          <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium flex items-center gap-2">
               <ClipboardList className="h-4 w-4 text-muted-foreground" />
               Task Configuration
