@@ -53,14 +53,14 @@ export default function Home() {
         <Text as="h2" variant="headingLg" fontWeight="semibold">
           Shop by Category
         </Text>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-6">
           {[
             { name: 'Electronics', icon: '📱', href: '/electronics' },
             { name: 'Clothing', icon: '👕', href: '/clothing' },
             { name: 'Accessories', icon: '👜', href: '/accessories' },
           ].map((cat) => (
             <Link key={cat.name} href={cat.href}>
-              <div className="bg-white border rounded-lg p-6 text-center hover:shadow-md transition-shadow cursor-pointer">
+              <div className="bg-white border rounded-lg px-8 py-10 text-center hover:shadow-md transition-shadow cursor-pointer">
                 <div className="w-12 h-12 bg-gray-100 rounded-full mx-auto mb-3 flex items-center justify-center">
                   <span className="text-2xl">{cat.icon}</span>
                 </div>
