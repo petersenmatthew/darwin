@@ -14,33 +14,6 @@ const elevenlabs = new ElevenLabsClient({
     apiKey: ELEVENLABS_API_KEY,
 });
 
-export const createAudioStreamFromText = async (
-    text: string,
-): Promise<Buffer> => {
-    const audioStream = await elevenlabs.textToSpeech.stream(
-        "JBFqnCBsd6RMkjVDRZzb",
-        {
-            modelId: "eleven_flash_v2_5",
-            text,
-            outputFormat: "mp3_44100_128",
-            // Optional voice settings that allow you to customize the output
-            voiceSettings: {
-                stability: 0,
-                similarityBoost: 1.0,
-                useSpeakerBoost: true,
-                speed: 1.0,
-            },
-        },
-    );
-    const chunks: Buffer[] = [];
-    for await (const chunk of audioStream) {
-        chunks.push(chunk as Buffer);
-    }
-    const content = Buffer.concat(chunks);
-    return content;
-};
-
-
 export interface BrowserAgentConfig {
   website: string;
   task: string;
