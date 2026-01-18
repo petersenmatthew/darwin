@@ -5,6 +5,7 @@ import { injectAnalyticsOverlay, removeAnalyticsOverlay } from "./analytics-over
 export interface BrowserAgentConfig {
   website: string;
   task: string;
+  taskName?: string; // Task name/title for analytics (separate from task description)
   model?: string;
   maxSteps?: number;
   env?: "LOCAL" | "BROWSERBASE";
@@ -76,14 +77,11 @@ export class BrowserAgent {
       throw new Error("Agent not initialized. Call init() first.");
     }
 
-    // Default thinking format instructions
-    const defaultThinkingFormat = `Keep your thinking concise and focused. Use 2-3 short sentences maximum. Be direct and avoid long paragraphs.`;
-    
-    const thinkingFormatInstructions = this.config.thinkingFormat || defaultThinkingFormat;
+    // Default thinking format instructions   
 
     // Default system prompt that encourages thinking
     const defaultSystemPrompt = `<role>
-You are a helpful browser automation assistant specialized in web interaction and task execution.
+You are a simulating a human who is helpful specialized in web interaction and task execution.
 </role>
 
 <workflow>
@@ -95,12 +93,18 @@ Before taking any action, you MUST use the 'think' tool to explain:
 </workflow>
 
 <thinking_format>
-${thinkingFormatInstructions}
+- Keep your thinking super concise and focused and try to use the least amount of words possible.
+- Use 1-2 short sentences maximum. NO MORE THAN 2.
+- ANYTIME something is not compeltely as expected, point it out and critique and make a real suggestion. You should be doing this as much as possible.
+- Visibly say stuff like "I thought it would be here", you want to visbly critque the UI
+- Make suggestions for improvements to the UI based on what is confusing or not working as expected.
+- Be direct and avoid long paragraphs.
 </thinking_format>
 
 <rules>
-- Always use the 'think' tool before calling other tools like screenshot, ariaTree, click, scroll, etc.
-- This helps users understand your reasoning process and improves transparency.
+- Always use the 'think' tool before calling other tools like screenshot, click, scroll, etc.
+- NEVER USE THE ariaTree tool.
+- Don't mention that you are an agent with tools, you are a HUMAN who is going through a site. 
 - After thinking, proceed with your action.
 </rules>`;
 
@@ -115,6 +119,18 @@ ${thinkingFormatInstructions}
     console.log(`Navigating to: ${this.config.website}`);
     await page.goto(this.config.website);
     console.log("Page loaded, starting task execution...");
+
+    // Inject task information into the page for analytics tracking
+    // Use taskName for analytics (title), fallback to task (description) if not provided
+    const taskForAnalytics = this.config.taskName || this.config.task;
+    await page.evaluate((task: string) => {
+      if (typeof window !== 'undefined') {
+        // Store task in localStorage so the demo app can access it
+        localStorage.setItem('darwin_task', task);
+        // Also set it on window for immediate access
+        (window as any).__darwinTask = task;
+      }
+    }, taskForAnalytics);
 
     // Inject timer overlay into the page
     await injectTimerOverlay(page);
@@ -314,6 +330,71 @@ ${thinkingFormatInstructions}
   async close(): Promise<void> {
     if (this.stagehand) {
       const page = this.stagehand.context.pages()[0];
+      
+      // Send session_ended event before closing
+      try {
+        // Wait for the event to be sent with a timeout
+        await Promise.race([
+          page.evaluate(async (task: string) => {
+            if (typeof window !== 'undefined') {
+              // Get session and user IDs
+              const sessionId = sessionStorage.getItem('analytics_session_id') || 
+                              localStorage.getItem('analytics_session_id');
+              const userId = localStorage.getItem('analytics_user_id') || 
+                            sessionStorage.getItem('analytics_user_id');
+              
+              if (!sessionId) {
+                console.warn('No session ID found, cannot send session_ended event');
+                return;
+              }
+              
+              // Try to use the exposed trackEvent function
+              if ((window as any).__darwinTrackEvent) {
+                const sessionDuration = (window as any).__darwinSessionStartTime 
+                  ? Date.now() - (window as any).__darwinSessionStartTime 
+                  : undefined;
+                
+                // Get task name from localStorage (set by browser agent) or use task parameter
+                const taskName = localStorage.getItem('darwin_task') || task;
+                await (window as any).__darwinTrackEvent('session_ended', {
+                  page_name: window.location.pathname,
+                  session_duration: sessionDuration,
+                  task: taskName,
+                  task_name: taskName,
+                });
+              } else {
+                // Fallback: send directly via fetch and wait for it
+                try {
+                  // Get task name from localStorage (set by browser agent) or use task parameter
+                  const taskName = localStorage.getItem('darwin_task') || task;
+                  const response = await fetch('/api/events', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      event: 'session_ended',
+                      session_id: sessionId,
+                      user_id: userId,
+                      timestamp: Date.now(),
+                      page_name: window.location.pathname,
+                      task: taskName,
+                      task_name: taskName,
+                    }),
+                  });
+                  
+                  if (!response.ok) {
+                    console.error('Failed to send session_ended event:', response.statusText);
+                  }
+                } catch (e) {
+                  console.error('Error sending session_ended event:', e);
+                }
+              }
+            }
+          }, this.config.task),
+          new Promise((resolve) => setTimeout(resolve, 3000)) // 3 second timeout
+        ]);
+      } catch (error) {
+        console.error('Error sending session_ended event:', error);
+      }
       if (page) {
         await removeAnalyticsOverlay(page);
       }
