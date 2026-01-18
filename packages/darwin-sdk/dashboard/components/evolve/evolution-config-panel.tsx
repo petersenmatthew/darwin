@@ -19,7 +19,6 @@ import {
   Globe,
   Settings2,
   Play,
-  Zap,
   Plus,
 } from "lucide-react";
 import {
@@ -132,16 +131,11 @@ export function EvolutionConfigPanel({
     <>
       <div className="flex flex-col gap-6 p-6">
         {/* Header */}
-        <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-emerald-500">
-            <Zap className="h-5 w-5 text-white" />
-          </div>
-          <div>
-            <h1 className="text-xl font-semibold">Evolution Pipeline</h1>
-            <p className="text-sm text-muted-foreground">
-              Configure and run UI evolution experiments
-            </p>
-          </div>
+        <div>
+          <h1 className="text-3xl font-semibold">Evolution Pipeline</h1>
+          <p className="text-sm text-muted-foreground mt-1">
+            Configure and run UI evolution experiments
+          </p>
         </div>
 
         {/* Task Selection */}
