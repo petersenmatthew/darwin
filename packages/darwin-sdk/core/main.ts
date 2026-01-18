@@ -73,8 +73,8 @@ export function startDarwin() {
           env: (env as "LOCAL" | "BROWSERBASE") || "LOCAL",
           apiKey,
           projectId,
-          systemPrompt,
-          thinkingFormat,
+          systemPrompt: "You are a helpful browser automation assistant that navigates websites like a human would. Don't use aria tree, use the screenshot tool to get info. Move the cursor naturally, scroll smoothly, and take your time to ensure accuracy.",
+          thinkingFormat: "Keep your thinking concise and focused. Use 2-3 short sentences maximum. Be direct and avoid long paragraphs. Critique any UI improvements you can.",
         };
       }
 
@@ -298,8 +298,8 @@ export function startDarwin() {
           env: (env as "LOCAL" | "BROWSERBASE") || "LOCAL",
           apiKey,
           projectId,
-          systemPrompt,
-          thinkingFormat,
+          systemPrompt: "You are a helpful browser automation assistant that navigates websites like a human would. Don't use aria tree, use the screenshot tool to get info. Move the cursor naturally, scroll smoothly, and take your time to ensure accuracy.",
+          thinkingFormat: "Keep your thinking concise and focused. Use 2-3 short sentences maximum. Be direct and avoid long paragraphs. Critique any UI improvements you can.",
         };
       }
 
@@ -368,8 +368,8 @@ export function startDarwin() {
           env: (env as "LOCAL" | "BROWSERBASE") || "LOCAL",
           apiKey,
           projectId,
-          systemPrompt,
-          thinkingFormat,
+          systemPrompt: "You are a helpful browser automation assistant that navigates websites like a human would. Don't use aria tree, use the screenshot tool to get info. Move the cursor naturally, scroll smoothly, and take your time to ensure accuracy.",
+          thinkingFormat: "Keep your thinking concise and focused. Use 2-3 short sentences maximum. Be direct and avoid long paragraphs. Critique any UI improvements you can.",
         };
       }
 
