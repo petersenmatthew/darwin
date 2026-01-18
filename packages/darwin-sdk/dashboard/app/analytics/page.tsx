@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from "recharts";
 import { TrendingDown, TrendingUp, Clock, MousePointerClick, Eye, FileText } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { getSavedTasks } from "@/lib/task-storage";
 
 interface TaskMetrics {
   taskId: string;
@@ -47,6 +48,18 @@ export default function AnalyticsPage() {
   const [analytics, setAnalytics] = useState<TaskAnalytics[]>([]);
   const [selectedTask, setSelectedTask] = useState<string>("");
   const [loading, setLoading] = useState(true);
+  const [taskTitleMap, setTaskTitleMap] = useState<Record<string, string>>({});
+
+  // Load saved tasks to create a mapping from description to title
+  useEffect(() => {
+    const savedTasks = getSavedTasks();
+    const mapping: Record<string, string> = {};
+    savedTasks.forEach(task => {
+      // Map description to title (name)
+      mapping[task.description] = task.name;
+    });
+    setTaskTitleMap(mapping);
+  }, []);
 
   useEffect(() => {
     const fetchAnalytics = async () => {
@@ -74,6 +87,9 @@ export default function AnalyticsPage() {
   }, [selectedTask]);
 
   const selectedTaskData = analytics.find(t => t.taskName === selectedTask);
+  const getTaskTitle = (taskName: string) => {
+    return taskTitleMap[taskName] || taskName;
+  };
 
   // Format data for charts
   const durationData = selectedTaskData?.runs.map(run => ({
@@ -166,11 +182,15 @@ export default function AnalyticsPage() {
                   <SelectValue placeholder="Select a task" />
                 </SelectTrigger>
                 <SelectContent>
-                  {analytics.map((task) => (
-                    <SelectItem key={task.taskName} value={task.taskName}>
-                      {task.taskName} ({task.totalRuns} runs)
-                    </SelectItem>
-                  ))}
+                  {analytics.map((task) => {
+                    // Use title if available, otherwise fall back to taskName
+                    const displayTitle = taskTitleMap[task.taskName] || task.taskName;
+                    return (
+                      <SelectItem key={task.taskName} value={task.taskName}>
+                        {displayTitle} ({task.totalRuns} {task.totalRuns === 1 ? 'run' : 'runs'})
+                      </SelectItem>
+                    );
+                  })}
                 </SelectContent>
               </Select>
             </div>
@@ -345,7 +365,7 @@ export default function AnalyticsPage() {
                   <CardHeader>
                     <CardTitle>Run Details</CardTitle>
                     <CardDescription>
-                      Detailed metrics for each run of {selectedTaskData.taskName}
+                      Detailed metrics for each run of {getTaskTitle(selectedTaskData.taskName)}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>

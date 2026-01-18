@@ -29,6 +29,7 @@ export interface AgentSession {
   logs: LogEntry[];
   isEvolution?: boolean;
   changes?: UIChange[];
+  steps?: number;
 }
 
 export interface LogEntry {
@@ -80,13 +81,22 @@ class AgentSessionManager extends EventEmitter {
         ? Math.round((Date.now() - session.createdAt.getTime()) / 1000)
         : 0;
 
+      // Count steps: use stored steps if available, otherwise count action logs as fallback
+      let stepCount = session.steps;
+      if (stepCount === undefined) {
+        // Fallback: count action logs as a proxy for steps executed
+        // Each action log typically represents a step that was executed
+        const actionLogs = session.logs.filter(log => log.type === "action");
+        stepCount = actionLogs.length;
+      }
+
       return {
         id: session.id,
         agentName: "Browser Agent",
         task: session.config.task || "N/A",
         status: session.status,
         duration: duration > 0 ? `${duration}s` : "-",
-        steps: 0, // TODO: Track steps if available
+        steps: stepCount,
         maxSteps: session.config.maxSteps || 20,
         startedAt: session.createdAt.toISOString(),
         result: session.result,
@@ -112,6 +122,13 @@ class AgentSessionManager extends EventEmitter {
       session.completedAt = new Date();
       this.addLog(id, "result", result.message || "Task completed");
       this.emit("session:completed", id, result);
+    }
+  }
+
+  updateSessionSteps(id: string, steps: number): void {
+    const session = this.sessions.get(id);
+    if (session) {
+      session.steps = steps;
     }
   }
 

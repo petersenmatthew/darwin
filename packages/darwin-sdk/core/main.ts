@@ -113,6 +113,9 @@ export function startDarwin() {
         })
         .then((executeResult) => {
           sessionManager.setSessionResult(sessionId, executeResult.result);
+          if (executeResult.steps !== undefined) {
+            sessionManager.updateSessionSteps(sessionId, executeResult.steps);
+          }
           sessionManager.stopLogging();
           return agent.close();
         })
@@ -323,7 +326,8 @@ export function startDarwin() {
 
       try {
         await agent.init();
-        const { thoughts } = await agent.execute();
+        const executeResult = await agent.execute();
+        const { thoughts } = executeResult;
 
         res.json({
           status: "completed",
@@ -424,6 +428,9 @@ export function startDarwin() {
             sessionManager.updateSessionStatus(sessionId, "running");
             const executeResult = await agent.execute();
             thoughts = executeResult.thoughts;
+            if (executeResult.steps !== undefined) {
+              sessionManager.updateSessionSteps(sessionId, executeResult.steps);
+            }
             console.log(chalk.green(`✓ Agent completed with ${thoughts.length} thoughts`));
             sessionManager.addLog(sessionId, "status", `Agent completed with ${thoughts.length} thoughts`);
           } finally {

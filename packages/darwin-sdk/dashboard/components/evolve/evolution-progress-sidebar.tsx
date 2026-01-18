@@ -296,11 +296,11 @@ export function EvolutionProgressSidebar({
   const getTypeIcon = (type: string) => {
     switch (type) {
       case "added":
-        return <span className="text-emerald-400">+</span>;
+        return <span className="text-emerald-300 font-bold">+</span>;
       case "modified":
-        return <span className="text-amber-400">~</span>;
+        return <span className="text-amber-300 font-bold">~</span>;
       case "removed":
-        return <span className="text-red-400">-</span>;
+        return <span className="text-red-300 font-bold">-</span>;
       default:
         return null;
     }
@@ -480,78 +480,65 @@ export function EvolutionProgressSidebar({
 
               {/* Completed State - Show Changes */}
               {currentStage === "complete" && changes.length > 0 && (
-                <div className="flex flex-col gap-4 mt-2">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-medium text-sm">Generated Changes</h4>
-                    <span className="text-xs text-muted-foreground">
-                      {changes.length} modifications
+                <div className="flex flex-col gap-5 mt-4">
+                  <div className="flex items-center justify-between border-b-2 border-blue-500/50 pb-3">
+                    <h4 className="text-xl font-bold text-foreground">Generated Changes</h4>
+                    <span className="text-base font-semibold text-blue-400 bg-blue-500/20 px-3 py-1 rounded-full border border-blue-500/50">
+                      {changes.length} {changes.length === 1 ? 'modification' : 'modifications'}
                     </span>
                   </div>
 
-                  <div className="flex flex-col gap-3">
+                  <div className="flex flex-col gap-4">
                     {changes.map((change) => (
                       <div
                         key={change.id}
-                        className="rounded-lg border border-border bg-background/50 p-3 transition-colors hover:bg-muted/50"
+                        className={cn(
+                          "rounded-lg border-2 p-4 transition-all hover:shadow-lg",
+                          change.type === "added"
+                            ? "border-emerald-500/60 bg-emerald-500/10"
+                            : change.type === "modified"
+                            ? "border-amber-500/60 bg-amber-500/10"
+                            : "border-red-500/60 bg-red-500/10"
+                        )}
                       >
-                        <div className="flex items-start justify-between gap-2">
-                          <div className="flex items-center gap-2">
-                            <span className="font-mono text-sm">
+                        <div className="flex items-start justify-between gap-3 mb-3">
+                          <div className="flex items-center gap-3">
+                            <span className="font-mono text-lg font-bold">
                               {getTypeIcon(change.type)}
                             </span>
-                            <span className="font-medium text-sm">
+                            <span className="text-base font-bold text-foreground">
                               {change.component}
                             </span>
                           </div>
                           <span
                             className={cn(
-                              "rounded-full border px-2 py-0.5 text-xs font-medium",
+                              "rounded-full border-2 px-3 py-1 text-sm font-bold uppercase tracking-wide",
                               change.type === "added" 
-                                ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"
+                                ? "bg-emerald-500/30 text-emerald-300 border-emerald-500/60"
                                 : change.type === "modified"
-                                ? "bg-amber-500/20 text-amber-400 border-amber-500/30"
-                                : "bg-red-500/20 text-red-400 border-red-500/30"
+                                ? "bg-amber-500/30 text-amber-300 border-amber-500/60"
+                                : "bg-red-500/30 text-red-300 border-red-500/60"
                             )}
                           >
                             {change.type}
                           </span>
                         </div>
-                        <p className="text-xs text-muted-foreground mt-2">
+                        <p className="text-sm font-semibold text-foreground mb-3 leading-relaxed">
                           {change.description}
                         </p>
                         {change.explanation && (
-                          <p className="text-xs text-muted-foreground mt-2 italic border-l-2 border-border pl-2">
-                            {change.explanation}
-                          </p>
+                          <div className="bg-background/80 border-l-4 border-blue-500 pl-4 py-3 rounded-r">
+                            <p className="text-sm text-foreground leading-relaxed font-medium">
+                              {change.explanation}
+                            </p>
+                          </div>
                         )}
-                        <div className="flex items-center gap-1 mt-2 text-xs text-muted-foreground">
-                          <FileCode className="h-3 w-3" />
-                          <span className="font-mono">{change.file}</span>
+                        <div className="flex items-center gap-2 mt-4 pt-3 border-t border-border/50">
+                          <FileCode className="h-4 w-4 text-blue-400" />
+                          <span className="font-mono text-sm font-semibold text-blue-300">{change.file}</span>
                         </div>
                       </div>
                     ))}
-                  </div>
-
-                  {/* Summary Stats */}
-                  <div className="grid grid-cols-3 gap-2 mt-2">
-                    <div className="rounded-lg border border-border bg-muted/30 p-3 text-center">
-                      <div className="text-lg font-semibold text-emerald-400">
-                        {changes.filter((c) => c.type === "added").length}
-                      </div>
-                      <div className="text-xs text-muted-foreground">Added</div>
-                    </div>
-                    <div className="rounded-lg border border-border bg-muted/30 p-3 text-center">
-                      <div className="text-lg font-semibold text-amber-400">
-                        {changes.filter((c) => c.type === "modified").length}
-                      </div>
-                      <div className="text-xs text-muted-foreground">Modified</div>
-                    </div>
-                    <div className="rounded-lg border border-border bg-muted/30 p-3 text-center">
-                      <div className="text-lg font-semibold text-blue-400">
-                        {changes.length}
-                      </div>
-                      <div className="text-xs text-muted-foreground">Total</div>
-                    </div>
                   </div>
                 </div>
               )}

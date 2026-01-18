@@ -72,7 +72,7 @@ export class BrowserAgent {
   /**
    * Execute the task and stream output
    */
-  async execute(): Promise<{ thoughts: ThoughtEntry[]; result: any }> {
+  async execute(): Promise<{ thoughts: ThoughtEntry[]; result: any; steps: number }> {
     if (!this.stagehand) {
       throw new Error("Agent not initialized. Call init() first.");
     }
@@ -320,7 +320,7 @@ Before taking any action, you MUST use the 'think' tool to explain:
       }
     }
 
-    return { thoughts, result: finalResult };
+    return { thoughts, result: finalResult, steps: stepNumber };
   }
 
 
