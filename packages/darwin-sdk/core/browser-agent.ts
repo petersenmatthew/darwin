@@ -120,7 +120,7 @@ export class BrowserAgent {
         // Read local avatar file
         const avatarPath = path.resolve(__dirname, "assets/avatar.glb");
         let avatarDataUri = "";
-        
+
         try {
             if (fs.existsSync(avatarPath)) {
                 const avatarBuffer = fs.readFileSync(avatarPath);
@@ -138,58 +138,84 @@ export class BrowserAgent {
         await page.evaluate((avatarUri: string) => {
             (window as any).createAgentOverlay = () => {
                 if (document.getElementById('agent-overlay')) return;
-                
+
                 console.log("Overlay: Creating container...");
-                
+
+                // 1. Create Main Container
                 const container = document.createElement('div');
                 container.id = 'agent-overlay';
-                container.style.position = 'fixed';
-                container.style.bottom = '20px';
-                container.style.left = '20px';
-                container.style.width = '250px';
-                container.style.height = '250px';
-                container.style.zIndex = '2147483647';
-                container.style.pointerEvents = 'none';
-                container.style.borderRadius = '50%';
-                container.style.overflow = 'hidden';
-                container.style.border = '4px solid yellow';
-                container.style.backgroundColor = 'rgba(0,0,0,0.5)';
-                container.style.fontFamily = 'sans-serif';
-                container.style.fontSize = '14px';
-                
-                // Create separate elements for loading text and canvas
-                container.innerHTML = `
-                    <div id="agent-loading" style="position:absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:white; z-index:10;">Initializing...</div>
-                    <div id="agent-canvas" style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:1;"></div>
-                `;
-                
+                Object.assign(container.style, {
+                    position: 'fixed',
+                    bottom: '20px',
+                    left: '20px',
+                    width: '300px',
+                    height: '300px',
+                    zIndex: '2147483647',
+                    pointerEvents: 'none', // Let clicks pass through
+                    borderRadius: '50%',
+                    overflow: 'hidden',
+                    border: '4px solid yellow',
+                    backgroundColor: 'rgba(0,0,0,0.5)', // Initial dark bg for loading
+                    fontFamily: 'sans-serif',
+                    fontSize: '14px'
+                });
+
+                // 2. Create Loading Text Layer
+                const loadingDiv = document.createElement('div');
+                loadingDiv.id = 'agent-loading';
+                Object.assign(loadingDiv.style, {
+                    position: 'absolute',
+                    top: '0',
+                    left: '0',
+                    width: '100%',
+                    height: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: 'white',
+                    zIndex: '10'
+                });
+                loadingDiv.innerText = 'Initializing...';
+                container.appendChild(loadingDiv);
+
+                // 3. Create Canvas Layer (where TalkingHead will draw)
+                const canvasDiv = document.createElement('div');
+                canvasDiv.id = 'agent-canvas';
+                Object.assign(canvasDiv.style, {
+                    position: 'absolute',
+                    top: '0',
+                    left: '0',
+                    width: '100%',
+                    height: '100%',
+                    zIndex: '1'
+                });
+                container.appendChild(canvasDiv);
                 document.body.appendChild(container);
 
                 const mod = document.createElement('script');
                 mod.type = 'module';
                 mod.textContent = `
-                    // Use esm.sh for automatic dependency resolution
                     import { TalkingHead } from "https://esm.sh/@met4citizen/talkinghead";
                     
                     (async () => {
                         const nodeCanvas = document.getElementById('agent-canvas');
                         const nodeLoading = document.getElementById('agent-loading');
                         const container = document.getElementById('agent-overlay');
-                        
+
                         try {
                             if (nodeLoading) nodeLoading.innerText = 'Loading Engine...';
-                            
-                            // Initialize TalkingHead on the dedicated canvas div
+
+                            // Initialize TalkingHead
                             const head = new TalkingHead(nodeCanvas, {
                                 cameraView: "upper",
                                 avatarMood: "neutral",
                                 lipsyncModules: ["en"],
-                                cameraDistance: 2.5
+                                cameraDistance: 1.8
                             });
 
                             if (nodeLoading) nodeLoading.innerText = 'Loading Avatar...';
-                            
-                            // Load the avatar from Data URI
+
+                            // Load Avatar
                             await head.showAvatar({
                                 url: "${avatarUri}",
                                 body: "M",
@@ -198,13 +224,14 @@ export class BrowserAgent {
                                 ttsVoice: "en-GB-Standard-A",
                                 lipsyncLang: "en"
                             });
-                            
+
+                            // Success State
                             if (container) {
-                                container.style.borderColor = '#00ff00'; // Green = Success
-                                container.style.backgroundColor = 'rgba(0,0,0,0.1)'; // Transparent background
+                                container.style.borderColor = '#00ff00';
+                                container.style.backgroundColor = 'rgba(0,0,0,0.0)'; // Fully transparent background
                             }
-                            if (nodeLoading) nodeLoading.style.display = 'none'; // Hide loading text
-                            
+                            if (nodeLoading) nodeLoading.style.display = 'none';
+
                             head.start();
                             window.agentHead = head;
                             console.log("Overlay: Agent Head Ready");
@@ -212,7 +239,7 @@ export class BrowserAgent {
                             console.error("Overlay Error:", e);
                             if (container) container.style.borderColor = 'red';
                             if (nodeLoading) {
-                                nodeLoading.innerHTML = "Load Failed:<br>" + e.message;
+                                nodeLoading.innerText = "Error: " + e.message;
                                 nodeLoading.style.color = 'red';
                             }
                         }
@@ -223,6 +250,7 @@ export class BrowserAgent {
 
             (window as any).createAgentOverlay();
 
+            // Persistence
             const observer = new MutationObserver(() => {
                 if (!document.getElementById('agent-overlay')) {
                     (window as any).createAgentOverlay();
@@ -388,8 +416,7 @@ export class BrowserAgent {
           "";
 
         if (thought) {
-          const thoughtText = 
-            typeof thought === "string" ? thought : JSON.stringify(thought);
+          const thoughtText = typeof thought === "string" ? thought : JSON.stringify(thought);
           if (!seenThoughts.has(thoughtText)) {
             seenThoughts.add(thoughtText);
             console.log("\n💭 Thinking:", thoughtText);
