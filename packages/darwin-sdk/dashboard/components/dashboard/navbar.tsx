@@ -70,7 +70,7 @@ export function Navbar() {
           <Button asChild size="sm" className="gap-2 bg-white text-black hover:bg-white/90 border-0">
             <Link href="/evolve">
               <Zap className="h-4 w-4" />
-              EVOLVE
+              Evolve
             </Link>
           </Button>
           <DropdownMenu>

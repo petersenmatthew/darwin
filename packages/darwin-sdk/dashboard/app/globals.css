@@ -18,16 +18,16 @@
   --muted-foreground: oklch(0.6 0 0);
   --accent: oklch(0.18 0 0);
   --accent-foreground: oklch(0.95 0 0);
-  --destructive: oklch(0.55 0.2 25);
+  --destructive: rgb(255, 255, 255);
   --destructive-foreground: oklch(0.95 0 0);
   --border: oklch(0.22 0 0);
   --input: oklch(0.18 0 0);
   --ring: oklch(0.5 0 0);
   --chart-1: oklch(0.65 0.2 250);
   --chart-2: oklch(0.7 0.15 160);
-  --chart-3: oklch(0.75 0.18 80);
+  --chart-3: rgb(255, 255, 255);
   --chart-4: oklch(0.6 0.22 320);
-  --chart-5: oklch(0.65 0.2 25);
+  --chart-5: rgb(255, 255, 255);
   --radius: 0.5rem;
   --sidebar: oklch(0.12 0 0);
   --sidebar-foreground: oklch(0.95 0 0);
@@ -37,9 +37,9 @@
   --sidebar-accent-foreground: oklch(0.95 0 0);
   --sidebar-border: oklch(0.22 0 0);
   --sidebar-ring: oklch(0.5 0 0);
-  --success: oklch(0.7 0.15 145);
+  --success: rgb(255, 255, 255);
   --success-foreground: oklch(0.95 0 0);
-  --warning: oklch(0.75 0.15 80);
+  --warning: rgb(255, 255, 255);
   --warning-foreground: oklch(0.09 0 0);
 }
 
@@ -58,16 +58,16 @@
   --muted-foreground: oklch(0.6 0 0);
   --accent: oklch(0.18 0 0);
   --accent-foreground: oklch(0.95 0 0);
-  --destructive: oklch(0.55 0.2 25);
+  --destructive: rgb(255, 255, 255);
   --destructive-foreground: oklch(0.95 0 0);
   --border: oklch(0.22 0 0);
   --input: oklch(0.18 0 0);
   --ring: oklch(0.5 0 0);
   --chart-1: oklch(0.65 0.2 250);
   --chart-2: oklch(0.7 0.15 160);
-  --chart-3: oklch(0.75 0.18 80);
+  --chart-3: rgb(255, 255, 255);
   --chart-4: oklch(0.6 0.22 320);
-  --chart-5: oklch(0.65 0.2 25);
+  --chart-5: rgb(255, 255, 255);
   --sidebar: oklch(0.12 0 0);
   --sidebar-foreground: oklch(0.95 0 0);
   --sidebar-primary: oklch(0.65 0.2 250);
@@ -76,9 +76,9 @@
   --sidebar-accent-foreground: oklch(0.95 0 0);
   --sidebar-border: oklch(0.22 0 0);
   --sidebar-ring: oklch(0.5 0 0);
-  --success: oklch(0.7 0.15 145);
+  --success: rgb(255, 255, 255);
   --success-foreground: oklch(0.95 0 0);
-  --warning: oklch(0.75 0.15 80);
+  --warning: rgb(255, 255, 255);
   --warning-foreground: oklch(0.09 0 0);
 }
 

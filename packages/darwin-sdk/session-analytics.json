@@ -1,0 +1,17 @@
+[
+  {
+    "id": "session-1768716862919-aa5uaur8a",
+    "status": "error",
+    "task": "dasd",
+    "website": "https://example.com",
+    "model": "google/gemini-3-flash-preview",
+    "maxSteps": 20,
+    "startedAt": "2026-01-18T06:14:22.919Z",
+    "completedAt": "2026-01-18T06:14:46.855Z",
+    "duration": 24,
+    "stepsCompleted": 2,
+    "error": "No Page found for awaitActivePage: no page available",
+    "thoughtsCount": 1,
+    "actionsCount": 2
+  }
+]
