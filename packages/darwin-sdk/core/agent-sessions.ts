@@ -60,6 +60,10 @@ class AgentSessionManager extends EventEmitter {
     return this.sessions.get(id);
   }
 
+  getAllSessions(): AgentSession[] {
+    return Array.from(this.sessions.values());
+  }
+
   updateSessionStatus(id: string, status: AgentSession["status"]): void {
     const session = this.sessions.get(id);
     if (session) {

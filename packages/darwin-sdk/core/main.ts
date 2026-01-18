@@ -9,6 +9,21 @@ import { Analyst } from "./analyst";
 import { AnalyticsSnapshot } from "../helpers/analytic-types";
 import chalk from "chalk";
 
+// Helper function to format relative time
+function formatRelativeTime(date: Date): string {
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
+
+  if (diffMins < 1) return "Just now";
+  if (diffMins < 60) return `${diffMins} minute${diffMins > 1 ? "s" : ""} ago`;
+  if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? "s" : ""} ago`;
+  if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? "s" : ""} ago`;
+  return date.toLocaleDateString();
+}
+
 export function startDarwin() {
   const app = express();
   const API_PORT = 3002;
@@ -227,6 +242,78 @@ export function startDarwin() {
     });
   });
 
+  // Get all sessions
+  app.get("/api/sessions", (req, res) => {
+    const allSessions = sessionManager.getAllSessions();
+    const sessions = allSessions.map((session) => {
+      let duration = "N/A";
+      if (session.completedAt && session.createdAt) {
+        const diffMs = session.completedAt.getTime() - session.createdAt.getTime();
+        const diffSecs = Math.floor(diffMs / 1000);
+        const diffMins = Math.floor(diffSecs / 60);
+        if (diffMins > 0) {
+          duration = `${diffMins}m ${diffSecs % 60}s`;
+        } else {
+          duration = `${diffSecs}s`;
+        }
+      } else if (session.status === "running" || session.status === "initializing") {
+        const diffMs = Date.now() - session.createdAt.getTime();
+        const diffSecs = Math.floor(diffMs / 1000);
+        const diffMins = Math.floor(diffSecs / 60);
+        if (diffMins > 0) {
+          duration = `${diffMins}m ${diffSecs % 60}s`;
+        } else {
+          duration = `${diffSecs}s`;
+        }
+      }
+
+      return {
+        id: session.id,
+        agentId: session.id,
+        agentName: session.config.website || "Unknown",
+        task: session.config.task || "No task",
+        status: session.status,
+        duration,
+        steps: session.logs.filter((log) => log.type === "action" || log.type === "think").length,
+        maxSteps: session.config.maxSteps || 20,
+        startedAt: formatRelativeTime(session.createdAt),
+        completedAt: session.completedAt?.toISOString(),
+        createdAt: session.createdAt.toISOString(),
+      };
+    });
+
+    // Sort by most recent first
+    sessions.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+    res.json(sessions);
+  });
+
+  // Get dashboard metrics
+  app.get("/api/metrics", (req, res) => {
+    const allSessions = sessionManager.getAllSessions();
+    const totalSessions = allSessions.length;
+    const activeSessions = allSessions.filter(
+      (s) => s.status === "running" || s.status === "initializing"
+    ).length;
+    const completedSessions = allSessions.filter((s) => s.status === "completed");
+    const errorSessions = allSessions.filter((s) => s.status === "error");
+    const successRate =
+      totalSessions > 0
+        ? Math.round((completedSessions.length / totalSessions) * 100 * 10) / 10
+        : 0;
+
+    res.json({
+      totalAgents: totalSessions,
+      agentsTrend: 0, // Could calculate trend if we store historical data
+      activeSessions,
+      sessionsTrend: 0,
+      successRate,
+      successTrend: 0,
+      tasksCompleted: completedSessions.length,
+      tasksTrend: 0,
+    });
+  });
+
   // Get session status
   app.get("/api/session/:sessionId", (req, res) => {
     const { sessionId } = req.params;
@@ -236,24 +323,25 @@ export function startDarwin() {
       return res.status(404).json({ error: "Session not found" });
     }
 
-    res.json({
-      id: session.id,
-      status: session.status,
-      config: {
-        website: session.config.website,
-        task: session.config.task,
-      },
-      result: session.result
-        ? {
-            success: session.result.success,
-            message: session.result.message,
-          }
-        : undefined,
-      error: session.error,
-      createdAt: session.createdAt.toISOString(),
-      completedAt: session.completedAt?.toISOString(),
-      logsCount: session.logs.length,
-    });
+      res.json({
+        id: session.id,
+        status: session.status,
+        config: {
+          website: session.config.website,
+          task: session.config.task,
+        },
+        result: session.result
+          ? {
+              success: session.result.success,
+              message: session.result.message,
+            }
+          : undefined,
+        error: session.error,
+        createdAt: session.createdAt.toISOString(),
+        completedAt: session.completedAt?.toISOString(),
+        logsCount: session.logs.length,
+        isEvolution: (session as any).isEvolution || false,
+      });
   });
 
   app.post("/api/run-sync", async (req, res) => {
@@ -377,6 +465,11 @@ export function startDarwin() {
 
       // Create session for streaming logs
       const sessionId = sessionManager.createSession(agentConfig);
+      // Mark session as evolution session
+      const session = sessionManager.getSession(sessionId);
+      if (session) {
+        (session as any).isEvolution = true;
+      }
       agentConfig.onEvent = (type, data) => {
         if (type === 'think') {
           sessionManager.addLog(sessionId, 'think', data.thought || JSON.stringify(data));
@@ -470,9 +563,10 @@ export function startDarwin() {
           });
           sessionManager.stopLogging();
         } catch (error: any) {
-          console.error(chalk.red(`Pipeline error: ${error.message}`));
-          sessionManager.addLog(sessionId, "error", error.message);
-          sessionManager.setSessionError(sessionId, error.message);
+          const errorMessage = error?.message || String(error) || "Unknown pipeline error";
+          console.error(chalk.red(`Pipeline error: ${errorMessage}`));
+          sessionManager.addLog(sessionId, "error", errorMessage);
+          sessionManager.setSessionError(sessionId, errorMessage);
           sessionManager.stopLogging();
         }
       })();
@@ -489,8 +583,9 @@ export function startDarwin() {
         },
       });
     } catch (error: any) {
-      console.error(chalk.red(`Pipeline error: ${error.message}`));
-      res.status(500).json({ error: error.message });
+      const errorMessage = error?.message || String(error) || "Unknown pipeline error";
+      console.error(chalk.red(`Pipeline error: ${errorMessage}`));
+      res.status(500).json({ error: errorMessage });
     }
   });
 

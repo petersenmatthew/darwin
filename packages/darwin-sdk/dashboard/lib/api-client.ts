@@ -112,6 +112,22 @@ export class DarwinAPIClient {
 
     return response.json();
   }
+
+  async getAllSessions(): Promise<any[]> {
+    const response = await fetch(`${this.baseUrl}/api/sessions`);
+    if (!response.ok) {
+      throw new Error('Failed to get sessions');
+    }
+    return response.json();
+  }
+
+  async getMetrics(): Promise<any> {
+    const response = await fetch(`${this.baseUrl}/api/metrics`);
+    if (!response.ok) {
+      throw new Error('Failed to get metrics');
+    }
+    return response.json();
+  }
 }
 
 export const apiClient = new DarwinAPIClient();

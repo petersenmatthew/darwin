@@ -138,16 +138,27 @@ export class Analyst {
 
     console.log('🧬 Running evolution...');
     console.log('📁 Target:', this.targetAppPath);
-    console.log('📝 Prompt:', prompt);
+    console.log('📝 Prompt length:', prompt.length, 'characters');
     console.log('---');
 
-    const result = await runClaude(prompt, this.targetAppPath) as {
-      stdout: string;
-      stderr: string;
-    };
+    try {
+      const result = await runClaude(prompt, this.targetAppPath) as {
+        stdout: string;
+        stderr: string;
+      };
 
-    console.log('✅ Done!');
-    console.log(result.stdout);
-    return result;
+      console.log('✅ Evolution completed!');
+      if (result.stdout) {
+        console.log('Output:', result.stdout.substring(0, 500) + (result.stdout.length > 500 ? '...' : ''));
+      }
+      return result;
+    } catch (error: any) {
+      // Re-throw with better context
+      const errorMessage = error instanceof Error
+        ? error.message
+        : (typeof error === 'string' ? error : 'Unknown error during evolution');
+      console.error('❌ Evolution failed:', errorMessage);
+      throw new Error(`Evolution failed: ${errorMessage}`);
+    }
   }
 }

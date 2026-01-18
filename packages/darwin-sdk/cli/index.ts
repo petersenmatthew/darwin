@@ -171,7 +171,7 @@ program
   .option("-m, --model <model>", "Override model")
   .option("-s, --steps <number>", "Override max steps", parseInt)
   .option("--env <env>", "Environment: LOCAL or BROWSERBASE", "LOCAL")
-  .option("--target <path>", "Target app path for Claude to modify", "../demo-app")
+  .option("--target <path>", "Target app path for Claude to modify", "../../demo-app")
   .action(async (options) => {
     try {
       // Load config

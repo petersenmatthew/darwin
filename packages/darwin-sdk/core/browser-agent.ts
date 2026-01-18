@@ -75,11 +75,6 @@ export class BrowserAgent {
       throw new Error("Agent not initialized. Call init() first.");
     }
 
-    // Default thinking format instructions
-    const defaultThinkingFormat = `Keep your thinking concise and focused. Use 2-3 short sentences maximum. Be direct and avoid long paragraphs.`;
-    
-    const thinkingFormatInstructions = this.config.thinkingFormat || defaultThinkingFormat;
-
     // Default system prompt that encourages thinking
     const defaultSystemPrompt = `<role>
 You are a helpful browser automation assistant specialized in web interaction and task execution.
@@ -94,7 +89,7 @@ Before taking any action, you MUST use the 'think' tool to explain:
 </workflow>
 
 <thinking_format>
-${thinkingFormatInstructions}
+Keep your thinking concise and focused. Use 1-2 short sentences maximum. Be direct and avoid long paragraphs
 </thinking_format>
 
 <rules>
