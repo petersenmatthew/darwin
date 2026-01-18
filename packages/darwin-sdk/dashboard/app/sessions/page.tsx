@@ -99,27 +99,11 @@ export default function SessionsPage() {
           </div>
 
           {/* Stats Cards */}
-          <div className="grid gap-4 sm:grid-cols-6">
+          <div className="grid gap-4 sm:grid-cols-3">
             <Card>
               <CardContent className="p-4">
                 <div className="text-sm text-muted-foreground">Total</div>
                 <div className="text-2xl font-semibold">{stats.total}</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-4">
-                <div className="text-sm text-muted-foreground">Initializing</div>
-                <div className="text-2xl font-semibold text-blue-500">
-                  {stats.initializing}
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-4">
-                <div className="text-sm text-muted-foreground">Running</div>
-                <div className="text-2xl font-semibold text-emerald-500">
-                  {stats.running}
-                </div>
               </CardContent>
             </Card>
             <Card>
@@ -132,17 +116,9 @@ export default function SessionsPage() {
             </Card>
             <Card>
               <CardContent className="p-4">
-                <div className="text-sm text-muted-foreground">Error</div>
+                <div className="text-sm text-muted-foreground">Errors</div>
                 <div className="text-2xl font-semibold text-red-500">
                   {stats.error}
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-4">
-                <div className="text-sm text-muted-foreground">Cancelled</div>
-                <div className="text-2xl font-semibold text-muted-foreground">
-                  {stats.cancelled}
                 </div>
               </CardContent>
             </Card>
