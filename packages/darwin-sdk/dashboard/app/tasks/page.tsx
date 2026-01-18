@@ -66,8 +66,8 @@ function TaskStatusBadge({ status }: { status: Task["status"] }) {
       variant="secondary"
       className={cn(
         "font-medium",
-        status === "active" && "text-primary",
-        status === "paused" && "text-primary",
+        status === "active" && "bg-success/20 text-success",
+        status === "paused" && "bg-amber-500/15 text-amber-500",
         status === "draft" && "bg-muted text-muted-foreground"
       )}
     >
@@ -198,7 +198,7 @@ export default function TasksPage() {
             <Card>
               <CardContent className="p-4">
                 <div className="text-sm text-muted-foreground">Active</div>
-                <div className="text-2xl font-semibold">
+                <div className="text-2xl font-semibold text-success">
                   {stats.active}
                 </div>
               </CardContent>
@@ -294,7 +294,12 @@ export default function TasksPage() {
                             {task.totalRuns > 0 ? (
                               <span
                                 className={cn(
-                                  "font-mono"
+                                  "font-mono",
+                                  task.successRate >= 90
+                                    ? "text-success"
+                                    : task.successRate >= 70
+                                      ? "text-amber-500"
+                                      : "text-destructive"
                                 )}
                               >
                                 {task.successRate}%

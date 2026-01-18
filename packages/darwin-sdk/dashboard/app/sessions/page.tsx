@@ -125,7 +125,7 @@ export default function SessionsPage() {
                 <Card>
                   <CardContent className="p-4">
                     <div className="text-sm text-muted-foreground">Completed</div>
-                    <div className="text-2xl font-semibold">
+                    <div className="text-2xl font-semibold text-success">
                       {stats.completed}
                     </div>
                   </CardContent>
@@ -133,7 +133,7 @@ export default function SessionsPage() {
                 <Card>
                   <CardContent className="p-4">
                     <div className="text-sm text-muted-foreground">Errors</div>
-                    <div className="text-2xl font-semibold">
+                    <div className="text-2xl font-semibold text-destructive">
                       {stats.error}
                     </div>
                   </CardContent>
