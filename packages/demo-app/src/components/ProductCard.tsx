@@ -118,10 +118,12 @@ export default function ProductCard({ product }: ProductCardProps) {
             <div className="absolute bottom-2 left-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
               <button
                 onClick={handleAddToCart}
-                className="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md text-sm font-medium flex items-center justify-center gap-2"
+                className="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md text-sm font-medium flex items-center justify-center gap-2 text-center"
               >
-                <Icon source={CartIcon} />
-                Add to Cart
+                <div>
+                  <Icon source={CartIcon} />
+                </div>
+                <span className="">Add to Cart</span>
               </button>
             </div>
           )}

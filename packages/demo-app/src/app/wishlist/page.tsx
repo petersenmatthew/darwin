@@ -180,13 +180,13 @@ export default function WishlistPage() {
                 <button
                   onClick={() => handleAddToCart(product.id)}
                   disabled={!product.inStock}
-                  className={`flex-1 py-2 text-sm font-medium rounded-lg transition-colors ${
+                  className={`flex-1 py-2 text-sm font-medium rounded-lg transition-colors flex items-center justify-center text-center ${
                     product.inStock
                       ? 'bg-green-600 text-white hover:bg-green-700'
                       : 'bg-gray-200 text-gray-500 cursor-not-allowed'
                   }`}
                 >
-                  {showAddedMessage === product.id ? 'Added!' : 'Add to Cart'}
+                  <span>{showAddedMessage === product.id ? 'Added!' : 'Add to Cart'}</span>
                 </button>
                 <button
                   onClick={() => removeFromWishlist(product.id)}

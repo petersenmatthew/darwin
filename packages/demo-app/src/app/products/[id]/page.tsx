@@ -187,7 +187,7 @@ export default function ProductDetailPage() {
               <button
                 onClick={handleAddToCart}
                 disabled={!product.inStock}
-                className={`flex-1 py-3 px-6 rounded-md font-medium flex items-center justify-center gap-2 transition-colors h-12 ${
+                className={`flex-1 py-3 px-6 rounded-md font-medium flex items-center justify-center gap-2 transition-colors h-12 text-center ${
                   addedToCart
                     ? 'bg-green-700 text-white'
                     : product.inStock
@@ -195,8 +195,8 @@ export default function ProductDetailPage() {
                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 }`}
               >
-                <Icon source={addedToCart ? CheckIcon : CartIcon} />
-                {addedToCart ? 'Added to Cart!' : product.inStock ? 'Add to Cart' : 'Out of Stock'}
+                <div><Icon source={addedToCart ? CheckIcon : CartIcon} /></div>
+                <span>{addedToCart ? 'Added to Cart!' : product.inStock ? 'Add to Cart' : 'Out of Stock'}</span>
               </button>
               <Button 
                 size="large" 
