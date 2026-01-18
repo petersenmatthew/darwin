@@ -5724,5 +5724,1154 @@
     "timestamp": 1768692346722,
     "page_name": "/",
     "time_on_page": 30942
+  },
+  {
+    "event": "session_started",
+    "session_id": "session_1768697786324_qsuwkyshs",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768697786422,
+    "page_name": "/",
+    "referrer": ""
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768697786324_qsuwkyshs",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768697786420,
+    "page_name": "/"
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768697786324_qsuwkyshs",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768697789022,
+    "page_name": "/",
+    "time_on_page": 2602
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768697786324_qsuwkyshs",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768697789022,
+    "page_name": "/",
+    "time_on_page": 2601
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768697786324_qsuwkyshs",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768697789022,
+    "page_name": "/",
+    "time_on_page": 2601
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768697786324_qsuwkyshs",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768697789022,
+    "page_name": "/",
+    "time_on_page": 2601
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768697895605_so4nwbpfe",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768697895802,
+    "page_name": "/"
+  },
+  {
+    "event": "session_started",
+    "session_id": "session_1768697895605_so4nwbpfe",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768697895805,
+    "page_name": "/",
+    "referrer": ""
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768697895605_so4nwbpfe",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768697897997,
+    "page_name": "/",
+    "time_on_page": 2194
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768697895605_so4nwbpfe",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768697897997,
+    "page_name": "/",
+    "time_on_page": 2194
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768697895605_so4nwbpfe",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768697897997,
+    "page_name": "/",
+    "time_on_page": 2194
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768697895605_so4nwbpfe",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768697897997,
+    "page_name": "/",
+    "time_on_page": 2194
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768697895605_so4nwbpfe",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768697897997,
+    "page_name": "/",
+    "time_on_page": 2194
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768697895605_so4nwbpfe",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768697897997,
+    "page_name": "/",
+    "time_on_page": 2194
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768697922356_hoeu2cj3c",
+    "user_id": "user_1768697922356_g248hfum7",
+    "timestamp": 1768697922381,
+    "page_name": "/"
+  },
+  {
+    "event": "session_started",
+    "session_id": "session_1768697922356_hoeu2cj3c",
+    "user_id": "user_1768697922356_g248hfum7",
+    "timestamp": 1768697922385,
+    "page_name": "/",
+    "referrer": ""
+  },
+  {
+    "event": "navigation_clicked",
+    "session_id": "session_1768697922356_hoeu2cj3c",
+    "user_id": "user_1768697922356_g248hfum7",
+    "timestamp": 1768697931251,
+    "page_name": "/",
+    "link_href": "/accessories",
+    "link_text": "Accessories",
+    "time_since_page_load": 8889
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768697922356_hoeu2cj3c",
+    "user_id": "user_1768697922356_g248hfum7",
+    "timestamp": 1768697932071,
+    "page_name": "/accessories"
+  },
+  {
+    "event": "navigation_clicked",
+    "session_id": "session_1768697922356_hoeu2cj3c",
+    "user_id": "user_1768697922356_g248hfum7",
+    "timestamp": 1768697942353,
+    "page_name": "/accessories",
+    "link_href": "/cart",
+    "link_text": "Link",
+    "time_since_page_load": 19970
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768697922356_hoeu2cj3c",
+    "user_id": "user_1768697922356_g248hfum7",
+    "timestamp": 1768697942904,
+    "page_name": "/cart"
+  },
+  {
+    "event": "navigation_clicked",
+    "session_id": "session_1768697922356_hoeu2cj3c",
+    "user_id": "user_1768697922356_g248hfum7",
+    "timestamp": 1768697951945,
+    "page_name": "/cart",
+    "link_href": "/",
+    "link_text": "Link",
+    "time_since_page_load": 19873
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768697922356_hoeu2cj3c",
+    "user_id": "user_1768697922356_g248hfum7",
+    "timestamp": 1768697951958,
+    "page_name": "/"
+  },
+  {
+    "event": "navigation_clicked",
+    "session_id": "session_1768697922356_hoeu2cj3c",
+    "user_id": "user_1768697922356_g248hfum7",
+    "timestamp": 1768697976449,
+    "page_name": "/",
+    "link_href": "/products",
+    "link_text": "All Products",
+    "time_since_page_load": 33544
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768697922356_hoeu2cj3c",
+    "user_id": "user_1768697922356_g248hfum7",
+    "timestamp": 1768697977032,
+    "page_name": "/products"
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768697922356_hoeu2cj3c",
+    "user_id": "user_1768697922356_g248hfum7",
+    "timestamp": 1768697988139,
+    "page_name": "/products/3"
+  },
+  {
+    "event": "button_clicked",
+    "session_id": "session_1768697922356_hoeu2cj3c",
+    "user_id": "user_1768697922356_g248hfum7",
+    "timestamp": 1768697997695,
+    "page_name": "/products/3",
+    "button_id": "add_to_cart_3",
+    "button_text": "Add to Cart",
+    "button_type": "add_to_cart",
+    "product_id": "3",
+    "product_name": "Smart Fitness Watch",
+    "quantity": 1,
+    "time_since_page_load": 9566
+  },
+  {
+    "event": "navigation_clicked",
+    "session_id": "session_1768697922356_hoeu2cj3c",
+    "user_id": "user_1768697922356_g248hfum7",
+    "timestamp": 1768698003368,
+    "page_name": "/products/3",
+    "link_href": "/accessories",
+    "link_text": "Accessories",
+    "time_since_page_load": 15229
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768697922356_hoeu2cj3c",
+    "user_id": "user_1768697922356_g248hfum7",
+    "timestamp": 1768698003423,
+    "page_name": "/accessories"
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768698341162_n07lymcin",
+    "user_id": "user_1768698341162_kto1shx30",
+    "timestamp": 1768698341188,
+    "page_name": "/"
+  },
+  {
+    "event": "session_started",
+    "session_id": "session_1768698341162_n07lymcin",
+    "user_id": "user_1768698341162_kto1shx30",
+    "timestamp": 1768698341196,
+    "page_name": "/",
+    "referrer": ""
+  },
+  {
+    "event": "button_clicked",
+    "session_id": "session_1768698341162_n07lymcin",
+    "user_id": "user_1768698341162_kto1shx30",
+    "timestamp": 1768698345845,
+    "page_name": "/",
+    "button_id": "shop_now",
+    "button_text": "Shop Now",
+    "button_type": "cta",
+    "time_since_page_load": 4673
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768698341162_n07lymcin",
+    "user_id": "user_1768698341162_kto1shx30",
+    "timestamp": 1768698345964,
+    "page_name": "/products"
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698870921,
+    "page_name": "/"
+  },
+  {
+    "event": "session_started",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698870930,
+    "page_name": "/",
+    "referrer": ""
+  },
+  {
+    "event": "navigation_clicked",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698881468,
+    "page_name": "/",
+    "link_href": "/accessories",
+    "link_text": "Accessories",
+    "time_since_page_load": 10566
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698881592,
+    "page_name": "/accessories"
+  },
+  {
+    "event": "navigation_clicked",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698896314,
+    "page_name": "/accessories",
+    "link_href": "/cart",
+    "link_text": "Link",
+    "time_since_page_load": 25391
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698896411,
+    "page_name": "/cart"
+  },
+  {
+    "event": "session_ended",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698904912,
+    "page_name": "/cart",
+    "session_duration": 33982,
+    "pages_viewed": 2
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698904914,
+    "page_name": "/cart",
+    "time_on_page": 8503
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698904914,
+    "page_name": "/cart",
+    "time_on_page": 8502
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698904914,
+    "page_name": "/cart",
+    "time_on_page": 8502
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698904914,
+    "page_name": "/cart",
+    "time_on_page": 8502
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698904914,
+    "page_name": "/cart",
+    "time_on_page": 8502
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698904915,
+    "page_name": "/cart",
+    "time_on_page": 8502
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698904915,
+    "page_name": "/cart",
+    "time_on_page": 8503
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698904915,
+    "page_name": "/cart",
+    "time_on_page": 8503
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698904915,
+    "page_name": "/cart",
+    "time_on_page": 8503
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698904915,
+    "page_name": "/cart",
+    "time_on_page": 8503
+  },
+  {
+    "event": "session_started",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698905444,
+    "page_name": "/",
+    "referrer": ""
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698905442,
+    "page_name": "/"
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698913611,
+    "page_name": "/",
+    "scroll_direction": "down",
+    "scroll_position": 356,
+    "scroll_percent": 19,
+    "time_since_page_load": 8185
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698920247,
+    "page_name": "/products/3"
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698920554,
+    "page_name": "/products/3",
+    "scroll_direction": "up",
+    "scroll_position": 0,
+    "scroll_percent": 0,
+    "time_since_page_load": 15112
+  },
+  {
+    "event": "navigation_clicked",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698924453,
+    "page_name": "/products/3",
+    "link_href": "/accessories",
+    "link_text": "Accessories",
+    "time_since_page_load": 19010
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698924577,
+    "page_name": "/accessories"
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698933164,
+    "page_name": "/accessories",
+    "scroll_direction": "down",
+    "scroll_position": 356,
+    "scroll_percent": 7,
+    "time_since_page_load": 12917
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698942366,
+    "page_name": "/products/7"
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698942677,
+    "page_name": "/products/7",
+    "scroll_direction": "up",
+    "scroll_position": 0,
+    "scroll_percent": 0,
+    "time_since_page_load": 18100
+  },
+  {
+    "event": "navigation_clicked",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698947056,
+    "page_name": "/products/7",
+    "link_href": "/cart",
+    "link_text": "Link",
+    "time_since_page_load": 22479
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698947188,
+    "page_name": "/cart"
+  },
+  {
+    "event": "session_ended",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698955087,
+    "page_name": "/cart",
+    "session_duration": 49643,
+    "pages_viewed": 2
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698955087,
+    "page_name": "/cart",
+    "time_on_page": 7899
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698955087,
+    "page_name": "/cart",
+    "time_on_page": 7899
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698955088,
+    "page_name": "/cart",
+    "time_on_page": 7900
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698955088,
+    "page_name": "/cart",
+    "time_on_page": 7900
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698955088,
+    "page_name": "/cart",
+    "time_on_page": 7900
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698955088,
+    "page_name": "/cart",
+    "time_on_page": 7900
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698955088,
+    "page_name": "/cart",
+    "time_on_page": 7900
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698955088,
+    "page_name": "/cart",
+    "time_on_page": 7900
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698955088,
+    "page_name": "/cart",
+    "time_on_page": 7900
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698955088,
+    "page_name": "/cart",
+    "time_on_page": 7900
+  },
+  {
+    "event": "session_started",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698957039,
+    "page_name": "/product/2",
+    "referrer": ""
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768698870896_7n8ptp4gm",
+    "user_id": "user_1768698870896_f8jq6139d",
+    "timestamp": 1768698957037,
+    "page_name": "/product/2"
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768699071860_o4sh8nluh",
+    "user_id": "user_1768699071860_2vq073ix9",
+    "timestamp": 1768699071886,
+    "page_name": "/"
+  },
+  {
+    "event": "session_started",
+    "session_id": "session_1768699071860_o4sh8nluh",
+    "user_id": "user_1768699071860_2vq073ix9",
+    "timestamp": 1768699071891,
+    "page_name": "/",
+    "referrer": ""
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768699071860_o4sh8nluh",
+    "user_id": "user_1768699071860_2vq073ix9",
+    "timestamp": 1768699077046,
+    "page_name": "/accessories"
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768699071860_o4sh8nluh",
+    "user_id": "user_1768699071860_2vq073ix9",
+    "timestamp": 1768699090050,
+    "page_name": "/accessories",
+    "scroll_direction": "down",
+    "scroll_position": 356,
+    "scroll_percent": 7,
+    "time_since_page_load": 18164
+  },
+  {
+    "event": "session_started",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699284457,
+    "page_name": "/",
+    "referrer": ""
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699284455,
+    "page_name": "/"
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699293413,
+    "page_name": "/"
+  },
+  {
+    "event": "page_abandoned",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699314724,
+    "page_name": "/",
+    "time_on_page": 30269
+  },
+  {
+    "event": "page_abandoned",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699323725,
+    "page_name": "/",
+    "time_on_page": 30312
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699340258,
+    "page_name": "/",
+    "time_on_page": 55803
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699340258,
+    "page_name": "/",
+    "time_on_page": 55802
+  },
+  {
+    "event": "session_ended",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699340259,
+    "page_name": "/",
+    "session_duration": 55802,
+    "pages_viewed": 2
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699340703,
+    "page_name": "/"
+  },
+  {
+    "event": "session_started",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699340705,
+    "page_name": "/",
+    "referrer": ""
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699342027,
+    "page_name": "/",
+    "scroll_direction": "down",
+    "scroll_position": 228,
+    "scroll_percent": 13,
+    "time_since_page_load": 1344
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699342450,
+    "page_name": "/",
+    "scroll_direction": "up",
+    "scroll_position": 0,
+    "scroll_percent": 0,
+    "time_since_page_load": 1767
+  },
+  {
+    "event": "navigation_clicked",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699352635,
+    "page_name": "/",
+    "link_href": "/cart",
+    "link_text": "Cart",
+    "time_since_page_load": 11948
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699352745,
+    "page_name": "/cart"
+  },
+  {
+    "event": "navigation_clicked",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699354398,
+    "page_name": "/cart",
+    "link_href": "/products",
+    "link_text": "All Products",
+    "time_since_page_load": 13694
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699354521,
+    "page_name": "/products"
+  },
+  {
+    "event": "button_clicked",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699355597,
+    "page_name": "/products",
+    "button_id": "add_to_cart_3",
+    "button_text": "Add to Cart",
+    "button_type": "add_to_cart",
+    "product_id": "3",
+    "product_name": "Smart Fitness Watch",
+    "time_since_page_load": 1111
+  },
+  {
+    "event": "navigation_clicked",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699356440,
+    "page_name": "/products",
+    "link_href": "/cart",
+    "link_text": "Cart",
+    "time_since_page_load": 1918
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699356456,
+    "page_name": "/cart"
+  },
+  {
+    "event": "button_clicked",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699357735,
+    "page_name": "/cart",
+    "button_id": "proceed_to_checkout",
+    "button_text": "Proceed to Checkout",
+    "button_type": "checkout",
+    "cart_total": 302.3892,
+    "time_since_page_load": 1286
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699358194,
+    "page_name": "/checkout"
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699359376,
+    "page_name": "/checkout",
+    "scroll_direction": "down",
+    "scroll_position": 215,
+    "scroll_percent": 25,
+    "time_since_page_load": 2920
+  },
+  {
+    "event": "form_started",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699359676,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "form_name": "Checkout Form",
+    "time_since_page_load": 1489
+  },
+  {
+    "event": "form_field_focused",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699359677,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_state",
+    "field_type": "select",
+    "time_since_page_load": 1490
+  },
+  {
+    "event": "form_field_unfocused",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699363712,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_state",
+    "field_type": "select",
+    "has_value": false,
+    "time_since_page_load": 5525
+  },
+  {
+    "event": "form_field_focused",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699379156,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_state",
+    "field_type": "select",
+    "time_since_page_load": 20969
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699380440,
+    "page_name": "/checkout",
+    "scroll_direction": "up",
+    "scroll_position": 0,
+    "scroll_percent": 0,
+    "time_since_page_load": 23984
+  },
+  {
+    "event": "form_field_unfocused",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699382349,
+    "page_name": "/checkout",
+    "form_id": "checkout_form",
+    "field_name": "shipping_state",
+    "field_type": "select",
+    "has_value": false,
+    "time_since_page_load": 24162
+  },
+  {
+    "event": "navigation_clicked",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699382430,
+    "page_name": "/checkout",
+    "link_href": "/electronics",
+    "link_text": "Electronics",
+    "time_since_page_load": 25974
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699383079,
+    "page_name": "/electronics"
+  },
+  {
+    "event": "navigation_clicked",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699383976,
+    "page_name": "/electronics",
+    "link_href": "/products",
+    "link_text": "All Products",
+    "time_since_page_load": 25781
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699383998,
+    "page_name": "/products"
+  },
+  {
+    "event": "navigation_clicked",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699386714,
+    "page_name": "/products",
+    "link_href": "/",
+    "link_text": "S ShopWave",
+    "time_since_page_load": 3635
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699386760,
+    "page_name": "/"
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699388315,
+    "page_name": "/",
+    "scroll_direction": "down",
+    "scroll_position": 493,
+    "scroll_percent": 27,
+    "time_since_page_load": 4317
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699388954,
+    "page_name": "/",
+    "scroll_direction": "down",
+    "scroll_position": 523,
+    "scroll_percent": 29,
+    "time_since_page_load": 4956
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699389395,
+    "page_name": "/",
+    "scroll_direction": "down",
+    "scroll_position": 542,
+    "scroll_percent": 30,
+    "time_since_page_load": 5397
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699389789,
+    "page_name": "/",
+    "scroll_direction": "down",
+    "scroll_position": 546,
+    "scroll_percent": 30,
+    "time_since_page_load": 5791
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699391072,
+    "page_name": "/products/6"
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699391378,
+    "page_name": "/products/6",
+    "scroll_direction": "up",
+    "scroll_position": 0,
+    "scroll_percent": 0,
+    "time_since_page_load": 4618
+  },
+  {
+    "event": "navigation_clicked",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699392897,
+    "page_name": "/products/6",
+    "link_href": "/products",
+    "link_text": "All Products",
+    "time_since_page_load": 6137
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699392955,
+    "page_name": "/products"
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699394977,
+    "page_name": "/products",
+    "scroll_direction": "down",
+    "scroll_position": 261,
+    "scroll_percent": 5,
+    "time_since_page_load": 3905
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699396284,
+    "page_name": "/products",
+    "scroll_direction": "up",
+    "scroll_position": 0,
+    "scroll_percent": 0,
+    "time_since_page_load": 5212
+  },
+  {
+    "event": "navigation_clicked",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699396930,
+    "page_name": "/products",
+    "link_href": "/products",
+    "link_text": "All Products",
+    "time_since_page_load": 5857
+  },
+  {
+    "event": "page_abandoned",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699426846,
+    "page_name": "/products",
+    "time_on_page": 33891
+  },
+  {
+    "event": "navigation_clicked",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699511735,
+    "page_name": "/products",
+    "link_href": "/cart",
+    "link_text": "Cart",
+    "time_since_page_load": 118780
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699512111,
+    "page_name": "/cart"
+  },
+  {
+    "event": "button_clicked",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699513360,
+    "page_name": "/cart",
+    "button_id": "proceed_to_checkout",
+    "button_text": "Proceed to Checkout",
+    "button_type": "checkout",
+    "cart_total": 302.3892,
+    "time_since_page_load": 1255
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699513407,
+    "page_name": "/checkout"
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699514717,
+    "page_name": "/checkout",
+    "scroll_direction": "down",
+    "scroll_position": 156,
+    "scroll_percent": 18,
+    "time_since_page_load": 2606
+  },
+  {
+    "event": "session_ended",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699515328,
+    "page_name": "/checkout",
+    "session_duration": 174623,
+    "pages_viewed": 2
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699515328,
+    "page_name": "/checkout",
+    "time_on_page": 1921
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768699284429_w4ahgdnzp",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768699515328,
+    "page_name": "/checkout",
+    "time_on_page": 1920
   }
 ]

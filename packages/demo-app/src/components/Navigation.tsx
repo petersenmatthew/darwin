@@ -58,6 +58,7 @@ export default function Navigation() {
               <TrackedLink
                 href="/search"
                 className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-colors"
+                aria-label="Search"
               >
                 <Icon source={SearchIcon} />
               </TrackedLink>
@@ -65,6 +66,7 @@ export default function Navigation() {
               <TrackedLink
                 href="/wishlist"
                 className="relative p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-colors"
+                aria-label="Wishlist"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
@@ -79,11 +81,12 @@ export default function Navigation() {
               <button
                 onClick={() => setShowAuthModal(true)}
                 className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-colors"
+                aria-label="Account"
               >
                 <Icon source={PersonIcon} />
               </button>
 
-              <TrackedLink href="/cart" className="relative p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-colors">
+              <TrackedLink href="/cart" className="relative p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-colors" aria-label="Cart">
                 <Icon source={CartIcon} />
                 {cartCount > 0 && (
                   <span className="absolute -top-1 -right-1 bg-green-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
@@ -96,6 +99,7 @@ export default function Navigation() {
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className="lg:hidden p-2 text-gray-600 hover:text-gray-900 ml-1"
+                aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   {mobileMenuOpen ? (

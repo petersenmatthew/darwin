@@ -15,6 +15,7 @@ export interface AgentConfig {
   verbose?: 0 | 1 | 2;
   systemPrompt?: string;
   thinkingFormat?: string;
+  targetAppPath?: string;
 }
 
 export interface AgentSession {
@@ -93,6 +94,23 @@ export class DarwinAPIClient {
 
   getStreamUrl(sessionId: string): string {
     return `${this.baseUrl}/api/stream/${sessionId}`;
+  }
+
+  async startEvolve(config: AgentConfig): Promise<AgentSession> {
+    const response = await fetch(`${this.baseUrl}/api/evolve`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(config),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to start evolution');
+    }
+
+    return response.json();
   }
 }
 
