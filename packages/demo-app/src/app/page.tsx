@@ -40,9 +40,12 @@ export default function Home() {
                   Shop Now
                 </Button>
               </Link>
-              <Button size="large" variant="plain">
+              <Link 
+                href="/products" 
+                className="text-white hover:text-green-100 underline font-medium self-center"
+              >
                 Learn More
-              </Button>
+              </Link>
             </div>
           </div>
         </div>
