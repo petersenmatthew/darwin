@@ -1,5 +1,6 @@
 import { Stagehand } from "@browserbasehq/stagehand";
 import { injectTimerOverlay, stopTimerOverlay } from "./timer-overlay";
+import { injectAnalyticsOverlay, removeAnalyticsOverlay } from "./analytics-overlay";
 
 export interface BrowserAgentConfig {
   website: string;
@@ -117,6 +118,9 @@ ${thinkingFormatInstructions}
 
     // Inject timer overlay into the page
     await injectTimerOverlay(page);
+    
+    // Inject analytics notification overlay
+    await injectAnalyticsOverlay(page);
 
     // Emit initial status
     if (this.config.onEvent) {
@@ -309,6 +313,10 @@ ${thinkingFormatInstructions}
    */
   async close(): Promise<void> {
     if (this.stagehand) {
+      const page = this.stagehand.context.pages()[0];
+      if (page) {
+        await removeAnalyticsOverlay(page);
+      }
       await this.stagehand.close();
     }
   }

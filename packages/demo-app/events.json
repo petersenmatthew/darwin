@@ -9651,5 +9651,12 @@
     "field_name": "payment_cvc",
     "field_type": "text",
     "time_since_page_load": 79923
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768720125207_o29a8khil",
+    "user_id": "user_1768720125207_24ht9hev7",
+    "timestamp": 1768720198124,
+    "page_name": "/checkout"
   }
 ]
