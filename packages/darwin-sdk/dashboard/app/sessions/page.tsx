@@ -98,32 +98,6 @@ export default function SessionsPage() {
             </Button>
           </div>
 
-          {/* Stats Cards */}
-          <div className="grid gap-4 sm:grid-cols-3">
-            <Card>
-              <CardContent className="p-4">
-                <div className="text-sm text-muted-foreground">Total</div>
-                <div className="text-2xl font-semibold">{stats.total}</div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-4">
-                <div className="text-sm text-muted-foreground">Completed</div>
-                <div className="text-2xl font-semibold text-green-500">
-                  {stats.completed}
-                </div>
-              </CardContent>
-            </Card>
-            <Card>
-              <CardContent className="p-4">
-                <div className="text-sm text-muted-foreground">Errors</div>
-                <div className="text-2xl font-semibold text-red-500">
-                  {stats.error}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
           {/* Sessions Table with Tabs */}
           <Card>
             <CardHeader className="pb-3">
@@ -139,6 +113,33 @@ export default function SessionsPage() {
                 </div>
               </div>
             </CardHeader>
+            {/* Stats Cards */}
+            <div className="px-6 pb-4">
+              <div className="grid gap-4 sm:grid-cols-3">
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="text-sm text-muted-foreground">Total</div>
+                    <div className="text-2xl font-semibold">{stats.total}</div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="text-sm text-muted-foreground">Completed</div>
+                    <div className="text-2xl font-semibold text-green-500">
+                      {stats.completed}
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="p-4">
+                    <div className="text-sm text-muted-foreground">Errors</div>
+                    <div className="text-2xl font-semibold text-red-500">
+                      {stats.error}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
             <CardContent className="p-0">
               <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as SessionStatus)}>
                 <div className="px-6 pb-4">
