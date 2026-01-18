@@ -10269,5 +10269,428 @@
     "timestamp": 1768723150977,
     "page_name": "/",
     "time_on_page": 484469
+  },
+  {
+    "event": "navigation_clicked",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723172769,
+    "page_name": "/",
+    "link_href": "/electronics",
+    "link_text": "Electronics",
+    "time_since_page_load": 506261
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723173347,
+    "page_name": "/electronics"
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723173657,
+    "page_name": "/electronics",
+    "scroll_direction": "up",
+    "scroll_position": 0,
+    "scroll_percent": 0,
+    "time_since_page_load": 507150
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723174353,
+    "page_name": "/electronics",
+    "scroll_direction": "down",
+    "scroll_position": 443,
+    "scroll_percent": 17,
+    "time_since_page_load": 507846
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723174961,
+    "page_name": "/electronics",
+    "scroll_direction": "down",
+    "scroll_position": 710,
+    "scroll_percent": 27,
+    "time_since_page_load": 508454
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723175691,
+    "page_name": "/electronics",
+    "scroll_direction": "down",
+    "scroll_position": 963,
+    "scroll_percent": 36,
+    "time_since_page_load": 509184
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723176577,
+    "page_name": "/electronics",
+    "scroll_direction": "down",
+    "scroll_position": 1469,
+    "scroll_percent": 55,
+    "time_since_page_load": 510070
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723178041,
+    "page_name": "/products/11"
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723178346,
+    "page_name": "/products/11",
+    "scroll_direction": "up",
+    "scroll_position": 0,
+    "scroll_percent": 0,
+    "time_since_page_load": 4999
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723179115,
+    "page_name": "/products/11",
+    "scroll_direction": "down",
+    "scroll_position": 33,
+    "scroll_percent": 2,
+    "time_since_page_load": 5768
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723181025,
+    "page_name": "/products/11",
+    "scroll_direction": "down",
+    "scroll_position": 232,
+    "scroll_percent": 15,
+    "time_since_page_load": 7677
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723184224,
+    "page_name": "/products/11",
+    "scroll_direction": "up",
+    "scroll_position": 0,
+    "scroll_percent": 0,
+    "time_since_page_load": 10877
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723214229,
+    "page_name": "/products/11"
+  },
+  {
+    "event": "page_abandoned",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723213927,
+    "page_name": "/products/11",
+    "time_on_page": 35885
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723221519,
+    "page_name": "/products/11",
+    "scroll_direction": "down",
+    "scroll_position": 182,
+    "scroll_percent": 12,
+    "time_since_page_load": 43478
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723222446,
+    "page_name": "/products/11",
+    "scroll_direction": "up",
+    "scroll_position": 38,
+    "scroll_percent": 3,
+    "time_since_page_load": 44405
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723222949,
+    "page_name": "/products/11",
+    "scroll_direction": "up",
+    "scroll_position": 32,
+    "scroll_percent": 2,
+    "time_since_page_load": 44908
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723223486,
+    "page_name": "/products/11",
+    "scroll_direction": "up",
+    "scroll_position": 28,
+    "scroll_percent": 2,
+    "time_since_page_load": 45445
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723225971,
+    "page_name": "/products/11",
+    "scroll_direction": "up",
+    "scroll_position": 0,
+    "scroll_percent": 0,
+    "time_since_page_load": 47930
+  },
+  {
+    "event": "session_ended",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723237924,
+    "page_name": "/products/11",
+    "session_duration": 571415,
+    "pages_viewed": 2
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723237924,
+    "page_name": "/products/11",
+    "time_on_page": 59883
+  },
+  {
+    "event": "page_refresh",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723237925,
+    "page_name": "/products/11",
+    "time_on_page": 59884
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723238451,
+    "page_name": "/products/11"
+  },
+  {
+    "event": "session_started",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723238453,
+    "page_name": "/products/11",
+    "referrer": ""
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723240864,
+    "page_name": "/products/11"
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723252267,
+    "page_name": "/products/11",
+    "scroll_direction": "down",
+    "scroll_position": 161,
+    "scroll_percent": 11,
+    "time_since_page_load": 13815
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723253190,
+    "page_name": "/products/11",
+    "scroll_direction": "down",
+    "scroll_position": 673,
+    "scroll_percent": 45,
+    "time_since_page_load": 14739
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723253931,
+    "page_name": "/products/11",
+    "scroll_direction": "down",
+    "scroll_position": 819,
+    "scroll_percent": 55,
+    "time_since_page_load": 15480
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723257535,
+    "page_name": "/products/11",
+    "scroll_direction": "down",
+    "scroll_position": 1188,
+    "scroll_percent": 79,
+    "time_since_page_load": 19084
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723258254,
+    "page_name": "/products/11",
+    "scroll_direction": "up",
+    "scroll_position": 1095,
+    "scroll_percent": 73,
+    "time_since_page_load": 19803
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723259206,
+    "page_name": "/products/11",
+    "scroll_direction": "up",
+    "scroll_position": 0,
+    "scroll_percent": 0,
+    "time_since_page_load": 20755
+  },
+  {
+    "event": "navigation_clicked",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723260039,
+    "page_name": "/products/11",
+    "link_href": "/electronics",
+    "link_text": "Electronics",
+    "time_since_page_load": 21587
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723260203,
+    "page_name": "/electronics"
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723262532,
+    "page_name": "/electronics",
+    "scroll_direction": "up",
+    "scroll_position": 660,
+    "scroll_percent": 25,
+    "time_since_page_load": 24081
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723264124,
+    "page_name": "/electronics",
+    "scroll_direction": "down",
+    "scroll_position": 2662,
+    "scroll_percent": 100,
+    "time_since_page_load": 25673
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723265143,
+    "page_name": "/electronics",
+    "scroll_direction": "up",
+    "scroll_position": 2312.5,
+    "scroll_percent": 87,
+    "time_since_page_load": 26692
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723267218,
+    "page_name": "/electronics",
+    "scroll_direction": "up",
+    "scroll_position": 34.5,
+    "scroll_percent": 1,
+    "time_since_page_load": 28767
+  },
+  {
+    "event": "navigation_clicked",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723268019,
+    "page_name": "/electronics",
+    "link_href": "/accessories",
+    "link_text": "Accessories",
+    "time_since_page_load": 29567
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723268722,
+    "page_name": "/accessories"
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723270499,
+    "page_name": "/accessories",
+    "scroll_direction": "up",
+    "scroll_position": 315.5,
+    "scroll_percent": 6,
+    "time_since_page_load": 10296
+  },
+  {
+    "event": "scroll",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723272727,
+    "page_name": "/accessories",
+    "scroll_direction": "up",
+    "scroll_position": 0,
+    "scroll_percent": 0,
+    "time_since_page_load": 12524
+  },
+  {
+    "event": "navigation_clicked",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723272914,
+    "page_name": "/accessories",
+    "link_href": "/",
+    "link_text": "S ShopWave",
+    "time_since_page_load": 12711
+  },
+  {
+    "event": "page_viewed",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768723273030,
+    "page_name": "/"
   }
 ]

@@ -220,16 +220,13 @@ export default function ProductDetailPage() {
 
           {/* Features */}
           <div className="space-y-3">
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Icon source={CheckIcon} tone="success" />
+            <div className="flex items-center justify-end gap-2 text-sm text-gray-600">
               Free shipping on orders over $50
             </div>
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Icon source={CheckIcon} tone="success" />
+            <div className="flex items-center justify-end gap-2 text-sm text-gray-600">
               30-day return policy
             </div>
-            <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Icon source={CheckIcon} tone="success" />
+            <div className="flex items-center justify-end gap-2 text-sm text-gray-600">
               2-year warranty included
             </div>
           </div>
