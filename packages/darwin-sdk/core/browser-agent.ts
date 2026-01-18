@@ -160,23 +160,13 @@ ${thinkingFormatInstructions}
                 console.log("\n💭 Thinking:", text);
 
                 try {
-                  const voiceDescription = "A man with a regional Toronto accent speaking very quickly";
-                  const cleanText = text.substring(12, text.length - 2); // Remove "reasoning": and end quote from raw text
-                    const voices = await elevenlabs.textToVoice.createPreviews({
-                        voiceDescription,
+                    const cleanText = text.substring(13, text.length - 2).replace(/\\./g, ''); // Remove "reasoning": and escape sequences
+                    const audioStream = await elevenlabs.textToSpeech.convert("JBFqnCBsd6RMkjVDRZzb", {
                         text: cleanText,
-                        loudness: 1,
-                        quality: 0.3,
-                        seed: 42,
+                      modelId: "eleven_flash_v2_5",
                     });
-                    if (voices?.previews.length > 0) {
-                        const audio = voices.previews[0].audioBase64;
-                        if (audio) {
-                            await play(
-                                Readable.from(Buffer.from(audio, "base64")),
-                            );
-                        }
-                    }
+
+                    await play(audioStream);
                 } catch (error) {
                     console.error("Error generating speech:", error);
                 }
