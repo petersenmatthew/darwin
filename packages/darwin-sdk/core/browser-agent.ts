@@ -1,6 +1,7 @@
 import { Stagehand } from "@browserbasehq/stagehand";
 import { injectTimerOverlay, stopTimerOverlay } from "./timer-overlay";
 import { injectAnalyticsOverlay, removeAnalyticsOverlay } from "./analytics-overlay";
+import { injectReasoningOverlay, updateReasoningText, removeReasoningOverlay } from "./reasoning-overlay";
 
 export interface BrowserAgentConfig {
   website: string;
@@ -104,6 +105,7 @@ Before taking any action, you MUST use the 'think' tool to explain:
 <rules>
 - Always use the 'think' tool before calling other tools like screenshot, click, scroll, etc.
 - NEVER USE THE ariaTree tool.
+- Write your reasoning thoughts in full english, no "/" or similar characters.
 - Don't mention that you are an agent with tools, you are a HUMAN who is going through a site. 
 - After thinking, proceed with your action.
 </rules>`;
@@ -137,6 +139,9 @@ Before taking any action, you MUST use the 'think' tool to explain:
     
     // Inject analytics notification overlay
     await injectAnalyticsOverlay(page);
+    
+    // Inject reasoning subtitle overlay
+    await injectReasoningOverlay(page);
 
     // Emit initial status
     if (this.config.onEvent) {
@@ -147,16 +152,54 @@ Before taking any action, you MUST use the 'think' tool to explain:
     const thoughts: ThoughtEntry[] = [];
     const seenThoughts = new Set<string>();
 
+    // Clean up reasoning text by removing JSON-like prefixes and brackets
+    const cleanReasoningText = (text: string): string => {
+      if (!text) return text;
+      
+      let cleaned = text.trim();
+      
+      // Remove JSON-like prefixes like { "reasoning": or {"reasoning":
+      cleaned = cleaned.replace(/^\s*\{\s*["']?reasoning["']?\s*:\s*/i, '');
+      
+      // Remove leading/trailing braces and quotes
+      cleaned = cleaned.replace(/^\s*\{+\s*/, '');
+      cleaned = cleaned.replace(/\s*\}+\s*$/, '');
+      cleaned = cleaned.replace(/^\s*\[+\s*/, '');
+      cleaned = cleaned.replace(/\s*\]+$/, '');
+      
+      // Remove leading/trailing quotes if the entire string is quoted
+      if ((cleaned.startsWith('"') && cleaned.endsWith('"')) || 
+          (cleaned.startsWith("'") && cleaned.endsWith("'"))) {
+        cleaned = cleaned.slice(1, -1);
+      }
+      
+      // Remove common JSON prefixes
+      cleaned = cleaned.replace(/^\s*["']?thought["']?\s*:\s*/i, '');
+      cleaned = cleaned.replace(/^\s*["']?text["']?\s*:\s*/i, '');
+      cleaned = cleaned.replace(/^\s*["']?input["']?\s*:\s*/i, '');
+      
+      return cleaned.trim();
+    };
+
     const addThought = (text: string, source: ThoughtEntry['source'], step: number) => {
-      if (!seenThoughts.has(text)) {
-        seenThoughts.add(text);
+      // Clean the text before processing
+      const cleanedText = cleanReasoningText(text);
+      
+      if (!cleanedText || !seenThoughts.has(cleanedText)) {
+        seenThoughts.add(cleanedText);
         thoughts.push({
           step,
-          text,
+          text: cleanedText,
           timestamp: new Date().toISOString(),
           source,
         });
-        console.log('\n💭 Thinking:', text);
+        console.log('\n💭 Thinking:', cleanedText);
+        
+        // Update reasoning overlay in real-time (fire and forget to not block)
+        updateReasoningText(page, cleanedText).catch((err) => {
+          // Log error for debugging but don't block execution
+          console.error('Failed to update reasoning overlay:', err);
+        });
       }
     };
 
@@ -284,6 +327,9 @@ Before taking any action, you MUST use the 'think' tool to explain:
     // Stop the timer when task completes
     await stopTimerOverlay(page);
     
+    // Clear reasoning overlay when task completes
+    await updateReasoningText(page, '');
+    
     // Sanitize the message to remove control characters
     if (finalResult.message) {
       const sanitized = finalResult.message
@@ -397,6 +443,7 @@ Before taking any action, you MUST use the 'think' tool to explain:
       }
       if (page) {
         await removeAnalyticsOverlay(page);
+        await removeReasoningOverlay(page);
       }
       await this.stagehand.close();
     }

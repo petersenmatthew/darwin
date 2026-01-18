@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Navbar } from "@/components/dashboard/navbar";
 import { MetricCard } from "@/components/dashboard/metric-card";
 import { QuickActions } from "@/components/dashboard/quick-actions";
-import { ActivityFeed } from "@/components/dashboard/activity-feed";
+import { AnalyticsOverview } from "@/components/dashboard/analytics-overview";
 import { SessionsTable } from "@/components/dashboard/sessions-table";
 import { apiClient } from "@/lib/api-client";
 import { Bot, Zap, CheckCircle2, ListTodo } from "lucide-react";
@@ -82,14 +82,14 @@ export default function DashboardPage() {
 
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-6">
-          {/* Quick Actions & Recent Sessions */}
+          {/* Quick Actions */}
           <div className="lg:col-span-3">
             <QuickActions />
           </div>
 
-          {/* Activity Feed */}
+          {/* Analytics Overview */}
           <div className="lg:col-span-9">
-            <ActivityFeed />
+            <AnalyticsOverview />
           </div>
         </div>
 

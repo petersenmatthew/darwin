@@ -69,14 +69,14 @@ export function LogViewer({ logs, className }: LogViewerProps) {
   };
 
   return (
-    <Card className={cn(className)}>
-      <CardHeader>
-        <CardTitle>Agent Logs</CardTitle>
+    <Card className={cn("h-full flex flex-col", className)}>
+      <CardHeader className="pb-2">
+        <CardTitle className="text-base">Agent Logs</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex-1 min-h-0 p-3">
         <div
           ref={scrollRef}
-          className="h-[400px] overflow-y-auto bg-muted rounded-md p-4 font-mono text-sm"
+          className="h-full overflow-y-auto bg-muted rounded-md p-3 font-mono text-xs"
         >
           {logs.length === 0 ? (
             <div className="text-muted-foreground">No logs yet...</div>
@@ -84,12 +84,12 @@ export function LogViewer({ logs, className }: LogViewerProps) {
             logs.map((entry, index) => (
               <div
                 key={index}
-                className={cn("mb-2", getLogColor(entry.type))}
+                className={cn("mb-1", getLogColor(entry.type))}
               >
-                <span className="text-muted-foreground text-xs">
+                <span className="text-muted-foreground text-[10px]">
                   [{new Date(entry.timestamp).toLocaleTimeString()}]
                 </span>{" "}
-                <span>{formatLogMessage(entry)}</span>
+                <span className="text-xs">{formatLogMessage(entry)}</span>
               </div>
             ))
           )}

@@ -238,13 +238,13 @@ export function AgentExecution({ sessionId, onCancel }: AgentExecutionProps) {
   };
 
   return (
-    <div className="space-y-4">
-      <Card>
-        <CardHeader>
+    <div className="space-y-3 h-full flex flex-col">
+      <Card className="flex-shrink-0">
+        <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>Agent Execution</CardTitle>
-              <CardDescription>
+              <CardTitle className="text-base">Agent Execution</CardTitle>
+              <CardDescription className="text-xs">
                 Session ID: <code className="text-xs">{sessionId}</code>
               </CardDescription>
             </div>
@@ -284,7 +284,9 @@ export function AgentExecution({ sessionId, onCancel }: AgentExecutionProps) {
         )}
       </Card>
 
-      <LogViewer logs={logs} />
+      <div className="flex-1 min-h-0">
+        <LogViewer logs={logs} className="h-full" />
+      </div>
     </div>
   );
 }

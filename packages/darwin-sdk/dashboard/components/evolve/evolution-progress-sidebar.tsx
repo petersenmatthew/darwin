@@ -9,10 +9,8 @@ import {
   Paintbrush,
   Check,
   Loader2,
-  GitPullRequest,
   Clock,
   FileCode,
-  ArrowRight,
   Sparkles,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -31,7 +29,6 @@ interface UIChange {
 interface EvolutionProgressSidebarProps {
   isRunning: boolean;
   totalIterations: number;
-  onCreatePR?: () => void;
   sessionId?: string;
 }
 
@@ -86,7 +83,6 @@ const stages = [
 export function EvolutionProgressSidebar({
   isRunning,
   totalIterations,
-  onCreatePR,
   sessionId,
 }: EvolutionProgressSidebarProps) {
   const [currentStage, setCurrentStage] = useState<EvolutionStage>("idle");
@@ -95,8 +91,10 @@ export function EvolutionProgressSidebar({
   const [changes, setChanges] = useState<UIChange[]>([]);
   const [currentIteration, setCurrentIteration] = useState(0);
   const [startTime, setStartTime] = useState<Date | null>(null);
+  const [currentSteps, setCurrentSteps] = useState<number>(0);
+  const [maxSteps, setMaxSteps] = useState<number>(20);
 
-  // Fetch session data to get changes
+  // Fetch session data to get changes and step information
   useEffect(() => {
     if (!sessionId) return;
 
@@ -112,6 +110,13 @@ export function EvolutionProgressSidebar({
           if (sessionData.changes && Array.isArray(sessionData.changes) && sessionData.changes.length > 0) {
             setChanges(sessionData.changes);
           }
+          // Update step information
+          if (sessionData.steps !== undefined) {
+            setCurrentSteps(sessionData.steps);
+          }
+          if (sessionData.maxSteps !== undefined) {
+            setMaxSteps(sessionData.maxSteps);
+          }
         }
       } catch (error) {
         console.error("Failed to fetch session data:", error);
@@ -119,10 +124,18 @@ export function EvolutionProgressSidebar({
     };
 
     fetchSessionData();
-    // Poll for changes every 2 seconds
+    // Poll for changes and step updates every 2 seconds
     const interval = setInterval(fetchSessionData, 2000);
     return () => clearInterval(interval);
   }, [sessionId]);
+
+  // Calculate progress for exploring stage based on steps
+  useEffect(() => {
+    if (currentStage === "exploring" && maxSteps > 0) {
+      const progress = Math.min(100, Math.round((currentSteps / maxSteps) * 100));
+      setStageProgress(progress);
+    }
+  }, [currentStage, currentSteps, maxSteps]);
 
   // Listen to real session logs if sessionId is provided
   useEffect(() => {
@@ -160,9 +173,11 @@ export function EvolutionProgressSidebar({
           // Don't set mockChanges here - let the fetch above handle it
         }
         
-        // Update progress based on status messages
+        // Update progress based on status messages (but not for exploring stage - that's handled by step count)
         if (message.includes("completed") || message.includes("complete")) {
-          setStageProgress(100);
+          if (currentStage !== "exploring") {
+            setStageProgress(100);
+          }
         }
       } catch (err) {
         console.error("Failed to parse status event:", err);
@@ -547,20 +562,6 @@ export function EvolutionProgressSidebar({
 
         </div>
       </ScrollArea>
-
-      {/* Footer with PR Button */}
-      {currentStage === "complete" && (
-        <div className="border-t border-border p-4">
-          <Button className="w-full gap-2" size="lg" onClick={onCreatePR}>
-            <GitPullRequest className="h-4 w-4" />
-            Create GitHub PR
-            <ArrowRight className="h-4 w-4 ml-auto" />
-          </Button>
-          <p className="text-xs text-muted-foreground text-center mt-2">
-            This will create a pull request with all UI changes
-          </p>
-        </div>
-      )}
     </div>
   );
 }

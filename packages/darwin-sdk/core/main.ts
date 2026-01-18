@@ -252,13 +252,23 @@ export function startDarwin() {
       return res.status(404).json({ error: "Session not found" });
     }
 
+    // Calculate steps: use stored steps if available, otherwise count action logs as fallback
+    let stepCount = session.steps;
+    if (stepCount === undefined) {
+      const actionLogs = session.logs.filter(log => log.type === "action");
+      stepCount = actionLogs.length;
+    }
+
     res.json({
       id: session.id,
       status: session.status,
       config: {
         website: session.config.website,
         task: session.config.task,
+        maxSteps: session.config.maxSteps || 20,
       },
+      steps: stepCount,
+      maxSteps: session.config.maxSteps || 20,
       result: session.result
         ? {
             success: session.result.success,

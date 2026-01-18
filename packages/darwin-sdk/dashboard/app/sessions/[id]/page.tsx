@@ -78,27 +78,27 @@ export default function SessionDetailPage() {
   const isEvolution = session?.isEvolution || false;
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="h-screen bg-background flex flex-col overflow-hidden">
       <Navbar />
       <div className="flex flex-1 overflow-hidden">
         {/* Main Content - Session Details */}
-        <main className="flex-1 p-6 min-w-0 overflow-y-auto">
-          <div className="mb-6">
+        <main className="flex-1 p-6 min-w-0 overflow-y-auto flex flex-col">
+          <div className="mb-4 flex-shrink-0">
             <Button
               variant="ghost"
-              className="mb-4"
+              className="mb-3"
               onClick={() => router.back()}
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
               Back
             </Button>
-            <h1 className="text-2xl font-semibold tracking-tight">Session Details</h1>
-            <p className="text-sm text-muted-foreground mt-1">
+            <h1 className="text-xl font-semibold tracking-tight">Session Details</h1>
+            <p className="text-xs text-muted-foreground mt-1">
               Session ID: <code className="text-xs">{sessionId}</code>
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4 flex-shrink-0">
             <Card>
               <CardHeader>
                 <CardTitle className="text-sm">Configuration</CardTitle>
@@ -166,7 +166,9 @@ export default function SessionDetailPage() {
             )}
           </div>
 
-          <AgentExecution sessionId={sessionId} />
+          <div className="flex-1 min-h-0">
+            <AgentExecution sessionId={sessionId} />
+          </div>
         </main>
 
         {/* Right Sidebar - Evolution Progress (only for evolution sessions) */}
@@ -177,9 +179,6 @@ export default function SessionDetailPage() {
                 isRunning={isRunning}
                 totalIterations={totalIterations}
                 sessionId={sessionId}
-                onCreatePR={() => {
-                  console.log("Create PR clicked");
-                }}
               />
             </div>
           </aside>
