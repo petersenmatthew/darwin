@@ -2,7 +2,7 @@ import { Stagehand } from "@browserbasehq/stagehand";
 import { injectTimerOverlay, stopTimerOverlay } from "./timer-overlay";
 import { ElevenLabsClient, play } from "@elevenlabs/elevenlabs-js";
 import { Readable } from "stream";
-import * as dotenv from 'dotenv';
+import * as dotenv from "dotenv";
 
 dotenv.config();
 const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY;
@@ -15,86 +15,90 @@ const elevenlabs = new ElevenLabsClient({
 });
 
 export interface BrowserAgentConfig {
-  website: string;
-  task: string;
-  model?: string;
-  maxSteps?: number;
-  env?: "LOCAL" | "BROWSERBASE";
-  apiKey?: string;
-  projectId?: string;
-  verbose?: 0 | 1 | 2;
-  systemPrompt?: string;
-  thinkingFormat?: string;
-  onEvent?: (type: "think" | "action" | "status" | "error", data: any) => void;
+    website: string;
+    task: string;
+    model?: string;
+    maxSteps?: number;
+    env?: "LOCAL" | "BROWSERBASE";
+    apiKey?: string;
+    projectId?: string;
+    verbose?: 0 | 1 | 2;
+    systemPrompt?: string;
+    thinkingFormat?: string;
+    onEvent?: (
+        type: "think" | "action" | "status" | "error",
+        data: any,
+    ) => void;
 }
 
 export interface ThoughtEntry {
-  step: number;
-  text: string;
-  timestamp: string;
-  source: 'stream' | 'step_finish' | 'tool_result' | 'final_reasoning';
+    step: number;
+    text: string;
+    timestamp: string;
+    source: "stream" | "step_finish" | "tool_result" | "final_reasoning";
 }
 
 export class BrowserAgent {
-  private stagehand: Stagehand | null = null;
-  private config: BrowserAgentConfig;
+    private stagehand: Stagehand | null = null;
+    private config: BrowserAgentConfig;
 
-  constructor(config: BrowserAgentConfig) {
-    this.config = {
-      model: "google/gemini-3-flash-preview",
-      maxSteps: 20,
-      env: "LOCAL",
-      verbose: 1, // Default to info level
-      ...config,
-    };
-  }
-
-  /**
-   * Initialize the Stagehand instance
-   */
-  async init(): Promise<void> {
-    const stagehandConfig: any = {
-      env: this.config.env,
-      experimental: true, // Required for hybrid mode and streaming
-      verbose: this.config.verbose, // Pass verbosity to Stagehand
-    };
-
-    if (this.config.env === "BROWSERBASE") {
-      stagehandConfig.apiKey =
-        this.config.apiKey || process.env.BROWSERBASE_API_KEY;
-      stagehandConfig.projectId =
-        this.config.projectId || process.env.BROWSERBASE_PROJECT_ID;
-
-      if (!stagehandConfig.apiKey || !stagehandConfig.projectId) {
-        throw new Error(
-          "BROWSERBASE mode requires API key and project ID. " +
-            "Set BROWSERBASE_API_KEY and BROWSERBASE_PROJECT_ID environment variables, " +
-            "or provide them in the config."
-        );
-      }
+    constructor(config: BrowserAgentConfig) {
+        this.config = {
+            model: "google/gemini-3-flash-preview",
+            maxSteps: 20,
+            env: "LOCAL",
+            verbose: 1, // Default to info level
+            ...config,
+        };
     }
 
-    console.log("Initializing Stagehand browser agent...");
-    this.stagehand = new Stagehand(stagehandConfig);
-    await this.stagehand.init();
-    console.log("Stagehand initialized successfully");
-  }
+    /**
+     * Initialize the Stagehand instance
+     */
+    async init(): Promise<void> {
+        const stagehandConfig: any = {
+            env: this.config.env,
+            experimental: true, // Required for hybrid mode and streaming
+            verbose: this.config.verbose, // Pass verbosity to Stagehand
+        };
 
-  /**
-   * Execute the task and stream output
-   */
-  async execute(): Promise<{ thoughts: ThoughtEntry[]; result: any }> {
-    if (!this.stagehand) {
-      throw new Error("Agent not initialized. Call init() first.");
+        if (this.config.env === "BROWSERBASE") {
+            stagehandConfig.apiKey =
+                this.config.apiKey || process.env.BROWSERBASE_API_KEY;
+            stagehandConfig.projectId =
+                this.config.projectId || process.env.BROWSERBASE_PROJECT_ID;
+
+            if (!stagehandConfig.apiKey || !stagehandConfig.projectId) {
+                throw new Error(
+                    "BROWSERBASE mode requires API key and project ID. " +
+                        "Set BROWSERBASE_API_KEY and BROWSERBASE_PROJECT_ID environment variables, " +
+                        "or provide them in the config.",
+                );
+            }
+        }
+
+        console.log("Initializing Stagehand browser agent...");
+        this.stagehand = new Stagehand(stagehandConfig);
+        await this.stagehand.init();
+        console.log("Stagehand initialized successfully");
     }
 
-    // Default thinking format instructions
-    const defaultThinkingFormat = `Keep your thinking concise and focused. Use 2-3 short sentences maximum. Be direct and avoid long paragraphs.`;
-    
-    const thinkingFormatInstructions = this.config.thinkingFormat || defaultThinkingFormat;
+    /**
+     * Execute the task and stream output
+     */
+    async execute(): Promise<{ thoughts: ThoughtEntry[]; result: any }> {
+        if (!this.stagehand) {
+            throw new Error("Agent not initialized. Call init() first.");
+        }
 
-    // Default system prompt that encourages thinking
-    const defaultSystemPrompt = `<role>
+        // Default thinking format instructions
+        const defaultThinkingFormat = `Keep your thinking concise and focused. Use 2-3 short sentences maximum. Be direct and avoid long paragraphs.`;
+
+        const thinkingFormatInstructions =
+            this.config.thinkingFormat || defaultThinkingFormat;
+
+        // Default system prompt that encourages thinking
+        const defaultSystemPrompt = `<role>
 You are a helpful browser automation assistant specialized in web interaction and task execution.
 </role>
 
@@ -116,237 +120,266 @@ ${thinkingFormatInstructions}
 - After thinking, proceed with your action.
 </rules>`;
 
-    const agent = this.stagehand.agent({
-      mode: "hybrid",
-      model: this.config.model,
-      stream: true, // Enable streaming mode
-      systemPrompt: this.config.systemPrompt || defaultSystemPrompt,
-    });
-
-    const page = this.stagehand.context.pages()[0];
-    console.log(`Navigating to: ${this.config.website}`);
-    await page.goto(this.config.website);
-    console.log("Page loaded, starting task execution...");
-
-    // Inject timer overlay into the page
-    await injectTimerOverlay(page);
-
-    // Emit initial status
-    if (this.config.onEvent) {
-      this.config.onEvent('status', { status: 'running' });
-    }
-
-    // Track seen thoughts to avoid duplicates
-    const thoughts: ThoughtEntry[] = [];
-    const seenThoughts = new Set<string>();
-
-    const addThought = (text: string, source: ThoughtEntry['source'], step: number) => {
-      if (!seenThoughts.has(text)) {
-        seenThoughts.add(text);
-        thoughts.push({
-          step,
-          text,
-          timestamp: new Date().toISOString(),
-          source,
+        const agent = this.stagehand.agent({
+            mode: "hybrid",
+            model: this.config.model,
+            stream: true, // Enable streaming mode
+            systemPrompt: this.config.systemPrompt || defaultSystemPrompt,
         });
-        console.log('\n💭 Thinking:', text);
-      }
-    };
 
-    // Track step history to force thinking
-    let stepNumber = 0;
-    let lastStepToolCalls: any[] = [];
-    let lastStepHadThink = false;
+        const page = this.stagehand.context.pages()[0];
+        console.log(`Navigating to: ${this.config.website}`);
+        await page.goto(this.config.website);
+        console.log("Page loaded, starting task execution...");
 
-    const streamResult = await agent.execute({
-      instruction: this.config.task,
-      maxSteps: this.config.maxSteps,
-      callbacks: {
-        // Intercept steps before execution to force thinking
-        prepareStep: async (stepContext: any) => {
-          stepNumber++;
+        // Inject timer overlay into the page
+        await injectTimerOverlay(page);
 
-          // Always require thinking at the start of each step (except first step)
-          // OR if the previous step had actions without thinking
-          const shouldRequireThinking = stepNumber > 1 && (!lastStepHadThink || lastStepToolCalls.some((tc: any) => tc.toolName !== 'think'));
+        // Emit initial status
+        if (this.config.onEvent) {
+            this.config.onEvent("status", { status: "running" });
+        }
 
-          if (shouldRequireThinking) {
-            const messages = stepContext.messages || [];
+        // Track seen thoughts to avoid duplicates
+        const thoughts: ThoughtEntry[] = [];
+        const seenThoughts = new Set<string>();
 
-            // Add a user message requiring thinking before actions
-            messages.push({
-              role: 'user',
-              content: 'CRITICAL: Before taking any action in this step, you MUST first use the "think" tool to explain what you observe, what you plan to do, and why. Only after using the think tool should you proceed with other actions.'
-            });
+        const addThought = async (
+            text: string,
+            source: ThoughtEntry["source"],
+            step: number,
+        ) => {
+            if (!seenThoughts.has(text)) {
+                seenThoughts.add(text);
+                thoughts.push({
+                    step,
+                    text,
+                    timestamp: new Date().toISOString(),
+                    source,
+                });
+                console.log("\n💭 Thinking:", text);
 
-            return {
-              ...stepContext,
-              messages: messages,
-            };
-          }
-          
-          return stepContext;
-        },
-        // Capture think tool calls when steps finish
-        onStepFinish: async (event: any) => {
-          // Store tool calls from this step
-          if (event.toolCalls) {
-            lastStepToolCalls = event.toolCalls;
-            lastStepHadThink = event.toolCalls.some((tc: any) => tc.toolName === 'think');
+                try {
+                  const voiceDescription = "A man with a regional Toronto accent speaking very quickly";
+                  const cleanText = text.substring(12, text.length - 2); // Remove "reasoning": and end quote from raw text
+                    const voices = await elevenlabs.textToVoice.createPreviews({
+                        voiceDescription,
+                        text: cleanText,
+                        loudness: 1,
+                        quality: 0.3,
+                        seed: 42,
+                    });
+                    if (voices?.previews.length > 0) {
+                        const audio = voices.previews[0].audioBase64;
+                        if (audio) {
+                            await play(
+                                Readable.from(Buffer.from(audio, "base64")),
+                            );
+                        }
+                    }
+                } catch (error) {
+                    console.error("Error generating speech:", error);
+                }
+            }
+        };
 
-            for (const toolCall of event.toolCalls) {
-              if (toolCall.toolName === 'think') {
-                // Extract thought from think tool call
-                const thought = toolCall.args?.thought ||
-                              toolCall.args?.text ||
-                              toolCall.args?.input ||
-                              toolCall.input ||
-                              toolCall.args || '';
+        // Track step history to force thinking
+        let stepNumber = 0;
+        let lastStepToolCalls: any[] = [];
+        let lastStepHadThink = false;
+
+        const streamResult = await agent.execute({
+            instruction: this.config.task,
+            maxSteps: this.config.maxSteps,
+            callbacks: {
+                // Intercept steps before execution to force thinking
+                prepareStep: async (stepContext: any) => {
+                    stepNumber++;
+
+                    // Always require thinking at the start of each step (except first step)
+                    // OR if the previous step had actions without thinking
+                    const shouldRequireThinking =
+                        stepNumber > 1 &&
+                        (!lastStepHadThink ||
+                            lastStepToolCalls.some(
+                                (tc: any) => tc.toolName !== "think",
+                            ));
+
+                    if (shouldRequireThinking) {
+                        const messages = stepContext.messages || [];
+
+                        // Add a user message requiring thinking before actions
+                        messages.push({
+                            role: "user",
+                            content:
+                                'CRITICAL: Before taking any action in this step, you MUST first use the "think" tool to explain what you observe, what you plan to do, and why. Only after using the think tool should you proceed with other actions.',
+                        });
+
+                        return {
+                            ...stepContext,
+                            messages: messages,
+                        };
+                    }
+                    return stepContext;
+                },
+                // Capture think tool calls when steps finish
+                onStepFinish: async (event: any) => {
+                    // Store tool calls from this step
+                    if (event.toolCalls) {
+                        lastStepToolCalls = event.toolCalls;
+                        lastStepHadThink = event.toolCalls.some(
+                            (tc: any) => tc.toolName === "think",
+                        );
+
+                        for (const toolCall of event.toolCalls) {
+                            if (toolCall.toolName === "think") {
+                                // Extract thought from think tool call
+                                const thought =
+                                    toolCall.args?.thought ||
+                                    toolCall.args?.text ||
+                                    toolCall.args?.input ||
+                                    toolCall.input ||
+                                    toolCall.args ||
+                                    "";
+
+                                if (thought) {
+                                    const thoughtText =
+                                        typeof thought === "string"
+                                            ? thought
+                                            : JSON.stringify(thought, null, 2);
+
+                                    await addThought(
+                                        thoughtText,
+                                        "step_finish",
+                                        stepNumber,
+                                    );
+                                }
+                            } else if (toolCall.toolName !== "think") {
+                                // Show other tool calls
+                                console.log(
+                                    `\n🔧 Action: ${toolCall.toolName}`,
+                                );
+                                // Emit event if callback provided
+                                if (this.config.onEvent) {
+                                    this.config.onEvent("action", {
+                                        toolName: toolCall.toolName,
+                                        args: toolCall.args,
+                                    });
+                                }
+                            }
+                        }
+                    } else {
+                        lastStepToolCalls = [];
+                        lastStepHadThink = false;
+                    }
+                },
+            },
+        });
+
+        // Stream fullStream to capture think tool calls in real-time
+        for await (const event of streamResult.fullStream) {
+            const eventAny = event as any;
+
+            // Look for think tool calls in the stream
+            if (event.type === "tool-call" && eventAny.toolName === "think") {
+                // Extract thinking from think tool calls
+                const thought =
+                    eventAny.args?.thought ||
+                    eventAny.args?.text ||
+                    eventAny.args?.input ||
+                    eventAny.input ||
+                    eventAny.args ||
+                    "";
 
                 if (thought) {
-                  const thoughtText = typeof thought === 'string'
-                    ? thought
-                    : JSON.stringify(thought, null, 2);
+                    const thoughtText =
+                        typeof thought === "string"
+                            ? thought
+                            : JSON.stringify(thought, null, 2);
 
-                  addThought(thoughtText, 'step_finish', stepNumber);
+                    await addThought(thoughtText, "stream", stepNumber);
                 }
-              } else if (toolCall.toolName !== 'think') {
-                // Show other tool calls
-                console.log(`\n🔧 Action: ${toolCall.toolName}`);
-                // Emit event if callback provided
-                if (this.config.onEvent) {
-                  this.config.onEvent('action', { toolName: toolCall.toolName, args: toolCall.args });
+            } else if (
+                event.type === "tool-result" &&
+                eventAny.toolName === "think"
+            ) {
+                // Think tool results - sometimes the result contains the thought
+                const result = eventAny.result;
+                if (result) {
+                    const resultText =
+                        typeof result === "string"
+                            ? result
+                            : JSON.stringify(result, null, 2);
+
+                    await addThought(resultText, "tool_result", stepNumber);
                 }
-              }
             }
-          } else {
-            lastStepToolCalls = [];
-            lastStepHadThink = false;
-          }
-        },
-      },
-    });
-
-    // Stream fullStream to capture think tool calls in real-time
-    for await (const event of streamResult.fullStream) {
-      const eventAny = event as any;
-
-      // Look for think tool calls in the stream
-      if (event.type === 'tool-call' && eventAny.toolName === 'think') {
-        // Extract thinking from think tool calls
-        const thought = eventAny.args?.thought ||
-                       eventAny.args?.text ||
-                       eventAny.args?.input ||
-                       eventAny.input ||
-                       eventAny.args || '';
-
-        if (thought) {
-          const thoughtText = typeof thought === 'string'
-            ? thought
-            : JSON.stringify(thought, null, 2);
-
-          addThought(thoughtText, 'stream', stepNumber);
         }
-      } else if (event.type === 'tool-result' && eventAny.toolName === 'think') {
-        // Think tool results - sometimes the result contains the thought
-        const result = eventAny.result;
-        if (result) {
-          const resultText = typeof result === 'string'
-            ? result
-            : JSON.stringify(result, null, 2);
 
-          addThought(resultText, 'tool_result', stepNumber);
-
+        // Also stream textStream for any reasoning text
+        for await (const delta of streamResult.textStream) {
+            if (delta && delta.trim()) {
+                // Filter out control characters
+                const cleanDelta = delta.replace(/[\x00-\x1F\x7F-\x9F]/g, "");
+                if (cleanDelta.trim()) {
+                    process.stdout.write(cleanDelta);
+                }
+            }
         }
-      }
+
+        // Get the final result after streaming completes
+        const finalResult = await streamResult.result;
+
+        // Stop the timer when task completes
+        await stopTimerOverlay(page);
+
+        // Sanitize the message to remove control characters
+        if (finalResult.message) {
+            const sanitized = finalResult.message
+                .replace(/[\x00-\x1F\x7F-\x9F]/g, "") // Remove control characters
+                .replace(/<ctrl\d+>/gi, "") // Remove <ctrlXX> patterns
+                .trim();
+
+            // Only update if there's actual content after sanitization
+            if (sanitized) {
+                finalResult.message = sanitized;
+            } else {
+                // If message was only control characters, provide a default
+                finalResult.message = finalResult.success
+                    ? "Task completed successfully"
+                    : "Task completed but may not have reached the goal";
+            }
+        }
+
+        // Extract reasoning from the final close action if available
+        if (finalResult.actions && finalResult.actions.length > 0) {
+            const closeAction = finalResult.actions.find(
+                (action: any) => action.type === "close",
+            );
+            if (closeAction && closeAction.reasoning) {
+                // Sanitize reasoning too
+                let reasoning = closeAction.reasoning;
+                if (typeof reasoning === "string") {
+                    reasoning = reasoning
+                        .replace(/[\x00-\x1F\x7F-\x9F]/g, "")
+                        .replace(/<ctrl\d+>/gi, "")
+                        .trim();
+                }
+                if (reasoning) {
+                    await addThought(reasoning, "final_reasoning", stepNumber);
+                }
+            }
+        }
+
+        return { thoughts, result: finalResult };
     }
 
-    // Also stream textStream for any reasoning text
-    for await (const delta of streamResult.textStream) {
-      if (delta && delta.trim()) {
-        // Filter out control characters
-        const cleanDelta = delta.replace(/[\x00-\x1F\x7F-\x9F]/g, '');
-        if (cleanDelta.trim()) {
-          process.stdout.write(cleanDelta);
+    /**
+     * Close the browser and cleanup
+     */
+    async close(): Promise<void> {
+        if (this.stagehand) {
+            await this.stagehand.close();
         }
-      }
     }
-
-    // Get the final result after streaming completes
-    const finalResult = await streamResult.result;
-
-    // Stop the timer when task completes
-    await stopTimerOverlay(page);
-
-    // Sanitize the message to remove control characters
-    if (finalResult.message) {
-      const sanitized = finalResult.message
-        .replace(/[\x00-\x1F\x7F-\x9F]/g, '') // Remove control characters
-        .replace(/<ctrl\d+>/gi, '') // Remove <ctrlXX> patterns
-        .trim();
-
-      // Only update if there's actual content after sanitization
-      if (sanitized) {
-        finalResult.message = sanitized;
-      } else {
-        // If message was only control characters, provide a default
-        finalResult.message = finalResult.success 
-          ? 'Task completed successfully' 
-          : 'Task completed but may not have reached the goal';
-      }
-    }
-    
-    // Extract reasoning from the final close action if available
-    if (finalResult.actions && finalResult.actions.length > 0) {
-      const closeAction = finalResult.actions.find((action: any) => action.type === 'close');
-      if (closeAction && closeAction.reasoning) {
-        // Sanitize reasoning too
-        let reasoning = closeAction.reasoning;
-        if (typeof reasoning === 'string') {
-          reasoning = reasoning
-            .replace(/[\x00-\x1F\x7F-\x9F]/g, '')
-            .replace(/<ctrl\d+>/gi, '')
-            .trim();
-        }
-        if (reasoning) {
-          addThought(reasoning, 'final_reasoning', stepNumber);
-          const voices =
-              await elevenlabs.textToVoice.createPreviews({
-                  voiceDescription:
-                      "A man with a regional Austrailian accent speaking quickly", // Can vary for different personas
-                  text: reasoning,
-                  // New model params
-                  loudness: 1, // Controls the volume level of the generated voice. -1 is quietest, 1 is loudest, 0 corresponds to roughly -24 LUFS.
-                  quality: 0.3, // Higher quality results in better voice output but less variety.
-                  seed: 42, // Random number that controls the voice generation. Same seed with same inputs produces same voice.
-              });
-          if (voices?.previews.length > 0) {
-              // Loop through the voices and play the audio
-              for (const voice of voices.previews) {
-                  const audio = voice.audioBase64;
-                  if (audio) {
-                      await play(
-                          Readable.from(
-                              Buffer.from(audio, "base64"),
-                          ),
-                      );
-                  }
-              }
-          }
-        }
-      }
-    }
-
-    return { thoughts, result: finalResult };
-  }
-
-
-  /**
-   * Close the browser and cleanup
-   */
-  async close(): Promise<void> {
-    if (this.stagehand) {
-      await this.stagehand.close();
-    }
-  }
 }
