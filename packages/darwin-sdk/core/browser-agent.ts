@@ -1,5 +1,45 @@
 import { Stagehand } from "@browserbasehq/stagehand";
 import { injectTimerOverlay, stopTimerOverlay } from "./timer-overlay";
+import { ElevenLabsClient, play } from "@elevenlabs/elevenlabs-js";
+import { Readable } from "stream";
+import * as dotenv from 'dotenv';
+
+dotenv.config();
+const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY;
+
+if (!ELEVENLABS_API_KEY) {
+    throw new Error("Missing ELEVENLABS_API_KEY in environment variables");
+}
+const elevenlabs = new ElevenLabsClient({
+    apiKey: ELEVENLABS_API_KEY,
+});
+
+export const createAudioStreamFromText = async (
+    text: string,
+): Promise<Buffer> => {
+    const audioStream = await elevenlabs.textToSpeech.stream(
+        "JBFqnCBsd6RMkjVDRZzb",
+        {
+            modelId: "eleven_flash_v2_5",
+            text,
+            outputFormat: "mp3_44100_128",
+            // Optional voice settings that allow you to customize the output
+            voiceSettings: {
+                stability: 0,
+                similarityBoost: 1.0,
+                useSpeakerBoost: true,
+                speed: 1.0,
+            },
+        },
+    );
+    const chunks: Buffer[] = [];
+    for await (const chunk of audioStream) {
+        chunks.push(chunk as Buffer);
+    }
+    const content = Buffer.concat(chunks);
+    return content;
+};
+
 
 export interface BrowserAgentConfig {
   website: string;
@@ -152,20 +192,20 @@ ${thinkingFormatInstructions}
         // Intercept steps before execution to force thinking
         prepareStep: async (stepContext: any) => {
           stepNumber++;
-          
+
           // Always require thinking at the start of each step (except first step)
           // OR if the previous step had actions without thinking
           const shouldRequireThinking = stepNumber > 1 && (!lastStepHadThink || lastStepToolCalls.some((tc: any) => tc.toolName !== 'think'));
-          
+
           if (shouldRequireThinking) {
             const messages = stepContext.messages || [];
-            
+
             // Add a user message requiring thinking before actions
             messages.push({
               role: 'user',
               content: 'CRITICAL: Before taking any action in this step, you MUST first use the "think" tool to explain what you observe, what you plan to do, and why. Only after using the think tool should you proceed with other actions.'
             });
-            
+
             return {
               ...stepContext,
               messages: messages,
@@ -243,6 +283,7 @@ ${thinkingFormatInstructions}
             : JSON.stringify(result, null, 2);
 
           addThought(resultText, 'tool_result', stepNumber);
+
         }
       }
     }
@@ -260,17 +301,17 @@ ${thinkingFormatInstructions}
 
     // Get the final result after streaming completes
     const finalResult = await streamResult.result;
-    
+
     // Stop the timer when task completes
     await stopTimerOverlay(page);
-    
+
     // Sanitize the message to remove control characters
     if (finalResult.message) {
       const sanitized = finalResult.message
         .replace(/[\x00-\x1F\x7F-\x9F]/g, '') // Remove control characters
         .replace(/<ctrl\d+>/gi, '') // Remove <ctrlXX> patterns
         .trim();
-      
+
       // Only update if there's actual content after sanitization
       if (sanitized) {
         finalResult.message = sanitized;
@@ -296,6 +337,29 @@ ${thinkingFormatInstructions}
         }
         if (reasoning) {
           addThought(reasoning, 'final_reasoning', stepNumber);
+          const voices =
+              await elevenlabs.textToVoice.createPreviews({
+                  voiceDescription:
+                      "A man with a regional Austrailian accent speaking quickly", // Can vary for different personas
+                  text: reasoning,
+                  // New model params
+                  loudness: 1, // Controls the volume level of the generated voice. -1 is quietest, 1 is loudest, 0 corresponds to roughly -24 LUFS.
+                  quality: 0.3, // Higher quality results in better voice output but less variety.
+                  seed: 42, // Random number that controls the voice generation. Same seed with same inputs produces same voice.
+              });
+          if (voices?.previews.length > 0) {
+              // Loop through the voices and play the audio
+              for (const voice of voices.previews) {
+                  const audio = voice.audioBase64;
+                  if (audio) {
+                      await play(
+                          Readable.from(
+                              Buffer.from(audio, "base64"),
+                          ),
+                      );
+                  }
+              }
+          }
         }
       }
     }
