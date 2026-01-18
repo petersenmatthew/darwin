@@ -19,7 +19,8 @@ export default function EvolvePage() {
       const website = `http://localhost:${config.port}`;
       const agentConfig = {
         website: website,
-        task: config.taskConfig?.description || "Run evolution",
+        task: config.taskConfig?.description || config.taskConfig?.name || "Run evolution", // Use description for agent execution
+        taskName: config.taskConfig?.name || config.taskConfig?.description || "Run evolution", // Use name for analytics
         model: "google/gemini-3-flash-preview",
         maxSteps: config.maxSteps,
         env: "LOCAL" as const,

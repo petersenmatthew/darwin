@@ -172,12 +172,7 @@ export function EvolutionConfigPanel({
               <SelectContent>
                 {savedTasks.map((task) => (
                   <SelectItem key={task.id} value={task.id}>
-                    <div className="flex flex-col gap-1">
-                      <span className="font-medium">{task.name}</span>
-                      <span className="text-xs text-muted-foreground line-clamp-1">
-                        {task.description}
-                      </span>
-                    </div>
+                    {task.name}
                   </SelectItem>
                 ))}
                 <SelectItem value="create-new" className="text-primary">
@@ -286,7 +281,7 @@ export function EvolutionConfigPanel({
 
         {/* Summary */}
         <Card className="bg-muted/30 border-dashed">
-          <CardContent className="pt-6">
+          <CardContent className="pt-0">
             <div className="flex flex-col gap-3">
               <h4 className="text-sm font-medium">Run Summary</h4>
               <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">

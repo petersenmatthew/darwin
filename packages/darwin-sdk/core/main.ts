@@ -430,28 +430,60 @@ export function startDarwin() {
             await agent.close();
           }
 
-          // Step 2: Load events from events.json
+          // Step 2: Load events from events.json or saved-events.json
           console.log(chalk.cyan("Step 2: Loading analytics events..."));
           sessionManager.addLog(sessionId, "status", "Step 2: Loading analytics events...");
           const appPath = targetAppPath || path.resolve(process.cwd(), "../../demo-app");
           const eventsFilePath = path.join(appPath, "events.json");
+          const savedEventsFilePath = path.join(appPath, "saved-events.json");
 
           let analyticsSnapshot: AnalyticsSnapshot = { events: [] };
+          
+          // Try to load from events.json first (current session, before it gets cleared)
+          let events: any[] = [];
           if (fs.existsSync(eventsFilePath)) {
             try {
               const eventsContent = fs.readFileSync(eventsFilePath, "utf-8");
-              const events = JSON.parse(eventsContent);
-              analyticsSnapshot = { events: Array.isArray(events) ? events : [] };
-              console.log(chalk.green(`✓ Loaded ${analyticsSnapshot.events.length} events`));
-              sessionManager.addLog(sessionId, "status", `Loaded ${analyticsSnapshot.events.length} analytics events`);
+              const parsed = JSON.parse(eventsContent);
+              if (Array.isArray(parsed) && parsed.length > 0) {
+                events = parsed;
+              }
             } catch (error) {
-              console.log(chalk.yellow("⚠ Could not parse events.json, using empty events"));
-              sessionManager.addLog(sessionId, "log", "Could not parse events.json, using empty events");
+              console.log(chalk.yellow("⚠ Could not parse events.json"));
             }
-          } else {
-            console.log(chalk.yellow("⚠ No events.json found, using empty events"));
-            sessionManager.addLog(sessionId, "log", "No events.json found, using empty events");
           }
+          
+          // If events.json is empty or doesn't exist, try saved-events.json and get the most recent session
+          if (events.length === 0 && fs.existsSync(savedEventsFilePath)) {
+            try {
+              const savedEventsContent = fs.readFileSync(savedEventsFilePath, "utf-8");
+              const allSavedEvents = JSON.parse(savedEventsContent);
+              if (Array.isArray(allSavedEvents) && allSavedEvents.length > 0) {
+                // Get the most recent session by finding the last session_started event
+                let mostRecentSessionId: string | null = null;
+                for (let i = allSavedEvents.length - 1; i >= 0; i--) {
+                  if (allSavedEvents[i].event === 'session_started' && allSavedEvents[i].session_id) {
+                    mostRecentSessionId = allSavedEvents[i].session_id;
+                    break;
+                  }
+                }
+                
+                // If we found a session, filter events to that session
+                if (mostRecentSessionId) {
+                  events = allSavedEvents.filter((e: any) => e.session_id === mostRecentSessionId);
+                } else {
+                  // Fallback: use all events if we can't find a session
+                  events = allSavedEvents;
+                }
+              }
+            } catch (error) {
+              console.log(chalk.yellow("⚠ Could not parse saved-events.json"));
+            }
+          }
+          
+          analyticsSnapshot = { events: events };
+          console.log(chalk.green(`✓ Loaded ${analyticsSnapshot.events.length} events`));
+          sessionManager.addLog(sessionId, "status", `Loaded ${analyticsSnapshot.events.length} analytics events`);
 
           // Step 3: Run the analyst
           console.log(chalk.cyan("Step 3: Analyzing data with Gemini..."));

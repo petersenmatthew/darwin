@@ -38,3 +38,5 @@ next-env.d.ts
 
 events.json
 packages/demo-app/events.json
+saved-events.json
+packages/demo-app/saved-events.json

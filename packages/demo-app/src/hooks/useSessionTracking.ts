@@ -15,10 +15,24 @@ export const useSessionTracking = () => {
       sessionStartTime.current = Date.now();
       pagesViewed.current = 1;
 
+      // Get task information from localStorage (injected by browser agent)
+      let taskName = 'UNKNOWN-TASK';
+      if (typeof window !== 'undefined') {
+        // Try to get task from localStorage (set by browser agent)
+        const storedTask = localStorage.getItem('darwin_task');
+        if (storedTask) {
+          taskName = storedTask;
+        } else if ((window as any).__darwinTask) {
+          taskName = (window as any).__darwinTask;
+        }
+      }
+
       // Track session started
       trackEvent('session_started', {
         page_name: getPageName(),
         referrer: typeof document !== 'undefined' ? document.referrer : undefined,
+        task: taskName,
+        task_name: taskName,
       });
 
       hasTrackedStart.current = true;
