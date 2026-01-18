@@ -12650,5 +12650,13 @@
     "scroll_position": 29,
     "scroll_percent": 1,
     "time_since_page_load": 86048
+  },
+  {
+    "event": "page_abandoned",
+    "session_id": "session_1768722666480_grinejayb",
+    "user_id": "user_1768683847388_jtikphatf",
+    "timestamp": 1768726246878,
+    "page_name": "/clothing",
+    "time_on_page": 115945
   }
 ]
