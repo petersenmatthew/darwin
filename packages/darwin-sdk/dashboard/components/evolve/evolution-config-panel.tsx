@@ -12,7 +12,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ClipboardList,
@@ -54,7 +53,6 @@ export function EvolutionConfigPanel({
   });
 
   const [showCreateTask, setShowCreateTask] = useState(false);
-  const [customTask, setCustomTask] = useState<TaskConfig | null>(null);
 
   // Load saved tasks on mount
   useEffect(() => {
@@ -90,20 +88,14 @@ export function EvolutionConfigPanel({
   }, []);
 
   const handleStartEvolution = () => {
-    let taskConfig: TaskConfig | undefined;
-    
-    if (config.taskId === "new") {
-      taskConfig = customTask ?? undefined;
-    } else {
-      // Find the selected saved task
-      const selectedTask = savedTasks.find((t) => t.id === config.taskId);
-      if (selectedTask) {
-        taskConfig = {
+    // Find the selected saved task
+    const selectedTask = savedTasks.find((t) => t.id === config.taskId);
+    const taskConfig: TaskConfig | undefined = selectedTask
+      ? {
           name: selectedTask.name,
           description: selectedTask.description,
-        };
-      }
-    }
+        }
+      : undefined;
     
     const finalConfig: EvolutionConfig = {
       ...config,
@@ -119,7 +111,6 @@ export function EvolutionConfigPanel({
     
     // Set it as the selected task
     setConfig((prev) => ({ ...prev, taskId: savedTask.id }));
-    setCustomTask(null);
     setShowCreateTask(false);
     
     toast.success("Task saved", {
@@ -147,102 +138,57 @@ export function EvolutionConfigPanel({
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <Tabs
-              value={config.taskId === "new" ? "new" : "existing"}
+            {savedTasks.length === 0 ? (
+              <div className="rounded-lg border border-dashed border-border p-6 text-center">
+                <p className="text-sm text-muted-foreground mb-2">
+                  No saved tasks yet
+                </p>
+                <p className="text-xs text-muted-foreground mb-4">
+                  Create a task from the dropdown to get started
+                </p>
+                <Button
+                  variant="outline"
+                  className="gap-2"
+                  onClick={() => setShowCreateTask(true)}
+                >
+                  <Plus className="h-4 w-4" />
+                  Create New Task
+                </Button>
+              </div>
+            ) : (
+              <Select
+              value={config.taskId !== "new" ? config.taskId : savedTasks[0]?.id || ""}
               onValueChange={(v) => {
-                if (v === "new") {
-                  if (!customTask) {
-                    setShowCreateTask(true);
-                  } else {
-                    setConfig((prev) => ({ ...prev, taskId: "new" }));
-                  }
+                if (v === "create-new") {
+                  setShowCreateTask(true);
                 } else {
-                  setConfig((prev) => ({
-                    ...prev,
-                    taskId: savedTasks[0]?.id || "",
-                  }));
+                  setConfig((prev) => ({ ...prev, taskId: v }));
                 }
               }}
             >
-              <TabsList className="w-full grid grid-cols-2">
-                <TabsTrigger value="existing">Existing Task</TabsTrigger>
-                <TabsTrigger value="new">
-                  {customTask ? "Custom" : "New"}
-                </TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="existing" className="mt-4">
-                {savedTasks.length === 0 ? (
-                  <div className="rounded-lg border border-dashed border-border p-6 text-center">
-                    <p className="text-sm text-muted-foreground mb-2">
-                      No saved tasks yet
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      Create a task from the dashboard to get started
-                    </p>
-                  </div>
-                ) : (
-                  <Select
-                    value={config.taskId !== "new" ? config.taskId : savedTasks[0]?.id || ""}
-                    onValueChange={(v) =>
-                      setConfig((prev) => ({ ...prev, taskId: v }))
-                    }
-                  >
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder="Select a task" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {savedTasks.map((task) => (
-                        <SelectItem key={task.id} value={task.id}>
-                          <div className="flex flex-col gap-1">
-                            <span className="font-medium">{task.name}</span>
-                            <span className="text-xs text-muted-foreground line-clamp-1">
-                              {task.description}
-                            </span>
-                          </div>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                )}
-              </TabsContent>
-
-              <TabsContent value="new" className="mt-4">
-                {customTask ? (
-                  <div className="rounded-lg border border-border p-4 bg-muted/20">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-amber-500/20">
-                          <ClipboardList className="h-4 w-4 text-amber-400" />
-                        </div>
-                        <div>
-                          <p className="font-medium text-sm">{customTask.name}</p>
-                          <p className="text-xs text-muted-foreground line-clamp-2">
-                            {customTask.description}
-                          </p>
-                        </div>
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setShowCreateTask(true)}
-                      >
-                        Edit
-                      </Button>
+              <SelectTrigger className="w-full h-12 py-2.5">
+                <SelectValue placeholder="Select a task" />
+              </SelectTrigger>
+              <SelectContent>
+                {savedTasks.map((task) => (
+                  <SelectItem key={task.id} value={task.id}>
+                    <div className="flex flex-col gap-1">
+                      <span className="font-medium">{task.name}</span>
+                      <span className="text-xs text-muted-foreground line-clamp-1">
+                        {task.description}
+                      </span>
                     </div>
-                  </div>
-                ) : (
-                  <Button
-                    variant="outline"
-                    className="w-full gap-2 bg-transparent"
-                    onClick={() => setShowCreateTask(true)}
-                  >
+                  </SelectItem>
+                ))}
+                <SelectItem value="create-new" className="text-primary">
+                  <div className="flex items-center gap-2">
                     <Plus className="h-4 w-4" />
-                    Create New Task
-                  </Button>
-                )}
-              </TabsContent>
-            </Tabs>
+                    <span className="font-medium">Create New</span>
+                  </div>
+                </SelectItem>
+              </SelectContent>
+            </Select>
+            )}
           </CardContent>
         </Card>
 
@@ -346,9 +292,7 @@ export function EvolutionConfigPanel({
               <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
                 <span className="text-muted-foreground">Task</span>
                 <span className="font-medium truncate">
-                  {config.taskId === "new"
-                    ? customTask?.name || "Custom Task"
-                    : savedTasks.find((t) => t.id === config.taskId)?.name || "No task selected"}
+                  {savedTasks.find((t) => t.id === config.taskId)?.name || "No task selected"}
                 </span>
                 <span className="text-muted-foreground">Target</span>
                 <span className="font-mono text-xs">
@@ -368,7 +312,7 @@ export function EvolutionConfigPanel({
           size="lg"
           className="w-full gap-2 h-12 text-base"
           onClick={handleStartEvolution}
-          disabled={isRunning || (config.taskId !== "new" && !savedTasks.find((t) => t.id === config.taskId) && !customTask)}
+          disabled={isRunning || !config.taskId || !savedTasks.find((t) => t.id === config.taskId)}
         >
           {isRunning ? (
             <>

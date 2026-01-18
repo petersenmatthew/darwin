@@ -67,10 +67,10 @@ export function Navbar() {
           </nav>
         </div>
         <div className="ml-auto flex items-center gap-4">
-          <Button asChild size="sm" className="gap-2 bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-500 hover:to-emerald-500 border-0">
+          <Button asChild size="sm" className="gap-2 bg-white text-black hover:bg-white/90 border-0">
             <Link href="/evolve">
               <Zap className="h-4 w-4" />
-              Evolve
+              EVOLVE
             </Link>
           </Button>
           <DropdownMenu>
