@@ -1,10 +1,18 @@
 import { spawn } from "child_process";
+import { EventEmitter } from "events";
 
-export function runClaude(instruction: string, cwd: string) {
+export interface StreamOptions {
+  onStdout?: (data: string) => void;
+  onStderr?: (data: string) => void;
+}
+
+export function runClaude(instruction: string, cwd: string, streamOptions?: StreamOptions) {
   return new Promise((resolve, reject) => {
-    const claude = spawn(
-      "claude",
-      ["-p", "--dangerously-skip-permissions", instruction],
+    // Use --yolo flag to automatically approve all tool calls including file modifications
+    // This allows Gemini CLI to actually modify files without asking for confirmation
+    const gemini = spawn(
+      "gemini",
+      ["--yolo", "-p", instruction],
       {
         cwd,
         env: { ...process.env },
@@ -12,15 +20,32 @@ export function runClaude(instruction: string, cwd: string) {
       },
     );
 
-    claude.stdin.end();
+    gemini.stdin.end();
 
     let stdout = "",
       stderr = "";
-    claude.stdout.on("data", (d) => (stdout += d));
-    claude.stderr.on("data", (d) => (stderr += d));
-    claude.on("close", (code) =>
+    
+    // Stream stdout data as it comes in
+    gemini.stdout.on("data", (d) => {
+      const data = d.toString();
+      stdout += data;
+      if (streamOptions?.onStdout) {
+        streamOptions.onStdout(data);
+      }
+    });
+    
+    // Stream stderr data as it comes in
+    gemini.stderr.on("data", (d) => {
+      const data = d.toString();
+      stderr += data;
+      if (streamOptions?.onStderr) {
+        streamOptions.onStderr(data);
+      }
+    });
+    
+    gemini.on("close", (code) =>
       code === 0 ? resolve({ stdout, stderr }) : reject(new Error(stderr)),
     );
-    claude.on("error", reject);
+    gemini.on("error", reject);
   });
 }

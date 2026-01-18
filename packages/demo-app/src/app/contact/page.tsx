@@ -70,7 +70,7 @@ export default function ContactPage() {
   const handleBlur = (fieldName: string) => {
     setFocusedField(null);
     const fieldType = fieldName === 'email' ? 'email' : fieldName === 'phone' ? 'tel' : fieldName === 'subject' ? 'select' : fieldName === 'message' ? 'textarea' : 'text';
-    const hasValue = formData[fieldName as keyof typeof formData] && String(formData[fieldName as keyof typeof formData]).trim() !== '';
+    const hasValue = (formData[fieldName as keyof typeof formData]).trim() !== '';
     
     // Track unfocus event
     trackFieldUnfocus(fieldName, fieldType, hasValue);

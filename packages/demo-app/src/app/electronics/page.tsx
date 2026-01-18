@@ -63,6 +63,7 @@ export default function ElectronicsPage() {
             { name: 'Wearables', icon: '⌚', count: 8 },
             { name: 'Chargers', icon: '🔌', count: 15 },
             { name: 'Accessories', icon: '📱', count: 24 },
+            { name: 'Peripherals', icon: '🖱️', count: 10 },
           ].map((cat) => (
             <div key={cat.name} className="bg-white border rounded-xl p-6 hover:shadow-lg transition-shadow cursor-pointer">
               <span className="text-4xl">{cat.icon}</span>

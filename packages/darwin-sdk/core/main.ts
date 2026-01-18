@@ -172,6 +172,11 @@ export function startDarwin() {
       });
     });
 
+    // Send existing changes if available
+    if (session.changes && session.changes.length > 0) {
+      sendEvent("changes", { changes: session.changes });
+    }
+
     // Listen for new logs
     const logHandler = (sid: string, logEntry: any) => {
       if (sid === sessionId) {
@@ -212,10 +217,17 @@ export function startDarwin() {
       }
     };
 
+    const changesHandler = (sid: string, changes: any[]) => {
+      if (sid === sessionId) {
+        sendEvent("changes", { changes });
+      }
+    };
+
     sessionManager.on("session:log", logHandler);
     sessionManager.on("session:status", statusHandler);
     sessionManager.on("session:completed", completedHandler);
     sessionManager.on("session:error", errorHandler);
+    sessionManager.on("session:changes", changesHandler);
 
     // Cleanup on client disconnect
     req.on("close", () => {
@@ -223,6 +235,7 @@ export function startDarwin() {
       sessionManager.off("session:status", statusHandler);
       sessionManager.off("session:completed", completedHandler);
       sessionManager.off("session:error", errorHandler);
+      sessionManager.off("session:changes", changesHandler);
       res.end();
     });
   });
@@ -253,6 +266,8 @@ export function startDarwin() {
       createdAt: session.createdAt.toISOString(),
       completedAt: session.completedAt?.toISOString(),
       logsCount: session.logs.length,
+      isEvolution: session.isEvolution || false,
+      changes: session.changes || [],
     });
   });
 
@@ -324,7 +339,7 @@ export function startDarwin() {
     }
   });
 
-  // Full pipeline: Run agents → Analyze → Evolve (Claude updates code)
+  // Full pipeline: Run agents → Analyze → Evolve (Gemini updates code)
   app.post("/api/evolve", async (req, res) => {
     try {
       const {
@@ -375,8 +390,8 @@ export function startDarwin() {
 
       const agentConfig = toBrowserAgentConfig(config);
 
-      // Create session for streaming logs
-      const sessionId = sessionManager.createSession(agentConfig);
+      // Create session for streaming logs (mark as evolution session)
+      const sessionId = sessionManager.createSession(agentConfig, true);
       agentConfig.onEvent = (type, data) => {
         if (type === 'think') {
           sessionManager.addLog(sessionId, 'think', data.thought || JSON.stringify(data));
@@ -453,15 +468,27 @@ export function startDarwin() {
             sessionManager.addLog(sessionId, "think", `Issue [${problem.severity}]: ${problem.hypothesis}`);
           }
 
-          // Step 4: Evolve the codebase with Claude
-          console.log(chalk.cyan("Step 4: Evolving codebase with Claude..."));
-          sessionManager.addLog(sessionId, "status", "Step 4: Evolving codebase with Claude...");
-          const evolutionResult = await analyst.evolve(analysis);
+          // Step 4: Evolve the codebase with Gemini
+          console.log(chalk.cyan("Step 4: Evolving codebase with Gemini..."));
+          sessionManager.addLog(sessionId, "status", "Step 4: Evolving codebase with Gemini...");
+          
+          // Stream Gemini CLI output in real-time
+          const evolutionResult = await analyst.evolve(analysis, (data, type) => {
+            // Stream the output to session logs
+            sessionManager.addLog(sessionId, "log", data);
+          });
+          
           console.log(chalk.green("✓ Evolution complete!"));
 
           sessionManager.addLog(sessionId, "status", "Evolution complete!");
           if (evolutionResult.stdout) {
             sessionManager.addLog(sessionId, "result", evolutionResult.stdout);
+          }
+
+          // Store changes if parsed from output
+          if (evolutionResult.changes && evolutionResult.changes.length > 0) {
+            sessionManager.setSessionChanges(sessionId, evolutionResult.changes);
+            console.log(chalk.green(`✓ Parsed ${evolutionResult.changes.length} changes from output`));
           }
 
           sessionManager.setSessionResult(sessionId, {
@@ -492,6 +519,39 @@ export function startDarwin() {
       console.error(chalk.red(`Pipeline error: ${error.message}`));
       res.status(500).json({ error: error.message });
     }
+  });
+
+  // Get all sessions
+  app.get("/api/sessions", (req, res) => {
+    try {
+      const sessions = sessionManager.getAllSessions();
+      res.json(sessions);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  // Get metrics
+  app.get("/api/metrics", (req, res) => {
+    const sessions = sessionManager.getAllSessions();
+    const totalSessions = sessions.length;
+    const activeSessions = sessions.filter(s => s.status === "running" || s.status === "initializing").length;
+    const completedSessions = sessions.filter(s => s.status === "completed").length;
+    const successRate = totalSessions > 0 
+      ? Math.round((completedSessions / totalSessions) * 100) 
+      : 0;
+    const tasksCompleted = completedSessions;
+
+    res.json({
+      totalAgents: totalSessions,
+      agentsTrend: 0, // TODO: Calculate trend
+      activeSessions,
+      sessionsTrend: 0, // TODO: Calculate trend
+      successRate,
+      successTrend: 0, // TODO: Calculate trend
+      tasksCompleted,
+      tasksTrend: 0, // TODO: Calculate trend
+    });
   });
 
   app.listen(API_PORT, () => {

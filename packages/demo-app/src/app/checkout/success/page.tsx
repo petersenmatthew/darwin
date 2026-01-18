@@ -14,7 +14,7 @@ export default function CheckoutSuccessPage() {
     <div className="max-w-2xl mx-auto px-4 py-16 text-center">
       <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
         <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center">
-          <Icon source={CheckIcon} tone="text-inverse" />
+          <Icon source={CheckIcon} tone="success" />
         </div>
       </div>
 

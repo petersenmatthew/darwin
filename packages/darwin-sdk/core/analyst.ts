@@ -90,6 +90,13 @@ export class Analyst {
   }
 
   buildUXAgentPrompt(analysis: AnalysisResult): string {
+    // Only address the highest priority issue (first one)
+    const primaryIssue = analysis.mainProblems[0];
+    
+    if (!primaryIssue) {
+      return `No issues found to address.`;
+    }
+
     return `
   You are an autonomous UX/UI improvement agent.
 
@@ -99,41 +106,70 @@ export class Analyst {
   - You prioritize accessibility, visual hierarchy, and usability
   - You only change code when justified by evidence
 
-  CONTEXT:
-  The following UX issues were identified from real product analytics:
+  CRITICAL INSTRUCTION:
+  - You MUST address ONLY ONE issue in this task
+  - Make ONLY ONE change to fix the single issue below
+  - Do NOT attempt to fix multiple issues or make multiple changes
+  - Focus entirely on the single issue provided
 
-  ${analysis.mainProblems
-    .map(
-      (p, i) => `
-  Issue ${i + 1}:
-  - ID: ${p.id}
-  - Severity: ${p.severity}
-  - Affected Area: ${p.affectedArea}
-  - Hypothesis: ${p.hypothesis}
+  CONTEXT:
+  The following UX issue was identified from real product analytics:
+
+  Issue:
+  - ID: ${primaryIssue.id}
+  - Severity: ${primaryIssue.severity}
+  - Affected Area: ${primaryIssue.affectedArea}
+  - Hypothesis: ${primaryIssue.hypothesis}
   - Evidence:
-  ${p.evidence.map(e => `  - ${e}`).join('\n')}
+  ${primaryIssue.evidence.map(e => `  - ${e}`).join('\n')}
   - Recommended Action:
-    ${p.recommendedAction}
-  `
-    )
-    .join('\n')}
+    ${primaryIssue.recommendedAction}
 
   TASK:
-  - Improve the product UX/UI to address the issues above
-  - Modify ONLY the relevant files
+  - Address ONLY this single issue above
+  - Make ONLY ONE code change to fix this issue
+  - Modify ONLY the relevant file(s) needed for this single fix
   - Keep changes minimal and focused
   - Do NOT refactor unrelated code
+  - Do NOT address any other issues
 
   OUTPUT RULES:
-  - Make the changes directly in the codebase
+  - Make the change directly in the codebase
   - Do not ask questions
   - Do not explain theory
   - If no change is needed, make no changes
+  - Remember: ONE issue, ONE change only
+
+  IMPORTANT - OUTPUT FORMAT:
+  After making your changes, you MUST output a JSON object describing what you changed.
+  The JSON must be in this exact format and appear at the end of your output:
+  
+  \`\`\`json
+  {
+    "changes": [
+      {
+        "id": "unique-id",
+        "component": "ComponentName",
+        "description": "Brief description of what was changed",
+        "type": "added" | "modified" | "removed",
+        "file": "path/to/file.tsx",
+        "impact": "high" | "medium" | "low"
+      }
+    ]
+  }
+  \`\`\`
+  
+  - Include ALL files you modified, added, or removed
+  - The "component" field should be the React component name or feature name
+  - The "description" should clearly explain what was changed and why
+  - The "type" must be one of: "added", "modified", or "removed"
+  - The "file" should be the relative path from the project root
+  - The "impact" should reflect the expected UX improvement level
   `.trim();
   }
 
 
-  async evolve(analysis: AnalysisResult) {
+  async evolve(analysis: AnalysisResult, onStream?: (data: string, type: 'stdout' | 'stderr') => void) {
     const prompt = this.buildUXAgentPrompt(analysis);
 
     console.log('🧬 Running evolution...');
@@ -141,13 +177,86 @@ export class Analyst {
     console.log('📝 Prompt:', prompt);
     console.log('---');
 
-    const result = await runClaude(prompt, this.targetAppPath) as {
+    const result = await runClaude(prompt, this.targetAppPath, {
+      onStdout: (data) => {
+        if (onStream) {
+          onStream(data, 'stdout');
+        }
+        // Also output to console for debugging
+        process.stdout.write(data);
+      },
+      onStderr: (data) => {
+        if (onStream) {
+          onStream(data, 'stderr');
+        }
+        // Also output to console for debugging
+        process.stderr.write(data);
+      },
+    }) as {
       stdout: string;
       stderr: string;
     };
 
     console.log('✅ Done!');
     console.log(result.stdout);
-    return result;
+    
+    // Parse changes from output
+    const changes = this.parseChangesFromOutput(result.stdout);
+    
+    return {
+      ...result,
+      changes,
+    };
+  }
+
+  private parseChangesFromOutput(output: string): any[] {
+    try {
+      // Look for JSON block in the output
+      const jsonMatch = output.match(/```json\s*([\s\S]*?)\s*```/);
+      if (jsonMatch) {
+        const jsonStr = jsonMatch[1].trim();
+        const parsed = JSON.parse(jsonStr);
+        if (parsed.changes && Array.isArray(parsed.changes)) {
+          return parsed.changes;
+        }
+      }
+      
+      // Also try to find JSON without code block markers
+      const jsonMatch2 = output.match(/\{[\s\S]*"changes"[\s\S]*\}/);
+      if (jsonMatch2) {
+        const parsed = JSON.parse(jsonMatch2[0]);
+        if (parsed.changes && Array.isArray(parsed.changes)) {
+          return parsed.changes;
+        }
+      }
+      
+      // Try to find JSON at the end of output
+      const lines = output.split('\n');
+      for (let i = lines.length - 1; i >= 0; i--) {
+        const line = lines[i].trim();
+        if (line.startsWith('{') && line.includes('"changes"')) {
+          try {
+            const parsed = JSON.parse(line);
+            if (parsed.changes && Array.isArray(parsed.changes)) {
+              return parsed.changes;
+            }
+          } catch (e) {
+            // Try to find complete JSON object
+            const jsonStart = output.lastIndexOf('{');
+            if (jsonStart !== -1) {
+              const jsonStr = output.substring(jsonStart);
+              const parsed = JSON.parse(jsonStr);
+              if (parsed.changes && Array.isArray(parsed.changes)) {
+                return parsed.changes;
+              }
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.warn('Failed to parse changes from output:', error);
+    }
+    
+    return [];
   }
 }

@@ -11,7 +11,9 @@
     "build": "tsc",
     "dev": "tsc --watch",
     "start": "node start-server.js",
-    "start:dev": "ts-node --require dotenv/config start-server.ts"
+    "start:dev": "ts-node --require dotenv/config start-server.ts",
+    "test:claude": "ts-node --require dotenv/config test-claude.ts",
+    "test:claude:simple": "ts-node --require dotenv/config test-claude-simple.ts"
   },
   "dependencies": {
     "@browserbasehq/stagehand": "^3.0.0",

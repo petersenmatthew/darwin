@@ -2,6 +2,13 @@ const path = require('path');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // External packages that should not be bundled (moved from experimental)
+  serverExternalPackages: [
+    '@browserbasehq/stagehand',
+    'playwright',
+    'puppeteer',
+  ],
+  // Webpack config for when using --webpack flag
   webpack: (config, { isServer }) => {
     if (isServer) {
       // Externalize problematic Node.js-only packages
@@ -48,13 +55,9 @@ const nextConfig = {
     }
     return config;
   },
-  // This tells Next.js to not bundle these packages
-  experimental: {
-    serverComponentsExternalPackages: [
-      '@browserbasehq/stagehand',
-      'playwright',
-      'puppeteer',
-    ],
+  // Turbopack configuration (for Next.js 16+)
+  turbopack: {
+    // Turbopack will use serverExternalPackages automatically
   },
 };
 

@@ -9,6 +9,15 @@ export interface EvolutionResult {
 
 export type SessionResult = AgentResult | EvolutionResult;
 
+export interface UIChange {
+  id: string;
+  component: string;
+  description: string;
+  type: "added" | "modified" | "removed";
+  file: string;
+  impact: "high" | "medium" | "low";
+}
+
 export interface AgentSession {
   id: string;
   status: "initializing" | "running" | "completed" | "error" | "cancelled";
@@ -18,6 +27,8 @@ export interface AgentSession {
   createdAt: Date;
   completedAt?: Date;
   logs: LogEntry[];
+  isEvolution?: boolean;
+  changes?: UIChange[];
 }
 
 export interface LogEntry {
@@ -42,7 +53,7 @@ class AgentSessionManager extends EventEmitter {
     this.originalConsoleWarn = console.warn;
   }
 
-  createSession(config: BrowserAgentConfig): string {
+  createSession(config: BrowserAgentConfig, isEvolution: boolean = false): string {
     const id = `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     const session: AgentSession = {
       id,
@@ -50,6 +61,7 @@ class AgentSessionManager extends EventEmitter {
       config,
       createdAt: new Date(),
       logs: [],
+      isEvolution,
     };
     this.sessions.set(id, session);
     this.emit("session:created", id);
@@ -58,6 +70,29 @@ class AgentSessionManager extends EventEmitter {
 
   getSession(id: string): AgentSession | undefined {
     return this.sessions.get(id);
+  }
+
+  getAllSessions(): any[] {
+    return Array.from(this.sessions.values()).map(session => {
+      const duration = session.completedAt && session.createdAt
+        ? Math.round((session.completedAt.getTime() - session.createdAt.getTime()) / 1000)
+        : session.status === "running" || session.status === "initializing"
+        ? Math.round((Date.now() - session.createdAt.getTime()) / 1000)
+        : 0;
+
+      return {
+        id: session.id,
+        agentName: "Browser Agent",
+        task: session.config.task || "N/A",
+        status: session.status,
+        duration: duration > 0 ? `${duration}s` : "-",
+        steps: 0, // TODO: Track steps if available
+        maxSteps: session.config.maxSteps || 20,
+        startedAt: session.createdAt.toISOString(),
+        result: session.result,
+        error: session.error,
+      };
+    }).sort((a, b) => new Date(b.startedAt).getTime() - new Date(a.startedAt).getTime());
   }
 
   updateSessionStatus(id: string, status: AgentSession["status"]): void {
@@ -88,6 +123,14 @@ class AgentSessionManager extends EventEmitter {
       session.completedAt = new Date();
       this.addLog(id, "error", error);
       this.emit("session:error", id, error);
+    }
+  }
+
+  setSessionChanges(id: string, changes: UIChange[]): void {
+    const session = this.sessions.get(id);
+    if (session) {
+      session.changes = changes;
+      this.emit("session:changes", id, changes);
     }
   }
 

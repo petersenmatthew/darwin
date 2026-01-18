@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Text, Button, Icon } from '@shopify/polaris';
@@ -8,9 +8,8 @@ import { SearchIcon } from '@shopify/polaris-icons';
 import { products } from '../../data/products';
 import ProductCard from '../../components/ProductCard';
 import { usePageTracking } from '../../hooks/usePageTracking';
-import ScrollTracker from '../../components/tracking/ScrollTracker';
 
-export default function SearchPage() {
+function Search() {
   usePageTracking();
   const searchParams = useSearchParams();
   const initialQuery = searchParams.get('q') || '';
@@ -187,4 +186,12 @@ export default function SearchPage() {
       )}
     </div>
   );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<div>Loading search...</div>}>
+      <Search />
+    </Suspense>
+  )
 }

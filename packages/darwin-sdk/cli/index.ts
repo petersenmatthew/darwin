@@ -164,14 +164,14 @@ program
 
 program
   .command("evolve")
-  .description("Run the full evolution pipeline: agent → analyze → claude updates code")
+  .description("Run the full evolution pipeline: agent → analyze → gemini updates code")
   .option("-c, --config <path>", "Path to config file", "darwin.config.json")
   .option("-w, --website <url>", "Override website URL")
   .option("-t, --task <task>", "Override task description")
   .option("-m, --model <model>", "Override model")
   .option("-s, --steps <number>", "Override max steps", parseInt)
   .option("--env <env>", "Environment: LOCAL or BROWSERBASE", "LOCAL")
-  .option("--target <path>", "Target app path for Claude to modify", "../demo-app")
+  .option("--target <path>", "Target app path for Gemini to modify", "../demo-app")
   .action(async (options) => {
     try {
       // Load config
@@ -267,13 +267,13 @@ program
         console.log("");
       }
 
-      // Step 4: Evolve the codebase with Claude
-      console.log(chalk.cyan("Step 4: Evolving codebase with Claude..."));
+      // Step 4: Evolve the codebase with Gemini
+      console.log(chalk.cyan("Step 4: Evolving codebase with Gemini..."));
       const evolutionResult = await analyst.evolve(analysis);
       console.log(chalk.green("\n✓ Evolution complete!\n"));
 
       if (evolutionResult.stdout) {
-        console.log(chalk.gray("Claude output:"));
+        console.log(chalk.gray("Gemini output:"));
         console.log(evolutionResult.stdout);
       }
 
