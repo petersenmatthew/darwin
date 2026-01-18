@@ -153,7 +153,7 @@ export class Analyst {
         "description": "Brief description of what was changed",
         "type": "added" | "modified" | "removed",
         "file": "path/to/file.tsx",
-        "impact": "high" | "medium" | "low"
+        "explanation": "Detailed explanation of how this change addresses the analytics data and user behavior patterns identified"
       }
     ]
   }
@@ -164,7 +164,7 @@ export class Analyst {
   - The "description" should clearly explain what was changed and why
   - The "type" must be one of: "added", "modified", or "removed"
   - The "file" should be the relative path from the project root
-  - The "impact" should reflect the expected UX improvement level
+  - The "explanation" must explain how this change directly addresses the analytics data, user behavior patterns, and the specific issue identified. Reference the evidence from the analytics (e.g., "This addresses the low click-through rate on the CTA button by...")
   `.trim();
   }
 

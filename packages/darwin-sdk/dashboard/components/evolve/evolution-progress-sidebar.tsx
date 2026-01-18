@@ -25,7 +25,7 @@ interface UIChange {
   description: string;
   type: "added" | "modified" | "removed";
   file: string;
-  impact: "high" | "medium" | "low";
+  explanation: string;
 }
 
 interface EvolutionProgressSidebarProps {
@@ -42,7 +42,7 @@ const mockChanges: UIChange[] = [
     description: "Increased CTA button contrast and size for better visibility",
     type: "modified",
     file: "components/hero-section.tsx",
-    impact: "high",
+    explanation: "Analytics showed a 15% lower click-through rate on the primary CTA compared to industry benchmarks. This change addresses the visibility issue by increasing button size by 20% and improving contrast ratio to meet WCAG AAA standards, directly targeting the low engagement metric.",
   },
   {
     id: "2",
@@ -50,7 +50,7 @@ const mockChanges: UIChange[] = [
     description: "Added hover animations and improved spacing between items",
     type: "modified",
     file: "components/navigation.tsx",
-    impact: "medium",
+    explanation: "User session recordings revealed hesitation and multiple clicks on navigation items. The analytics data showed a 22% bounce rate increase when users interacted with the menu. These visual feedback improvements address the interaction friction identified in the heatmap data.",
   },
   {
     id: "3",
@@ -58,23 +58,7 @@ const mockChanges: UIChange[] = [
     description: "New card layout with improved image aspect ratio",
     type: "added",
     file: "components/product-card.tsx",
-    impact: "high",
-  },
-  {
-    id: "4",
-    component: "FooterLinks",
-    description: "Reorganized link groups for better scannability",
-    type: "modified",
-    file: "components/footer.tsx",
-    impact: "low",
-  },
-  {
-    id: "5",
-    component: "LoadingSpinner",
-    description: "Replaced with skeleton loading for perceived performance",
-    type: "modified",
-    file: "components/loading.tsx",
-    impact: "medium",
+    explanation: "Product page analytics indicated that users spent less than 2 seconds viewing product cards before scrolling, with a 30% lower conversion rate. The improved aspect ratio and layout directly addresses the low engagement time metric by making product images more prominent and scannable.",
   },
 ];
 
@@ -308,18 +292,6 @@ export function EvolutionProgressSidebar({
     return "pending";
   };
 
-  const getImpactColor = (impact: string) => {
-    switch (impact) {
-      case "high":
-        return "bg-emerald-500/20 text-emerald-400 border-emerald-500/30";
-      case "medium":
-        return "bg-amber-500/20 text-amber-400 border-amber-500/30";
-      case "low":
-        return "bg-blue-500/20 text-blue-400 border-blue-500/30";
-      default:
-        return "bg-muted text-muted-foreground";
-    }
-  };
 
   const getTypeIcon = (type: string) => {
     switch (type) {
@@ -534,15 +506,24 @@ export function EvolutionProgressSidebar({
                           <span
                             className={cn(
                               "rounded-full border px-2 py-0.5 text-xs font-medium",
-                              getImpactColor(change.impact)
+                              change.type === "added" 
+                                ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"
+                                : change.type === "modified"
+                                ? "bg-amber-500/20 text-amber-400 border-amber-500/30"
+                                : "bg-red-500/20 text-red-400 border-red-500/30"
                             )}
                           >
-                            {change.impact}
+                            {change.type}
                           </span>
                         </div>
                         <p className="text-xs text-muted-foreground mt-2">
                           {change.description}
                         </p>
+                        {change.explanation && (
+                          <p className="text-xs text-muted-foreground mt-2 italic border-l-2 border-border pl-2">
+                            {change.explanation}
+                          </p>
+                        )}
                         <div className="flex items-center gap-1 mt-2 text-xs text-muted-foreground">
                           <FileCode className="h-3 w-3" />
                           <span className="font-mono">{change.file}</span>
@@ -567,9 +548,9 @@ export function EvolutionProgressSidebar({
                     </div>
                     <div className="rounded-lg border border-border bg-muted/30 p-3 text-center">
                       <div className="text-lg font-semibold text-blue-400">
-                        {changes.filter((c) => c.impact === "high").length}
+                        {changes.length}
                       </div>
-                      <div className="text-xs text-muted-foreground">High Impact</div>
+                      <div className="text-xs text-muted-foreground">Total</div>
                     </div>
                   </div>
                 </div>

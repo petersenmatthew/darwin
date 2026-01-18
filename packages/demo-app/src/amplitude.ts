@@ -21,7 +21,7 @@ export const initAmplitude = () => {
     fetchRemoteConfig: true,
     defaultTracking: {
       sessions: true,
-      pageViews: true,
+      pageViews: false,
       formInteractions: true,
       fileDownloads: true,
     },

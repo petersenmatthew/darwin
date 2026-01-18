@@ -15,7 +15,7 @@ export interface UIChange {
   description: string;
   type: "added" | "modified" | "removed";
   file: string;
-  impact: "high" | "medium" | "low";
+  explanation: string;
 }
 
 export interface AgentSession {
