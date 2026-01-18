@@ -156,11 +156,11 @@ export default function ProductDetailPage() {
                     });
                     setQuantity(Math.max(1, quantity - 1));
                   }}
-                  className="px-3 py-2 hover:bg-gray-50"
+                  className="px-3 py-2 hover:bg-gray-50 flex items-center justify-center"
                 >
                   -
                 </button>
-                <span className="px-4 py-2 border-x">{quantity}</span>
+                <span className="px-4 py-2 border-x flex items-center justify-center min-w-[3rem]">{quantity}</span>
                 <button
                   onClick={() => {
                     const timeSincePageLoad = pageLoadTime ? Date.now() - pageLoadTime : undefined;
@@ -176,18 +176,18 @@ export default function ProductDetailPage() {
                     });
                     setQuantity(quantity + 1);
                   }}
-                  className="px-3 py-2 hover:bg-gray-50"
+                  className="px-3 py-2 hover:bg-gray-50 flex items-center justify-center"
                 >
                   +
                 </button>
               </div>
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex items-center gap-3">
               <button
                 onClick={handleAddToCart}
                 disabled={!product.inStock}
-                className={`flex-1 py-3 px-6 rounded-md font-medium flex items-center justify-center gap-2 transition-colors ${
+                className={`flex-1 py-3 px-6 rounded-md font-medium flex items-center justify-center gap-2 transition-colors h-12 text-center ${
                   addedToCart
                     ? 'bg-green-700 text-white'
                     : product.inStock
@@ -195,8 +195,8 @@ export default function ProductDetailPage() {
                     : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                 }`}
               >
-                <Icon source={addedToCart ? CheckIcon : CartIcon} />
-                {addedToCart ? 'Added to Cart!' : product.inStock ? 'Add to Cart' : 'Out of Stock'}
+                <div><Icon source={addedToCart ? CheckIcon : CartIcon} /></div>
+                <span>{addedToCart ? 'Added to Cart!' : product.inStock ? 'Add to Cart' : 'Out of Stock'}</span>
               </button>
               <Button 
                 size="large" 
@@ -221,15 +221,15 @@ export default function ProductDetailPage() {
           {/* Features */}
           <div className="space-y-3">
             <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Icon source={CheckIcon} tone="success" />
+              <div><Icon source={CheckIcon} tone="success" /></div>
               Free shipping on orders over $50
             </div>
             <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Icon source={CheckIcon} tone="success" />
+              <div><Icon source={CheckIcon} tone="success" /></div>
               30-day return policy
             </div>
             <div className="flex items-center gap-2 text-sm text-gray-600">
-              <Icon source={CheckIcon} tone="success" />
+              <div><Icon source={CheckIcon} tone="success" /></div>
               2-year warranty included
             </div>
           </div>
